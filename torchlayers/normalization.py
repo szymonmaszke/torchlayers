@@ -1,30 +1,9 @@
 import torch
 
-from ._bases import InferDimension
-
-__all__ = ["InstanceNorm", "BatchNorm", "GroupNorm"]
+from ._dev_utils import modules
 
 
-class _Normalization(InferDimension):
-    def __init__(
-        self,
-        num_features,
-        eps=1e-05,
-        momentum=0.1,
-        affine=True,
-        track_running_stats=True,
-    ):
-        super().__init__(
-            module_name=self.module_name(),
-            num_features=num_features,
-            eps=eps,
-            momentum=momentum,
-            affine=affine,
-            track_running_stats=track_running_stats,
-        )
-
-
-class InstanceNorm(_Normalization):
+class InstanceNorm(modules.InferDimension):
     """Apply Instance Normalization over inferred dimension (3D up to 5D).
 
     Based on input shape it either creates 1D, 2D or 3D instance normalization for inputs of shape
@@ -63,7 +42,6 @@ class InstanceNorm(_Normalization):
         track_running_stats=False,
     ):
         super().__init__(
-            module_name="InstanceNorm",
             num_features=num_features,
             eps=eps,
             momentum=momentum,
@@ -71,15 +49,12 @@ class InstanceNorm(_Normalization):
             track_running_stats=track_running_stats,
         )
 
-    def module_name(self):
-        return "InstanceNorm"
 
-
-class BatchNorm(_Normalization):
+class BatchNorm(modules.InferDimension):
     """Apply Batch Normalization over inferred dimension (2D up to 5D).
 
-    Based on input shape it either creates 1D, 2D or 3D batch normalization for inputs of shape
-    2D/3D, 4D, 5D respectively (including batch as first dimension).
+    Based on input shape it either creates `1D`, `2D` or `3D` batch normalization for inputs of shape
+    `2D/3D`, `4D`, `5D` respectively (including batch as first dimension).
 
     Otherwise works like standard PyTorch's `BatchNorm <https://pytorch.org/docs/stable/nn.html#batchnorm1d>`__.
 
@@ -106,8 +81,32 @@ class BatchNorm(_Normalization):
 
     """
 
-    def module_name(self):
-        return "BatchNorm"
+    def __init__(
+        self,
+        num_features,
+        eps=1e-05,
+        momentum=0.1,
+        affine=True,
+        track_running_stats=True,
+    ):
+        super().__init__(
+            num_features=num_features,
+            eps=eps,
+            momentum=momentum,
+            affine=affine,
+            track_running_stats=track_running_stats,
+        )
+
+    def _module_not_found(self, inputs):
+        if len(inputs.shape) == 2:
+            inner_class = getattr(torch.nn, f"{self._module_name}1d", None)
+            if inner_class is not None:
+                return inner_class
+
+        raise ValueError(
+            f"{self._module_name} could not be inferred from shape. "
+            f"Only 5, 4, 3 or 2 dimensional input allowed (including batch dimension), got {len(inputs.shape)}."
+        )
 
 
 # Arguments had the wrong order unfortunately

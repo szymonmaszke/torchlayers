@@ -1,21 +1,16 @@
-import collections
-import functools
 import inspect
-import sys
 
 import torch
 
 from . import (_dev_utils, _inferable, convolution, normalization, pooling,
                regularization)
-from ._general import Flatten, Lambda, infer
+from ._general import Flatten, Lambda
 from ._version import __version__
-from .convolution import *  # noqa
-from .regularization import *  # noqa
 
 
 def _getattr(name):
     module_class = None
-    for module in (convolution, normalization, pooling, torch.nn):
+    for module in (convolution, normalization, pooling, regularization, torch.nn):
         module_class = getattr(module, name, None)
         if module_class is not None:
             return module_class
@@ -25,16 +20,33 @@ def _getattr(name):
 
 def _setup(name, module_class):
     inferred_module = type(
-        name, (torch.nn.Module,), {"_inferred_module_class": module_class}
+        name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
     )
     signature = inspect.signature(module_class.__init__)
     arguments = [str(argument) for argument in signature.parameters.values()]
 
-    setattr(inferred_module, "__init__", _dev_utils.infer.create_init(arguments[2:]))
-    setattr(inferred_module, "forward", _dev_utils.infer.create_forward(arguments[2:]))
-    setattr(inferred_module, "__repr__", _dev_utils.infer.create_repr(arguments[1]))
+    setattr(inferred_module, "__init__", _dev_utils.infer.create_init(*arguments[2:]))
+    setattr(
+        inferred_module,
+        "forward",
+        _dev_utils.infer.create_forward(
+            _dev_utils.infer.MODULE, _dev_utils.infer.MODULE_CLASS, *arguments[2:]
+        ),
+    )
+    setattr(
+        inferred_module,
+        "__repr__",
+        _dev_utils.infer.create_repr(_dev_utils.infer.MODULE, **{arguments[1]: "?"}),
+    )
 
     return inferred_module
+
+
+###############################################################################
+#
+#                       MODULE ATTRIBUTE GETTERS
+#
+###############################################################################
 
 
 def __dir__():

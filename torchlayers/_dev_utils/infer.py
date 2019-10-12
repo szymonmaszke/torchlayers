@@ -1,39 +1,18 @@
-from .. import _inferable
+from ._infer_helpers import (create_vars, get_per_module_index,
+                             remove_right_side, remove_type_hint)
+
+MODULE = "_inferred_module"
+MODULE_CLASS = "_inferred_class_module"
 
 
-def _remove_default_value(argument):
-    return argument.split("=")[0]
-
-
-def _get_per_module_index(module):
-    if type(module).__name__ in _inferable.torch.recurrent:
-        return 2
-    return 1
-
-
-def _get_dictionary(self, input_name):
-    if hasattr(self, "_inferred_module"):
-        dictionary = vars(self._inferred_module)
-    else:
-        dictionary = collections.OrderedDict(vars(self))
-        dictionary.update({input_name: "?"})
-        dictionary.move_to_end(input_name, last=False)
-
-    return (
-        (key, value)
-        for key, value in dictionary.items()
-        if not key.startswith("_") and key != "training"
-    )
-
-
-def create_init(arguments):
+def create_init(*arguments):
     namespace = {}
 
     header = f"""def __init__(self, {", ".join(arguments)}):"""
     header += "\n super(type(self), self).__init__()\n "
     header += " ".join(
         [
-            f"self.{_remove_default_value(argument)} = {_remove_default_value(argument)}\n"
+            f"self.{remove_right_side(argument)} = {remove_type_hint(remove_right_side(argument))}\n"
             for argument in arguments
         ]
     )
@@ -42,32 +21,36 @@ def create_init(arguments):
     return namespace["__init__"]
 
 
-def create_forward(arguments):
+def create_forward(module, module_class, *arguments):
     def forward(self, inputs, *args, **kwargs):
-        if not hasattr(self, "_inferred_module"):
+        if not hasattr(self, module):
+            module_cls = getattr(self, module_class)
             self.add_module(
-                "_inferred_module",
-                self._inferred_module_class(
-                    inputs.shape[_get_per_module_index(self._inferred_module_class)],
+                module,
+                module_cls(
+                    inputs.shape[get_per_module_index(module_cls)],
                     *[
-                        getattr(self, _remove_default_value(argument))
+                        getattr(self, remove_type_hint(remove_right_side(argument)))
                         for argument in arguments
                     ],
                 ),
             )
 
             for argument in arguments:
-                delattr(self, _remove_default_value(argument))
+                delattr(self, remove_type_hint(remove_right_side(argument)))
 
-        return self._inferred_module(inputs, *args, **kwargs)
+        return getattr(self, module)(inputs, *args, **kwargs)
 
     return forward
 
 
-def create_repr(input_name):
+def create_repr(module, **non_inferable_names):
     def __repr__(self) -> str:
+        if hasattr(self, module):
+            return repr(getattr(self, module))
+
         parameters = ", ".join(
-            f"{key}={value}" for key, value in _get_dictionary(self, input_name)
+            f"{key}={value}" for key, value in create_vars(self, **non_inferable_names)
         )
         return f"{type(self).__name__}({parameters})"
 

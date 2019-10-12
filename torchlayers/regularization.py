@@ -1,6 +1,6 @@
 import torch
 
-__all__ = ["StochasticDepth"]
+from ._dev_utils import modules
 
 
 class StochasticDepth(torch.nn.Module):
@@ -29,7 +29,7 @@ class StochasticDepth(torch.nn.Module):
 
     """
 
-    def __init__(self, module: torch.nn.Module, p: float):
+    def __init__(self, module: torch.nn.Module, p: float = 0.5):
         super().__init__()
         if not 0 < p < 1:
             raise ValueError(
@@ -43,3 +43,29 @@ class StochasticDepth(torch.nn.Module):
         if self._sampler.uniform_() < self.p and self.training:
             return inputs
         return self.module(inputs)
+
+
+class Dropout(modules.InferDimension):
+    """Randomly zero out some of the tensor elements.
+
+    Based on input shape it either creates `2D` or `3D` version of dropout for inputs of shape
+    `4D`, `5D` respectively (including batch as first dimension).
+    For every other dimension, standard `torch.nn.Dropout` will be used.
+
+    Otherwise works like standard PyTorch's `Dropout <https://pytorch.org/docs/stable/nn.html#dropout-layers>`__
+
+    Parameters
+    ----------
+    p: float, optional
+        Probability of an element to be zeroed. Default: ``0.5``
+    inplace: bool, optional
+        If ``True``, will do this operation in-place. Default: ``False``
+
+    """
+
+    def __init__(self, p=0.5, inplace=False):
+        super().__init__(p=p, inplace=inplace)
+
+    # Dropout can have any input shape according to documentation
+    def _module_not_found(self, inputs):
+        return torch.nn.Dropout

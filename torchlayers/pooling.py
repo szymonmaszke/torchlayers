@@ -1,37 +1,27 @@
 import torch
 
-__all__ = ["GlobalMaxPool", "GlobalAvgPool", "AdaptiveMaxPool", "AdaptiveAvgPool"]
+from ._dev_utils import modules
 
 
-class _GlobalPool(torch.nn.Module):
-    def __init__(self, is_max: bool, squeeze: bool):
-        super().__init__()
-        if is_max:
-            self._pool_operation_name = "max"
-        else:
-            self._pool_operation_name = "avg"
-        self._squeeze = squeeze
+class _GlobalPool(modules.InferDimension):
+    @classmethod
+    def _squeeze(cls, inputs):
+        squeezed = inputs.squeeze()
+        # Batch dimension could be squeezed as well
+        if len(squeezed.shape) == 1:
+            return squeezed.unsqueeze(0)
+        return squeezed
+
+    def __init__(self):
+        _operation: str = "Max" if "Max" in type(self).__name__ else "Avg"
+        super().__init__(output_size=1)
+        self._module_name = "Adaptive" + _operation + "Pool"
+
+    def __repr__(self):
+        return f"{type(self).__name__}()"
 
     def forward(self, inputs):
-        if not hasattr(self, "_pool_operation"):
-            module = getattr(
-                torch.nn.functional,
-                f"adaptive_{self._pool_operation_name}_pool{len(inputs.shape) - 2}d",
-                None,
-            )
-            if module is None:
-                raise ValueError(
-                    f"{type(self).__name__} could not be inferred from shape. "
-                    + f"Only 5, 4 and 3 dimensional input, got {len(inputs.shape)}"
-                )
-            self._pool_operation = module
-
-        output = self._pool_operation(inputs, 1)
-        if self._squeeze:
-            squeezed = output.squeeze()
-            if len(squeezed.shape) == 1:
-                return squeezed.unsqueeze(0)
-        return output
+        return _GlobalPool._squeeze(super().forward(inputs))
 
 
 class GlobalMaxPool(_GlobalPool):
@@ -50,9 +40,6 @@ class GlobalMaxPool(_GlobalPool):
 
     """
 
-    def __init__(self):
-        super().__init__(True, squeeze=True)
-
 
 class GlobalAvgPool(_GlobalPool):
     """Perform `mean` operation across first `torch.Tensor` dimension.
@@ -70,11 +57,8 @@ class GlobalAvgPool(_GlobalPool):
 
     """
 
-    def __init__(self):
-        super().__init__(False, squeeze=True)
 
-
-class AdaptiveMaxPool(_GlobalPool):
+class MaxPool(modules.InferDimension):
     """Perform `max` operation across first `torch.Tensor` dimension.
 
     Usually used after last convolution layer to get pixels of maximum value
@@ -92,12 +76,27 @@ class AdaptiveMaxPool(_GlobalPool):
 
     """
 
-    def __init__(self):
-        super().__init__(True, squeeze=False)
+    def __init__(
+        self,
+        kernel_size=2,
+        stride=None,
+        padding=0,
+        dilation=1,
+        return_indices=False,
+        ceil_mode=False,
+    ):
+        super().__init__(
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            return_indices=return_indices,
+            ceil_mode=ceil_mode,
+        )
 
 
-class AdaptiveAvgPool(_GlobalPool):
-    """Perform `mean` operation across first `torch.Tensor` dimension.
+class AvgPool(modules.InferDimension):
+    """Perform `max` operation across first `torch.Tensor` dimension.
 
     Usually used after last convolution layer to get pixels of maximum value
     from each channel.
@@ -105,16 +104,27 @@ class AdaptiveAvgPool(_GlobalPool):
     Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` pooling will be used
     for `3D`, `4D` and `5D` shape respectively (batch included).
 
-    Acts just like `GlobalMaxPool` but does not remove
-    superficial `1` dimensions. Works exactly like `AdaptiveAvgPool` in PyTorch
-    except for dimension inferring.
-
     Returns
     -------
     `torch.Tensor`
-            Same shape as `input`.
+            Same shape as `input`. Acts just like `GlobalMaxPool` but does not remove
+            superficial `1` dimensions. Works exactly like `AdaptiveMaxPool` in PyTorch
+            except for dimension inferring.
 
     """
 
-    def __init__(self):
-        super().__init__(False, squeeze=False)
+    def __init__(
+        self,
+        kernel_size=2,
+        stride=None,
+        padding=0,
+        ceil_mode=False,
+        count_include_pad=True,
+    ):
+        super().__init__(
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            ceil_mode=ceil_mode,
+            count_include_pad=count_include_pad,
+        )

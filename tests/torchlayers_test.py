@@ -1,15 +1,12 @@
 import torch
 
+import pytest
 import torchlayers
 
 
-def test_conv_shape():
-    layer = torchlayers.Conv(64, 3)
-    assert layer(torch.randn(1, 3, 28, 28)).shape == (1, 64, 28, 28)
-
-
-def test():
-    model = torchlayers.Sequential(
+@pytest.fixture
+def model():
+    return torchlayers.Sequential(
         torchlayers.Conv(64),
         torchlayers.BatchNorm(),
         torchlayers.ReLU(),
@@ -19,10 +16,39 @@ def test():
         torchlayers.Conv(256),
         torchlayers.GlobalMaxPool(),
         torchlayers.Linear(64),
+        torchlayers.BatchNorm(),
+        torchlayers.Linear(10),
     )
 
-    model(torch.randn(1, 3, 28, 28))
 
-    print(model)
+def test_functionality(model):
+    # Initialize
+    model(torch.randn(16, 3, 28, 28))
 
-    assert 0 == 1
+    optimizer = torch.optim.Adam(model.parameters())
+    criterion = torch.nn.CrossEntropyLoss()
+
+    for _ in range(16):
+        output = model(torch.randn(16, 3, 28, 28))
+        loss = criterion(output, torch.randint(2, (16,)))
+        loss.backward()
+
+        optimizer.zero_grad()
+
+
+def test_print_pre_init(model):
+    target = r"""Sequential(
+  (0): Conv(in_channels=?, out_channels=64, kernel_size=3, stride=1, padding=same, dilation=1, groups=1, bias=True, padding_mode=zeros)
+  (1): BatchNorm(num_features=?, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (2): ReLU()
+  (3): Conv(in_channels=?, out_channels=128, kernel_size=3, stride=1, padding=same, dilation=1, groups=1, bias=True, padding_mode=zeros)
+  (4): BatchNorm(num_features=?, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (5): ReLU()
+  (6): Conv(in_channels=?, out_channels=256, kernel_size=3, stride=1, padding=same, dilation=1, groups=1, bias=True, padding_mode=zeros)
+  (7): GlobalMaxPool()
+  (8): Linear(in_features=?, out_features=64, bias=True)
+  (9): BatchNorm(num_features=?, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (10): Linear(in_features=?, out_features=10, bias=True)
+)"""
+
+    assert target == str(model)

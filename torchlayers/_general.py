@@ -5,6 +5,7 @@ import torch
 from ._dev_utils.infer import create_forward, create_repr
 
 
+# Make inheritable torchlayers.Inferable like module base
 def infer(module_class: torch.nn.Module, input_name: str):
     """Create your own inferable `module`.
 
