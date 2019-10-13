@@ -2,9 +2,10 @@ import typing
 
 import torch
 
-from .infer import create_repr
+from .infer import create_getattr, create_repr
 
 
+# Fix getattr and deletion of attributes
 class InferDimension(torch.nn.Module):
     def __init__(self, *, instance_creator: typing.Callable = None, **kwargs):
         self._inner_module_name = "_inner_module"
@@ -33,7 +34,8 @@ class InferDimension(torch.nn.Module):
         )
 
     def forward(self, inputs):
-        if not hasattr(self, self._inner_module_name):
+        module = getattr(self, self._inner_module_name, None)
+        if module is None:
             dimensions = len(inputs.shape)
             inner_class = getattr(
                 torch.nn, f"{self._module_name}{dimensions - 2}d", None
@@ -55,7 +57,7 @@ class InferDimension(torch.nn.Module):
             for attribute in self._noninferable_attributes:
                 delattr(self, attribute)
 
-        return self._inner_module(inputs)
+        return getattr(self, self._inner_module_name)(inputs)
 
 
 class Representation(torch.nn.Module):

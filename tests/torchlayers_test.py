@@ -52,3 +52,18 @@ def test_print_pre_init(model):
 )"""
 
     assert target == str(model)
+
+
+def test_attribute_access_existing():
+    layer = torchlayers.Conv(64)
+    assert layer.kernel_size == 3
+    assert layer.padding == "same"
+
+
+def test_attribute_access_notinstantiated():
+    layer = torchlayers.Conv(64)
+    with pytest.raises(AttributeError):
+        non_instantiated_channels = layer.in_channels
+
+    layer(torch.randn(1, 8, 28, 28))
+    assert layer.in_channels == 8

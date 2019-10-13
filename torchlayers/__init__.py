@@ -18,7 +18,8 @@ def _getattr(name):
     raise AttributeError(f"module {__name__} has no attribute {name}")
 
 
-def _setup(name, module_class):
+def make_inferrable(module_class):
+    name = module_class.__name__
     inferred_module = type(
         name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
     )
@@ -38,6 +39,11 @@ def _setup(name, module_class):
         "__repr__",
         _dev_utils.infer.create_repr(_dev_utils.infer.MODULE, **{arguments[1]: "?"}),
     )
+    setattr(
+        inferred_module,
+        "__getattr__",
+        _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
+    )
 
     return inferred_module
 
@@ -56,5 +62,5 @@ def __dir__():
 def __getattr__(name: str):
     module_class = _getattr(name)
     if name in _inferable.torch.all() + _inferable.custom.all():
-        return _setup(name, module_class)
+        return make_inferrable(module_class)
     return module_class

@@ -23,7 +23,8 @@ def create_init(*arguments):
 
 def create_forward(module, module_class, *arguments):
     def forward(self, inputs, *args, **kwargs):
-        if not hasattr(self, module):
+        inferred_module = getattr(self, module, None)
+        if inferred_module is None:
             module_cls = getattr(self, module_class)
             self.add_module(
                 module,
@@ -39,19 +40,34 @@ def create_forward(module, module_class, *arguments):
             for argument in arguments:
                 delattr(self, remove_type_hint(remove_right_side(argument)))
 
-        return getattr(self, module)(inputs, *args, **kwargs)
+            inferred_module = getattr(self, module)
+
+        return inferred_module(inputs, *args, **kwargs)
 
     return forward
 
 
 def create_repr(module, **non_inferable_names):
     def __repr__(self) -> str:
-        if hasattr(self, module):
-            return repr(getattr(self, module))
+        inferred_module = getattr(self, module, None)
+        if inferred_module is None:
+            parameters = ", ".join(
+                f"{key}={value}"
+                for key, value in create_vars(self, **non_inferable_names)
+            )
+            return f"{type(self).__name__}({parameters})"
 
-        parameters = ", ".join(
-            f"{key}={value}" for key, value in create_vars(self, **non_inferable_names)
-        )
-        return f"{type(self).__name__}({parameters})"
+        return repr(inferred_module)
 
     return __repr__
+
+
+def create_getattr(module):
+    def __getattr__(self, name) -> str:
+        if name == module:
+            # PyTorch's __getattr__ checking buffers etc.
+            return super(type(self), self).__getattr__(name)
+        # Inferred module getattr
+        return getattr(getattr(self, module), name)
+
+    return __getattr__
