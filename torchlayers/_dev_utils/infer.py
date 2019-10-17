@@ -1,5 +1,6 @@
 from ._infer_helpers import (create_vars, get_per_module_index,
-                             remove_right_side, remove_type_hint)
+                             process_arguments, remove_right_side,
+                             remove_type_hint)
 
 MODULE = "_inferred_module"
 MODULE_CLASS = "_inferred_class_module"
@@ -37,9 +38,6 @@ def create_forward(module, module_class, *arguments):
                 ),
             )
 
-            for argument in arguments:
-                delattr(self, remove_type_hint(remove_right_side(argument)))
-
             inferred_module = getattr(self, module)
 
         return inferred_module(inputs, *args, **kwargs)
@@ -65,9 +63,30 @@ def create_repr(module, **non_inferable_names):
 def create_getattr(module):
     def __getattr__(self, name) -> str:
         if name == module:
-            # PyTorch's __getattr__ checking buffers etc.
             return super(type(self), self).__getattr__(name)
-        # Inferred module getattr
         return getattr(getattr(self, module), name)
 
     return __getattr__
+
+
+def create_reduce(module, *arguments):
+    inferred_input, non_inferrable_arguments = process_arguments(*arguments)
+
+    def __reduce__(self):
+        inferred_module = getattr(self, module, None)
+        if inferred_module is None:
+            raise ValueError(
+                "Model cannot be pickled as it wasn't instantiated. Pass example input through this module."
+            )
+
+        custom_reduce = getattr(inferred_module, "__reduce__", None)
+        if custom_reduce is None:
+            return (
+                type(inferred_module),
+                (getattr(inferred_module, inferred_input),)
+                + tuple(getattr(self, arg) for arg in non_inferrable_arguments),
+                inferred_module.state_dict(),
+            )
+        return custom_reduce()
+
+    return __reduce__

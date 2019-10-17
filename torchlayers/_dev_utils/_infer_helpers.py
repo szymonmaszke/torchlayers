@@ -29,3 +29,10 @@ def create_vars(self, **other_values):
         for key, value in dictionary.items()
         if not key.startswith("_") and key != "training"
     )
+
+
+def process_arguments(*arguments):
+    processed_arguments = [
+        remove_type_hint(remove_right_side(argument)) for argument in arguments
+    ]
+    return processed_arguments[0], processed_arguments[1:]

@@ -2,7 +2,7 @@ import typing
 
 import torch
 
-from .infer import create_getattr, create_repr
+from . import infer
 
 
 # Fix getattr and deletion of attributes
@@ -20,12 +20,18 @@ class InferDimension(torch.nn.Module):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self._noninferable_attributes = (key for key in kwargs)
-        self._repr = create_repr(self._inner_module_name)
+        self._noninferable_attributes = [key for key in kwargs]
+        self._repr = infer.create_repr(self._inner_module_name, **kwargs)
+        self._reduce = infer.create_reduce(
+            self._inner_module_name, *self._noninferable_attributes
+        )
         super().__init__()
 
     def __repr__(self):
         return self._repr(self)
+
+    def __reduce__(self):
+        return self._reduce(self)
 
     def _module_not_found(self, inputs):
         raise ValueError(
@@ -53,9 +59,6 @@ class InferDimension(torch.nn.Module):
                     },
                 ),
             )
-
-            for attribute in self._noninferable_attributes:
-                delattr(self, attribute)
 
         return getattr(self, self._inner_module_name)(inputs)
 
