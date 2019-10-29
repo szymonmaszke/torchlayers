@@ -1,14 +1,15 @@
 import setuptools
 
 exec(open("torchlayers/_version.py").read())  # get __version__
+exec(open("torchlayers/_name.py").read())  # get _name
 
 setuptools.setup(
-    name="torchlayers",
+    name=_name,
     version=__version__,
     license="MIT",
     author="Szymon Maszke",
     author_email="szymon.maszke@protonmail.com",
-    description="Shape inference and custom layers for PyTorch.",
+    description="Input shape inference and custom layers for PyTorch.",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/torchlayers",
@@ -33,5 +34,5 @@ setuptools.setup(
         "Documentation": "https://szymonmaszke.github.io/torchlayers/#torchlayers",
         "Issues": "https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc",
     },
-    keywords="machine learning analysis numpy pandas aws pipeline sklearn statsmodels",
+    keywords="pytorch keras input shape layers custom imagenet resnet resnext",
 )
