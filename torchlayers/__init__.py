@@ -23,22 +23,32 @@ def make_inferrable(module_class):
     inferred_module = type(
         name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
     )
-    signature = inspect.signature(module_class.__init__)
-    arguments = [str(argument) for argument in signature.parameters.values()]
+
+    init_signature = inspect.signature(module_class.__init__)
+    init_arguments = [str(argument) for argument in init_signature.parameters.values()]
+
+    forward_signature = inspect.signature(module_class.forward)
+    forward_arguments = [
+        str(argument) for argument in forward_signature.parameters.values()
+    ]
 
     # Arguments: self, input, *
-    setattr(inferred_module, "__init__", _dev_utils.infer.create_init(*arguments[2:]))
+    setattr(
+        inferred_module, "__init__", _dev_utils.infer.create_init(init_arguments[2:])
+    )
     setattr(
         inferred_module,
         "forward",
         _dev_utils.infer.create_forward(
-            _dev_utils.infer.MODULE, _dev_utils.infer.MODULE_CLASS, *arguments[2:]
+            _dev_utils.infer.MODULE, _dev_utils.infer.MODULE_CLASS, init_arguments[2:]
         ),
     )
     setattr(
         inferred_module,
         "__repr__",
-        _dev_utils.infer.create_repr(_dev_utils.infer.MODULE, **{arguments[1]: "?"}),
+        _dev_utils.infer.create_repr(
+            _dev_utils.infer.MODULE, **{init_arguments[1]: "?"}
+        ),
     )
     setattr(
         inferred_module,
@@ -49,7 +59,7 @@ def make_inferrable(module_class):
     setattr(
         inferred_module,
         "__reduce__",
-        _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, *arguments[1:]),
+        _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, init_arguments[1:]),
     )
 
     return inferred_module
