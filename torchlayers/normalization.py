@@ -1,9 +1,9 @@
 import torch
 
-from ._dev_utils import modules
+from . import _dev_utils
 
 
-class InstanceNorm(modules.InferDimension):
+class InstanceNorm(_dev_utils.modules.InferDimension):
     """Apply Instance Normalization over inferred dimension (3D up to 5D).
 
     Based on input shape it either creates 1D, 2D or 3D instance normalization for inputs of shape
@@ -50,7 +50,7 @@ class InstanceNorm(modules.InferDimension):
         )
 
 
-class BatchNorm(modules.InferDimension):
+class BatchNorm(_dev_utils.modules.InferDimension):
     """Apply Batch Normalization over inferred dimension (2D up to 5D).
 
     Based on input shape it either creates `1D`, `2D` or `3D` batch normalization for inputs of shape

@@ -1,4 +1,5 @@
 import inspect
+import io
 
 import torch
 
@@ -8,14 +9,15 @@ from ._general import Flatten, Lambda
 from ._version import __version__
 
 
-def _getattr(name):
-    module_class = None
-    for module in (convolution, normalization, pooling, regularization, torch.nn):
-        module_class = getattr(module, name, None)
-        if module_class is not None:
-            return module_class
+def build(module, *args, **kwargs):
+    module(*args, **kwargs)
+    return to_torch(module)
 
-    raise AttributeError(f"module {__name__} has no attribute {name}")
+
+def to_torch(module):
+    with io.BytesIO() as buffer:
+        torch.save(module, buffer)
+        return torch.load(io.BytesIO(buffer.getvalue()))
 
 
 def make_inferrable(module_class):
@@ -27,12 +29,6 @@ def make_inferrable(module_class):
     init_signature = inspect.signature(module_class.__init__)
     init_arguments = [str(argument) for argument in init_signature.parameters.values()]
 
-    forward_signature = inspect.signature(module_class.forward)
-    forward_arguments = [
-        str(argument) for argument in forward_signature.parameters.values()
-    ]
-
-    # Arguments: self, input, *
     setattr(
         inferred_module, "__init__", _dev_utils.infer.create_init(init_arguments[2:])
     )
@@ -72,12 +68,20 @@ def make_inferrable(module_class):
 ###############################################################################
 
 
-# Fix dir
 def __dir__():
     return dir(torch.nn)
 
 
 def __getattr__(name: str):
+    def _getattr(name):
+        module_class = None
+        for module in (convolution, normalization, pooling, regularization, torch.nn):
+            module_class = getattr(module, name, None)
+            if module_class is not None:
+                return module_class
+
+        raise AttributeError(f"module {__name__} has no attribute {name}")
+
     module_class = _getattr(name)
     if name in _inferable.torch.all() + _inferable.custom.all():
         return make_inferrable(module_class)

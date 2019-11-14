@@ -4,11 +4,14 @@ import torch
 
 from . import infer
 
+INNER_MODULE = "_inner_module"
 
-# Fix getattr and deletion of attributes
+
 class InferDimension(torch.nn.Module):
     def __init__(self, *, instance_creator: typing.Callable = None, **kwargs):
-        self._inner_module_name = "_inner_module"
+        super().__init__()
+
+        self._inner_module_name = INNER_MODULE
 
         self._module_name: str = type(self).__name__
         self._instance_creator = (
@@ -23,9 +26,8 @@ class InferDimension(torch.nn.Module):
         self._noninferable_attributes = [key for key in kwargs]
         self._repr = infer.create_repr(self._inner_module_name, **kwargs)
         self._reduce = infer.create_reduce(
-            self._inner_module_name, *self._noninferable_attributes
+            self._inner_module_name, self._noninferable_attributes
         )
-        super().__init__()
 
     def __repr__(self):
         return self._repr(self)

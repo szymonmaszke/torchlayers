@@ -1,3 +1,6 @@
+import inspect
+import pickle
+
 from ._infer_helpers import (create_vars, get_per_module_index,
                              process_arguments, remove_right_side,
                              remove_type_hint)
@@ -6,23 +9,29 @@ MODULE = "_inferred_module"
 MODULE_CLASS = "_inferred_class_module"
 
 
-def create_init(*arguments):
+def create_init(init_arguments):
     namespace = {}
 
-    header = f"""def __init__(self, {", ".join(arguments)}):"""
-    header += "\n super(type(self), self).__init__()\n "
-    header += " ".join(
+    function = f"""def __init__(self, {", ".join(init_arguments)}):"""
+    function += "\n super(type(self), self).__init__()\n "
+    function += " ".join(
         [
             f"self.{remove_right_side(argument)} = {remove_type_hint(remove_right_side(argument))}\n"
-            for argument in arguments
+            for argument in init_arguments
         ]
     )
 
-    exec(header, namespace)
+    exec(function, namespace)
     return namespace["__init__"]
 
 
-def create_forward(module, module_class, *arguments):
+# Change forward to exec in dictionary so varargs are not used but exact same
+# signature as original function
+def create_forward(module, module_class, init_arguments):
+    cleaned_arguments = [
+        remove_type_hint(remove_right_side(argument)) for argument in init_arguments
+    ]
+
     def forward(self, inputs, *args, **kwargs):
         inferred_module = getattr(self, module, None)
         if inferred_module is None:
@@ -31,10 +40,7 @@ def create_forward(module, module_class, *arguments):
                 module,
                 module_cls(
                     inputs.shape[get_per_module_index(module_cls)],
-                    *[
-                        getattr(self, remove_type_hint(remove_right_side(argument)))
-                        for argument in arguments
-                    ],
+                    *[getattr(self, argument) for argument in cleaned_arguments],
                 ),
             )
 
@@ -51,7 +57,7 @@ def create_repr(module, **non_inferable_names):
         if inferred_module is None:
             parameters = ", ".join(
                 f"{key}={value}"
-                for key, value in create_vars(self, **non_inferable_names)
+                for key, value in create_vars(self, non_inferable_names)
             )
             return f"{type(self).__name__}({parameters})"
 
@@ -69,8 +75,19 @@ def create_getattr(module):
     return __getattr__
 
 
-def create_reduce(module, *arguments):
-    inferred_input, non_inferrable_arguments = process_arguments(*arguments)
+# For warning regarding inability to find source code
+# https://github.com/pytorch/pytorch/blob/master/torch/_utils_internal.py#L44
+
+# getsourcefile
+# https://github.com/python/cpython/blob/master/Lib/inspect.py#L692
+# getfile
+# https://github.com/python/cpython/blob/master/Lib/inspect.py#L654
+# Simulate self.__module__.__file__ variable appropriately
+
+# getsourcelines
+# https://github.com/python/cpython/blob/master/Lib/inspect.py#L958
+def create_reduce(module, init_arguments):
+    inferred_input, non_inferrable_arguments = process_arguments(init_arguments)
 
     def __reduce__(self):
         inferred_module = getattr(self, module, None)

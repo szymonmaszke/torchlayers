@@ -17,7 +17,7 @@ def get_per_module_index(module):
     return 1
 
 
-def create_vars(self, **other_values):
+def create_vars(self, other_values):
     dictionary = collections.OrderedDict(vars(self))
     for key, value in other_values.items():
         key = remove_type_hint(key)
@@ -31,7 +31,7 @@ def create_vars(self, **other_values):
     )
 
 
-def process_arguments(*arguments):
+def process_arguments(arguments):
     processed_arguments = [
         remove_type_hint(remove_right_side(argument)) for argument in arguments
     ]

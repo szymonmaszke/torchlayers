@@ -1,9 +1,9 @@
 import torch
 
-from ._dev_utils import modules
+from . import _dev_utils
 
 
-class _GlobalPool(modules.InferDimension):
+class _GlobalPool(_dev_utils.modules.InferDimension):
     @classmethod
     def _squeeze(cls, inputs):
         squeezed = inputs.squeeze()
@@ -58,7 +58,7 @@ class GlobalAvgPool(_GlobalPool):
     """
 
 
-class MaxPool(modules.InferDimension):
+class MaxPool(_dev_utils.modules.InferDimension):
     """Perform `max` operation across first `torch.Tensor` dimension.
 
     Usually used after last convolution layer to get pixels of maximum value
@@ -95,7 +95,7 @@ class MaxPool(modules.InferDimension):
         )
 
 
-class AvgPool(modules.InferDimension):
+class AvgPool(_dev_utils.modules.InferDimension):
     """Perform `max` operation across first `torch.Tensor` dimension.
 
     Usually used after last convolution layer to get pixels of maximum value

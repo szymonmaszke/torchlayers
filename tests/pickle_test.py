@@ -43,3 +43,17 @@ def test_dimension_save():
     new_layer = torch.load(temp / "conv_model.pt")
     new_output = new_layer(inputs)
     assert torch.allclose(output, new_output)
+
+
+def test_to_torch():
+    inputs = torch.randn(16, 3, 32, 32)
+    temp = pathlib.Path(tempfile.gettempdir())
+
+    layer = torchlayers.Conv(64)
+    output = layer(inputs)
+    new_model = torchlayers.to_torch(layer)
+    torch.save(new_model, temp / "conv_model.pt")
+
+    new_layer = torch.load(temp / "conv_model.pt")
+    new_output = new_layer(inputs)
+    assert torch.allclose(output, new_output)

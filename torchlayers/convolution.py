@@ -5,11 +5,11 @@ import typing
 
 import torch
 
-from ._dev_utils import modules
+from . import _dev_utils
 from .pooling import GlobalAvgPool
 
 
-class Conv(modules.InferDimension):
+class Conv(_dev_utils.modules.InferDimension):
     """Standard convolution layer.
 
     Based on input shape it either creates 1D, 2D or 3D convolution for inputs of shape
@@ -110,7 +110,7 @@ class Conv(modules.InferDimension):
         return inner_class(**kwargs)
 
 
-class ConvTranspose(modules.InferDimension):
+class ConvTranspose(_dev_utils.modules.InferDimension):
     """Standard transposed convolution layer.
 
     Based on input shape it either creates 1D, 2D or 3D convolution (for inputs of shape
@@ -173,8 +173,8 @@ class ConvTranspose(modules.InferDimension):
         )
 
 
-class ChannelShuffle(modules.Representation):
-    """Shuffle output channels from modules.
+class ChannelShuffle(_dev_utils.modules.Representation):
+    """Shuffle output channels from _dev_utils.modules.
 
     When using group convolution knowledge transfer between next layers is reduced
     (as the same input channels are convolved with the same output channels).
@@ -204,7 +204,7 @@ class ChannelShuffle(modules.Representation):
         )
 
 
-class ChannelSplit(modules.Representation):
+class ChannelSplit(_dev_utils.modules.Representation):
     """Convenience layer splitting tensor using ratio.
 
     Returns two outputs, splitted accordingly to parameters.
@@ -241,7 +241,7 @@ class Residual(torch.nn.Module):
     any layer or activation and implement transformations only in module arguments
     (as per https://arxiv.org/pdf/1603.05027.pdf).
 
-    Above can be easily achieved by using one of BatchNormConv competitorch modules.
+    Above can be easily achieved by using one of BatchNormConv competitorch _dev_utils.modules.
 
     Parameters
     ----------
@@ -330,9 +330,9 @@ class Poly(torch.nn.Module):
 
 
 class MPoly(torch.nn.Module):
-    """Apply multiple (m) modules to input multiple times and sum.
+    """Apply multiple (m) _dev_utils.modules to input multiple times and sum.
 
-    It's equation for `modules` length equal to :math:`N` would be:
+    It's equation for `_dev_utils.modules` length equal to :math:`N` would be:
 
     .. math::
         1 + F_0 + F_0 * F_1 + ... + F_0 * F_1 * ... * F_N
@@ -345,16 +345,16 @@ class MPoly(torch.nn.Module):
 
     Parameters
     ----------
-    modules: *torch.nn.Module
-            Var arg with modules to use with WayPoly. If empty, acts as an identity.
+    _dev_utils.modules: *torch.nn.Module
+            Var arg with _dev_utils.modules to use with WayPoly. If empty, acts as an identity.
             for one module, acts like `ResNet`. `2` were used in original paper.
-            All modules need `inputs` and `outputs` shape equal and equal between themselves.
+            All _dev_utils.modules need `inputs` and `outputs` shape equal and equal between themselves.
 
     """
 
     def __init__(self, *modules: torch.nn.Module):
         super().__init__()
-        self.modules_: torch.nn.Module = torch.nn.ModuleList(modules)
+        self.modules_: torch.nn.Module = torch.nn.ModuleList(_dev_utils.modules)
 
     def forward(self, inputs):
         outputs = [self.modules_[0](inputs)]
@@ -364,9 +364,9 @@ class MPoly(torch.nn.Module):
 
 
 class WayPoly(torch.nn.Module):
-    """Apply multiple modules to input and sum.
+    """Apply multiple _dev_utils.modules to input and sum.
 
-    It's equation for `modules` length equal to :math:`N` would be:
+    It's equation for `_dev_utils.modules` length equal to :math:`N` would be:
 
     .. math::
         1 + F_1 + F_2 + ... + F_N
@@ -374,17 +374,17 @@ class WayPoly(torch.nn.Module):
     where :math:`1` is identity and consecutive :math:`F_N` are consecutive models
     specified by user.
 
-    Can be considered as an extension of standard `ResNet` to many modules.
+    Can be considered as an extension of standard `ResNet` to many _dev_utils.modules.
 
     Originally proposed by Xingcheng Zhang et. al in
     `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks <https://arxiv.org/abs/1608.06993>`__
 
     Parameters
     ----------
-    modules: *torch.nn.Module
-            Var arg with modules to use with WayPoly. If empty, acts as an identity.
+    _dev_utils.modules: *torch.nn.Module
+            Var arg with _dev_utils.modules to use with WayPoly. If empty, acts as an identity.
             for one module, acts like `ResNet`. `2` was used in original paper.
-            All modules need `inputs` and `outputs` shape equal and equal between themselves.
+            All _dev_utils.modules need `inputs` and `outputs` shape equal and equal between themselves.
     """
 
     def __init__(self, *modules: torch.nn.Module):
@@ -398,7 +398,7 @@ class WayPoly(torch.nn.Module):
         return torch.stack([inputs] + outputs, dim=0).sum(dim=0)
 
 
-class SqueezeExcitation(modules.Representation):
+class SqueezeExcitation(_dev_utils.modules.Representation):
     """Learn channel-wise excitation maps for `inputs`.
 
     Provided `inputs` will be squeezed into `in_channels`, passed through two
@@ -440,7 +440,7 @@ class SqueezeExcitation(modules.Representation):
         return inputs * excitation
 
 
-class Fire(modules.Representation):
+class Fire(_dev_utils.modules.Representation):
     """Squeeze and Expand number of channels efficiently operation-wise.
 
     First input channels will be squeezed to `hidden` channels and :math:`1 x 1` convolution.
