@@ -4,14 +4,12 @@ import torch
 
 from . import infer
 
-INNER_MODULE = "_inner_module"
-
 
 class InferDimension(torch.nn.Module):
     def __init__(self, *, instance_creator: typing.Callable = None, **kwargs):
         super().__init__()
 
-        self._inner_module_name = INNER_MODULE
+        self._inner_module_name = "_inner_module"
 
         self._module_name: str = type(self).__name__
         self._instance_creator = (

@@ -1,27 +1,30 @@
+import typing
+
 import torch
 
 from . import _dev_utils
 
 
-class _GlobalPool(_dev_utils.modules.InferDimension):
-    @classmethod
-    def _squeeze(cls, inputs):
-        squeezed = inputs.squeeze()
-        # Batch dimension could be squeezed as well
-        if len(squeezed.shape) == 1:
-            return squeezed.unsqueeze(0)
-        return squeezed
-
+class _GlobalPool(torch.nn.Module):
     def __init__(self):
-        _operation: str = "Max" if "Max" in type(self).__name__ else "Avg"
-        super().__init__(output_size=1)
-        self._module_name = "Adaptive" + _operation + "Pool"
+        super().__init__()
+
+        self._operation = self._maximum if "Max" in type(self).__name__ else self._mean
+
+    def _mean(self, tensor):
+        return torch.mean(tensor, axis=-1)
+
+    def _maximum(self, tensor):
+        values, _ = torch.max(tensor, axis=-1)
+        return values
 
     def __repr__(self):
         return f"{type(self).__name__}()"
 
     def forward(self, inputs):
-        return _GlobalPool._squeeze(super().forward(inputs))
+        while len(inputs.shape) > 2:
+            inputs = self._operation(inputs)
+        return inputs
 
 
 class GlobalMaxPool(_GlobalPool):

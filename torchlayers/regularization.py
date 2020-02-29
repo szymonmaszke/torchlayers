@@ -17,7 +17,7 @@ class StochasticDepth(torch.nn.Module):
     in fact the problem is actually more pronounced in the early layers.
     Nonetheless, the Stochastic Depth Network has relatively fewer dead neurons in later layers."
 
-    It might be useful to employ this technique onto layers closer to the bottleneck.
+    It might be useful to employ this technique to layers closer to the bottleneck.
 
     Parameters
     ----------
@@ -25,7 +25,7 @@ class StochasticDepth(torch.nn.Module):
             Any module whose output might be skipped
             (output shape of it has to be equal to the shape of inputs).
     p: float
-            Probability to skip the module.
+            Probability of survival (e.g. the layer will be kept).
 
     """
 
@@ -37,12 +37,12 @@ class StochasticDepth(torch.nn.Module):
             )
         self.module: torch.nn.Module = module
         self.p: float = p
-        self._sampler = torch.nn.Parameter(torch.Tensor(1), requires_grad=False)
+        self._sampler = torch.Tensor(1)
 
     def forward(self, inputs):
-        if self._sampler.uniform_() < self.p and self.training:
+        if self.training and self._sampler.uniform_():
             return inputs
-        return self.module(inputs)
+        return self.p * self.module(inputs)
 
 
 class Dropout(modules.InferDimension):

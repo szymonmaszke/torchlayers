@@ -5,8 +5,7 @@ import typing
 
 import torch
 
-from . import _dev_utils
-from .pooling import GlobalAvgPool
+from . import _dev_utils, normalization, pooling
 
 
 class Conv(_dev_utils.modules.InferDimension):
@@ -354,11 +353,11 @@ class MPoly(torch.nn.Module):
 
     def __init__(self, *modules: torch.nn.Module):
         super().__init__()
-        self.modules_: torch.nn.Module = torch.nn.ModuleList(_dev_utils.modules)
+        self.modules: torch.nn.Module = torch.nn.ModuleList(_dev_utils.modules)
 
     def forward(self, inputs):
-        outputs = [self.modules_[0](inputs)]
-        for module in self.modules_[1:]:
+        outputs = [self.modules[0](inputs)]
+        for module in self.modules[1:]:
             outputs.append(self.module(outputs[-1]))
         return torch.stack([inputs] + outputs, dim=0).sum(dim=0)
 
@@ -389,11 +388,11 @@ class WayPoly(torch.nn.Module):
 
     def __init__(self, *modules: torch.nn.Module):
         super().__init__()
-        self.modules_: torch.nn.Module = torch.nn.ModuleList(modules)
+        self.poly_modules: torch.nn.Module = torch.nn.ModuleList(modules)
 
     def forward(self, inputs):
         outputs = []
-        for module in self.modules_:
+        for module in self.poly_modules:
             outputs.append(module(inputs))
         return torch.stack([inputs] + outputs, dim=0).sum(dim=0)
 
@@ -413,25 +412,32 @@ class SqueezeExcitation(_dev_utils.modules.Representation):
         Number of channels in the input
     hidden: int, optional
         Size of the hidden `torch.nn.Linear` layer. Usually smaller than `in_channels`
-        (at least in original research paper). Default: Half of `in_channels`
+        (at least in original research paper). Default: `1/16` of `in_channels` as
+        suggested by original paper.
     activation: typing.Callable, optional
         One argument callable performing activation after hidden layer.
         Default: `torch.nn.ReLU()`
+    sigmoid: typing.Callable, optional
+        One argument callable squashing values after excitation.
+        Default: `torch.nn.Sigmoid`
 
     """
 
-    def __init__(self, in_channels: int, hidden: int = None, activation=None):
+    def __init__(
+        self, in_channels: int, hidden: int = None, activation=None, sigmoid=None
+    ):
         super().__init__()
         self.in_channels = in_channels
-        self.hidden: int = hidden if hidden is not None else in_channels // 2
+        self.hidden: int = hidden if hidden is not None else in_channels // 16
 
-        self._pooling = GlobalAvgPool()
+        self._pooling = pooling.GlobalAvgPool()
         self._first = torch.nn.Linear(in_channels, self.hidden)
         self.activation: typing.Callable = activation if activation is not None else torch.nn.ReLU()
+        self.sigmoid = sigmoid if sigmoid is not None else torch.nn.Sigmoid()
         self._second = torch.nn.Linear(self.hidden, in_channels)
 
     def forward(self, inputs):
-        excitation = torch.sigmoid(
+        excitation = self.sigmoid(
             self._second(self.activation(self._first(self._pooling(inputs))))
         )
         for _ in range(len(inputs.shape) - 2):
@@ -452,14 +458,14 @@ class Fire(_dev_utils.modules.Representation):
 
     Parameters
     ----------
-    in_channels: int
+    in_channels : int
         Number of channels in the input
-    out_channels: int
+    out_channels : int
         Number of channels produced by Fire module
-    hidden: int, optional
+    hidden_channels : int, optional
         Number of hidden channels (squeeze convolution layer).
         Default: Half of `in_channels`
-    ratio: float, optional
+    ratio : float, optional
         Ratio of :math:`1 x 1` convolution taken from total `out_channels`.
         The more, the more :math:`1 x 1` convolution will be used during expanding.
         Default: `0.5` (half of `out_channels`)
@@ -477,15 +483,13 @@ class Fire(_dev_utils.modules.Representation):
         )
         self.ratio: float = 0.5
 
-        self._squeeze = torch.nn.Conv2d(
-            in_channels, self.hidden_channels, kernel_size=1
-        )
+        self._squeeze = Conv(in_channels, self.hidden_channels, kernel_size=1)
 
         small_out_channels = int(out_channels * self.ratio)
-        self._expand_small = torch.nn.Conv2d(
+        self._expand_small = Conv(
             self.hidden_channels, small_out_channels, kernel_size=1
         )
-        self._expand_large = torch.nn.Conv2d(
+        self._expand_large = Conv(
             self.hidden_channels,
             out_channels - small_out_channels,
             kernel_size=3,
@@ -497,3 +501,74 @@ class Fire(_dev_utils.modules.Representation):
         return torch.cat(
             (self._expand_small(squeeze), self._expand_large(squeeze)), dim=1
         )
+
+
+class InvertedResidual(_dev_utils.modules.Representation):
+    """Inverted residual block used in MobileNetV2, MobileNetV3 and Efficient Net architectures.
+
+    https://arxiv.org/pdf/1905.02244.pdf
+
+    Parameters
+    ----------
+    in_channels: int
+        Number of channels in the input
+    hidden_channels: int, optional
+        Number of hidden channels (expanded). Should be greater than `in_channels`, usually
+        by factor of `4`.
+    activation: typing.Callable, optional
+        One argument callable performing activation after hidden layer.
+        Default: `torch.nn.ReLU6()`
+    squeeze_excitation: bool, optional
+        Whether to use standard SqueezeExcitation after depthwise convolution.
+        Default: `False`
+
+    """
+
+    def __init__(
+        self,
+        in_channels: int,
+        hidden_channels: int,
+        activation=None,
+        squeeze_excitation: bool = False,
+    ):
+        super().__init__()
+        self.in_channels = in_channels
+        self.hidden_channels = hidden_channels
+        self.activation = torch.nn.ReLU6() if activation is None else activation
+        self.squeeze_excitation: bool = squeeze_excitation
+
+        initial = torch.nn.Sequential(
+            Conv(self.in_channels, self.hidden_channels, kernel_size=1),
+            self.activation,
+            normalization.BatchNorm(self.hidden_channels),
+        )
+
+        depthwise_modules = [
+            Conv(
+                self.hidden_channels,
+                self.hidden_channels,
+                kernel_size=3,
+                groups=self.hidden_channels,
+            ),
+            self.activation,
+            normalization.BatchNorm(self.hidden_channels),
+        ]
+
+        if squeeze_excitation:
+            depthwise_modules.append(
+                SqueezeExcitation(
+                    self.hidden_channels, math.ceil(self.hidden_channels / 4)
+                )
+            )
+
+        depthwise = torch.nn.Sequential(*depthwise_modules)
+
+        squeeze = torch.nn.Sequential(
+            Conv(self.hidden_channels, self.in_channels, kernel_size=1,),
+            normalization.BatchNorm(self.in_channels),
+        )
+
+        self.block = Residual(torch.nn.Sequential(initial, depthwise, squeeze))
+
+    def forward(self, inputs):
+        return self.block(inputs)

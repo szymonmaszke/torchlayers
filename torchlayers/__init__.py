@@ -1,23 +1,60 @@
 import inspect
 import io
+import warnings
 
 import torch
 
 from . import (_dev_utils, _inferable, convolution, normalization, pooling,
-               regularization)
+               regularization, upsample)
 from ._general import Flatten, Lambda
 from ._version import __version__
 
 
 def build(module, *args, **kwargs):
-    module(*args, **kwargs)
-    return to_torch(module)
+    """
+    Build PyTorch layer or module by providing example input.
 
+    This method should be used **always** after creating module using `torchlayers`
+    and shape inference especially.
 
-def to_torch(module):
-    with io.BytesIO() as buffer:
-        torch.save(module, buffer)
-        return torch.load(io.BytesIO(buffer.getvalue()))
+    Works similarly to `build` functionality provided by `keras`.
+
+    Provided module will be "compiled" to PyTorch primitives to remove any
+    overhead.
+
+    Parameters
+    ----------
+    module : torch.nn.Module
+        Instance of module to build.
+    *args
+        Arguments required by module
+    **kwargs
+        Keyword arguments
+    """
+
+    def cast_to_torch(module):
+        with io.BytesIO() as buffer:
+            torch.save(module, buffer)
+            return torch.load(io.BytesIO(buffer.getvalue()))
+
+    def run_post(module):
+        for submodule in module.modules():
+            function = getattr(submodule, "post_build", None)
+            if function is not None:
+                post_build = getattr(submodule, "post_build")
+                if not callable(post_build):
+                    raise ValueError(
+                        "{submodule}'s post_build is required to be a method."
+                    )
+                submodule.post_build()
+
+    with torch.no_grad():
+        module.eval()
+        module(*args, **kwargs)
+    module.train()
+    module = cast_to_torch(module)
+    run_post(module)
+    return module
 
 
 def make_inferrable(module_class):
@@ -69,13 +106,28 @@ def make_inferrable(module_class):
 
 
 def __dir__():
-    return dir(torch.nn)
+    return (
+        dir(torch.nn)
+        + ["Flatten", "Lambda"]
+        + dir(convolution)
+        + dir(normalization)
+        + dir(upsample)
+        + dir(pooling)
+        + dir(regularization)
+    )
 
 
 def __getattr__(name: str):
     def _getattr(name):
         module_class = None
-        for module in (convolution, normalization, pooling, regularization, torch.nn):
+        for module in (
+            convolution,
+            normalization,
+            pooling,
+            regularization,
+            upsample,
+            torch.nn,
+        ):
             module_class = getattr(module, name, None)
             if module_class is not None:
                 return module_class
