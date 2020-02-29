@@ -1,29 +1,20 @@
-import pathlib
-
 import setuptools
 
-
-def read(HERE: pathlib.Path, filename, variable):
-    namespace = {}
-
-    exec(open(HERE / "torchlayers" / filename).read(), namespace)  # get version
-    return namespace[variable]
-
-
-HERE = pathlib.Path(__file__).resolve().parent
+exec(open("torchlayers/_version.py").read())  # get __version__
+exec(open("torchlayers/_name.py").read())  # get _name
 
 setuptools.setup(
-    name=read(HERE, pathlib.Path("_name.py"), "_name"),
-    version=read(HERE, pathlib.Path("_version.py"), "__version__"),
+    name=_name,
+    version=__version__,
     license="MIT",
     author="Szymon Maszke",
     author_email="szymon.maszke@protonmail.com",
-    description="Input shape inference and SOTA custom layers for PyTorch.",
+    description="Input shape inference and custom layers for PyTorch.",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/torchlayers",
     packages=setuptools.find_packages(),
-    install_requires=["torch>=1.3.0"],
+    install_requires=["torch>=1.2.0"],
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -43,5 +34,5 @@ setuptools.setup(
         "Documentation": "https://szymonmaszke.github.io/torchlayers/#torchlayers",
         "Issues": "https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc",
     },
-    keywords="pytorch keras input inference automatic shape layers sota custom imagenet resnet efficientnet",
+    keywords="pytorch keras input shape layers custom imagenet resnet resnext",
 )
