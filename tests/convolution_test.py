@@ -45,8 +45,7 @@ def model():
 
 
 def test_functionality(model):
-    model(torch.randn(16, 3, 28, 28))
-
+    model = torchlayers.build(model, torch.randn(16, 3, 28, 28))
     optimizer = torch.optim.Adam(model.parameters())
     criterion = torch.nn.CrossEntropyLoss()
 
