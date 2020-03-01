@@ -4,13 +4,11 @@ import pytest
 import torchlayers
 
 
-class _CustomLinear(torch.nn.Linear):
+@torchlayers.inferrable
+class CustomLinear(torch.nn.Linear):
     def __init__(self, in_features, out_features, bias: bool = True):
         super().__init__(in_features, out_features, bias)
         self.some_params = torch.nn.Parameter(torch.randn(2, out_features))
-
-
-CustomLinear = torchlayers.make_inferrable(_CustomLinear)
 
 
 @pytest.fixture

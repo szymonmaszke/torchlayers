@@ -1,6 +1,10 @@
-# Third argument
-recurrent = ("RNN", "LSTM", "GRU", "RNNCell", "LSTMCell", "GRUCell")
-# Second argument
+# First argument - batch
+# Third argument to infer
+recurrent = ("RNN", "LSTM", "GRU")
+
+# Second argument to infer
+recurrent_cells = ("RNNCell", "LSTMCell", "GRUCell")
+
 convolution = (
     "Conv1d",
     "Conv2d",
@@ -11,7 +15,7 @@ convolution = (
 )
 
 normalization = (
-    "BatchNorm1d",  # Remove all d from dimensions
+    "BatchNorm1d",
     "BatchNorm2d",
     "BatchNorm3d",
     "SyncBatchNorm",
@@ -24,4 +28,4 @@ linear = ("Linear",)
 
 
 def all():
-    return recurrent + convolution + normalization + linear
+    return recurrent + recurrent_cells + convolution + normalization + linear

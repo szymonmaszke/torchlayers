@@ -30,3 +30,6 @@ def test_basic_jit_save():
     loaded_model = torch.jit.load(str(temp / "jit.pt"))
     new_output = loaded_model(inputs)
     assert torch.allclose(output, new_output)
+
+
+# Test with JIT all custom modules

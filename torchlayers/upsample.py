@@ -45,7 +45,7 @@ class Conv2dPixelShuffle(torch.nn.Module):
         upscale_factor: int = 2,
         kernel_size: int = 3,
         stride: int = 1,
-        padding: typing.Union[int, str] = "same",  # Fix and use same padding
+        padding: typing.Union[typing.Tuple[int, int], int, str] = "same",
         dilation: int = 1,
         groups: int = 1,
         bias: bool = True,

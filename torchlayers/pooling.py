@@ -64,18 +64,16 @@ class GlobalAvgPool(_GlobalPool):
 class MaxPool(_dev_utils.modules.InferDimension):
     """Perform `max` operation across first `torch.Tensor` dimension.
 
-    Usually used after last convolution layer to get pixels of maximum value
-    from each channel.
-
-    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` pooling will be used
+    Depending on shape of passed `torch.Tensor` either `torch.nn.MaxPool1D`,
+    `torch.nn.MaxPool2D` or `torch.nn.MaxPool3D` pooling will be used
     for `3D`, `4D` and `5D` shape respectively (batch included).
+
+    Default value for `kernel_size` (`2`) was added.
 
     Returns
     -------
     `torch.Tensor`
-            Same shape as `input`. Acts just like `GlobalMaxPool` but does not remove
-            superficial `1` dimensions. Works exactly like `AdaptiveMaxPool` in PyTorch
-            except for dimension inferring.
+            Same shape as `input` with values pooled.
 
     """
 
@@ -99,20 +97,18 @@ class MaxPool(_dev_utils.modules.InferDimension):
 
 
 class AvgPool(_dev_utils.modules.InferDimension):
-    """Perform `max` operation across first `torch.Tensor` dimension.
+    """Perform `avg` operation across first `torch.Tensor` dimension.
 
-    Usually used after last convolution layer to get pixels of maximum value
-    from each channel.
-
-    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` pooling will be used
+    Depending on shape of passed `torch.Tensor` either `torch.nn.AvgPool1D`,
+    `torch.nn.AvgPool2D` or `torch.nn.AvgPool3D` pooling will be used
     for `3D`, `4D` and `5D` shape respectively (batch included).
+
+    Default value for `kernel_size` (`2`) was added.
 
     Returns
     -------
     `torch.Tensor`
-            Same shape as `input`. Acts just like `GlobalMaxPool` but does not remove
-            superficial `1` dimensions. Works exactly like `AdaptiveMaxPool` in PyTorch
-            except for dimension inferring.
+            Same shape as `input` with values pooled.
 
     """
 

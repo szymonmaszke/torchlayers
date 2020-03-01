@@ -33,7 +33,7 @@ class StochasticDepth(torch.nn.Module):
         super().__init__()
         if not 0 < p < 1:
             raise ValueError(
-                "Stochastic Depth p has to be between 0 and 1, " f"but got {p}"
+                "Stochastic Depth p has to be between 0 and 1 but got {}".format(p)
             )
         self.module: torch.nn.Module = module
         self.p: float = p

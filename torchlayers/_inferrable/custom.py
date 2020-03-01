@@ -1,5 +1,11 @@
 # Third argument
-convolution = ("SqueezeExcitation", "Fire", "Conv", "ConvTranspose", "InvertedResidual")
+convolution = (
+    "SqueezeExcitation",
+    "Fire",
+    "Conv",
+    "ConvTranspose",
+    "InvertedResidualBottleneck",
+)
 
 normalization = ("BatchNorm", "InstanceNorm", "GroupNorm")
 

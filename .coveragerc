@@ -1,7 +1,8 @@
 [run]
-source=torchfunc
+source=torchlayers
 branch=True
 omit=
+  torchlayers/_name.py
   *tox*
   *tests*
   setup.py
