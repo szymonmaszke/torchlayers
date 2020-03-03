@@ -6,7 +6,7 @@ import torch
 
 from . import (_dev_utils, _inferrable, activations, convolution,
                normalization, pooling, regularization, upsample)
-from ._general import Flatten, Lambda
+from ._general import Concatenate, Lambda, Reshape
 from ._version import __version__
 
 

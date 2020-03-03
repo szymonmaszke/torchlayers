@@ -13,7 +13,7 @@ class Lambda(torch.nn.Module):
 
     Parameters
     ----------
-    function: Callable
+    function : Callable
         Any user specified function
 
     Returns
@@ -46,14 +46,47 @@ class Concatenate(torch.nn.Module):
 
 
         model = torch.nn.Sequential(Foo(), torchlayers.Concatenate())
-        model(torch.randn(10, 20))
+        model(torch.randn(64 , 20))
 
     All tensors must have the same shape (except in the concatenating dimension).
 
     Parameters
     ----------
-    dim: int
+    dim : int
         Dimension along which tensors will be concatenated
+
+    Returns
+    -------
+    torch.Tensor
+        Concatenated tensor along specified `dim`.
+
+    """
+
+    def __init__(self, dim: int):
+        super().__init__()
+        self.dim: int = dim
+
+    def forward(self, inputs):
+        return torch.cat(inputs, dim=self.dim)
+
+
+class Reshape(torch.nn.Module):
+    """Reshape tensor excluding `batch` dimension
+
+    Reshapes input `torch.Tensor` features while preserving batch dimension.
+    Standard `torch.reshape` values (e.g. `-1`) are supported, e.g.:
+
+
+        layer = torchlayers.Reshape(20, -1)
+        layer(torch.randn(64, 80)) # shape (64, 20, 4)
+
+    All tensors must have the same shape (except in the concatenating dimension).
+    If possible, no copy of `tensor` will be performed.
+
+    Parameters
+    ----------
+    shapes: *int
+        Variable length list of shapes used in view function
 
     Returns
     -------
@@ -62,9 +95,9 @@ class Concatenate(torch.nn.Module):
 
     """
 
-    def __init__(self, dim: int):
+    def __init__(self, *shapes: int):
         super().__init__()
-        self.dim: int = dim
+        self.shapes: typing.Tuple[int] = shapes
 
     def forward(self, tensor):
-        return torch.cat(tensor, dim=self.dim)
+        return torch.reshape(tensor, (tensor.shape[0], *self.shapes))
