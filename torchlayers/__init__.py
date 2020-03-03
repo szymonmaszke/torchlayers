@@ -11,8 +11,7 @@ from ._version import __version__
 
 
 def build(module, *args, **kwargs):
-    """
-    Build PyTorch layer or module by providing example input.
+    """Build PyTorch layer or module by providing example input.
 
     This method should be used **always** after creating module using `torchlayers`
     and shape inference especially.
@@ -22,8 +21,8 @@ def build(module, *args, **kwargs):
     Provided module will be "compiled" to PyTorch primitives to remove any
     overhead.
 
-    `torchlayers` also support `post_build` function to perform some action after
-    shape was inferred (weight initialization example below)::
+    `torchlayers` also supports `post_build` function to perform some action after
+    shape was inferred (weight initialization example below):
 
 
         @torchlayers.inferrable
@@ -33,7 +32,7 @@ def build(module, *args, **kwargs):
                 torch.nn.init.eye_(self.weights)
 
     `post_build` should have no arguments other than `self` so all necessary
-    data should be saved in module before.
+    data should be saved in `module` beforehand.
 
     Parameters
     ----------
