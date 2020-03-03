@@ -13,19 +13,19 @@ class InstanceNorm(_dev_utils.modules.InferDimension):
 
     Parameters
     ----------
-    num_features: int
+    num_features : int
         :math:`C` (number of channels in input) from an expected input.
         Can be number of outputs of previous linear layer as well
-    eps: float, optional
+    eps : float, optional
         Value added to the denominator for numerical stability.
         Default: `1e-5`
-    momentum: float, optional
+    momentum : float, optional
         Value used for the `running_mean` and `running_var`
         computation. Default: `0.1`
-    affine: bool, optional
+    affine : bool, optional
         If ``True``, this module has learnable affine parameters, initialized just like in batch normalization.
         Default: ``False``
-    track_running_stats: bool, optional
+    track_running_stats : bool, optional
         If ``True``, this module tracks the running mean and variance,
         and when set to ``False``, this module does not track such statistics and always uses batch
         statistics in both training and eval modes.
@@ -35,11 +35,11 @@ class InstanceNorm(_dev_utils.modules.InferDimension):
 
     def __init__(
         self,
-        num_features,
-        eps=1e-05,
-        momentum=0.1,
-        affine=False,
-        track_running_stats=False,
+        num_features: int,
+        eps: float = 1e-05,
+        momentum: float = 0.1,
+        affine: bool = False,
+        track_running_stats: bool = False,
     ):
         super().__init__(
             num_features=num_features,
@@ -60,20 +60,20 @@ class BatchNorm(_dev_utils.modules.InferDimension):
 
     Parameters
     ----------
-    num_features: int
+    num_features : int
         :math:`C` (number of channels in input) from an expected input.
         Can be number of outputs of previous linear layer as well
-    eps: float, optional
+    eps : float, optional
         Value added to the denominator for numerical stability.
         Default: `1e-5`
-    momentum: float, optional
+    momentum : float, optional
         Value used for the `running_mean` and `running_var`
         computation. Can be set to ``None`` for cumulative moving average
         (i.e. simple average). Default: `0.1`
-    affine: bool, optional
+    affine : bool, optional
         If ``True``, this module has learnable affine parameters.
         Default: ``True``
-    track_running_stats: bool, optional
+    track_running_stats : bool, optional
         If ``True``, this module tracks the running mean and variance,
         and when set to ``False``, this module does not track such statistics and always uses batch
         statistics in both training and eval modes.
@@ -83,11 +83,11 @@ class BatchNorm(_dev_utils.modules.InferDimension):
 
     def __init__(
         self,
-        num_features,
-        eps=1e-05,
-        momentum=0.1,
-        affine=True,
-        track_running_stats=True,
+        num_features: int,
+        eps: float = 1e-05,
+        momentum: float = 0.1,
+        affine: bool = True,
+        track_running_stats: bool = True,
     ):
         super().__init__(
             num_features=num_features,
@@ -118,19 +118,24 @@ class GroupNorm(torch.nn.GroupNorm):
 
     Parameters
     ----------
-
-    num_channels: int
+    num_channels : int
         Number of channels expected in input
-    num_groups: int
+    num_groups : int
         Number of groups to separate the channels into
-    eps: float, optional
+    eps : float, optional
         Value added to the denominator for numerical stability.
         Default: `1e-5`
-    affine: bool, optional
+    affine : bool, optional
         If ``True``, this module has learnable affine parameters.
         Default: ``True``
 
     """
 
-    def __init__(self, num_channels, num_groups, eps=1e-05, affine=True):
+    def __init__(
+        self,
+        num_channels: int,
+        num_groups: int,
+        eps: float = 1e-05,
+        affine: bool = True,
+    ):
         super().__init__(num_groups, num_channels, eps, affine)
