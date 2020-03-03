@@ -45,8 +45,6 @@ class Conv(_dev_utils.modules.InferDimension):
         `kernel_size`, `stride` and `dilation`
         User can specify `int` or 2-tuple (for `Conv2d`)
         or 3-tuple (for `Conv3d`). Default: `same`
-    padding_mode : string, optional
-        Accepted values `zeros` and `circular` Default: `zeros`
     dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
         Spacing between kernel elements. String "same" can be used with odd
         `kernel_size`, `stride` and `dilation`
@@ -56,6 +54,8 @@ class Conv(_dev_utils.modules.InferDimension):
         Number of blocked connections from input channels to output channels. Default: 1
     bias : bool, optional
         If ``True``, adds a learnable bias to the output. Default: ``True``
+    padding_mode : string, optional
+        Accepted values `zeros` and `circular` Default: `zeros`
 
     """
 
@@ -156,16 +156,16 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
         or 3-tuple (for `Conv3d`). Default: `0`
     output_padding : int or tuple, optional
         Additional size added to one side of the output shape. Default: 0
-    groups : int, optional
-        Number of blocked connections from input channels to output channels. Default: 1
-    bias : bool, optional
-        If ``True``, adds a learnable bias to the output. Default: ``True``
-        dilation (int or tuple, optional): Spacing between kernel elements. Default: 1
     dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
         Spacing between kernel elements. String "same" can be used with odd
         `kernel_size`, `stride` and `dilation`
         User can specify `int` or 2-tuple (for `Conv2d`)
         or 3-tuple (for `Conv3d`). Default: `1`
+    groups : int, optional
+        Number of blocked connections from input channels to output channels. Default: 1
+    bias : bool, optional
+        If ``True``, adds a learnable bias to the output. Default: ``True``
+        dilation (int or tuple, optional): Spacing between kernel elements. Default: 1
     padding_mode : string, optional
         Accepted values `zeros` and `circular` Default: `zeros`
 
@@ -187,11 +187,11 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
         output_padding: typing.Union[
             int, typing.Tuple[int, int], typing.Tuple[int, int, int]
         ] = 0,
-        groups: int = 1,
-        bias: bool = True,
         dilation: typing.Union[
             int, typing.Tuple[int, int], typing.Tuple[int, int, int]
         ] = 1,
+        groups: int = 1,
+        bias: bool = True,
         padding_mode="zeros",
     ):
         super().__init__(
@@ -206,6 +206,198 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
             dilation=dilation,
             padding_mode=padding_mode,
         )
+
+
+class DepthwiseConv(Conv):
+    """Depthwise convolution layer.
+
+    Based on input shape it either creates 1D, 2D or 3D depthwise convolution
+    for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).
+
+    Additional `same` `padding` mode was added and set as default.
+    This mode preserves all dimensions excepts channels.
+
+    **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+    `dilation` and `stride`. If any of those is even you should explicitly pad
+    your input asymmetrically with `torch.functional.pad` or a-like.
+
+    **IMPORTANT**: `out_channels` has to be divisible by `in_channels` without remainder
+    (e.g. `out_channels=64` and `in_channels=32`), otherwise error is thrown.
+
+    `kernel_size` got a default value of `3`.
+
+    Parameters
+    ----------
+    in_channels : int
+        Number of channels in the input image
+    out_channels : int
+        Number of channels produced by the convolution
+    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `3`
+    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `3`
+    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional
+        Padding added to both sides of the input. String "same" can be used with odd
+        `kernel_size`, `stride` and `dilation`
+        User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `same`
+    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Spacing between kernel elements. String "same" can be used with odd
+        `kernel_size`, `stride` and `dilation`
+        User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `1`
+    bias : bool, optional
+        If ``True``, adds a learnable bias to the output. Default: ``True``
+    padding_mode : string, optional
+        Accepted values `zeros` and `circular` Default: `zeros`
+
+    """
+
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 3,
+        stride: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 1,
+        padding: typing.Union[
+            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = "same",
+        dilation: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 1,
+        bias: bool = True,
+        padding_mode: str = "zeros",
+    ):
+        if not out_channels % in_channels:
+            raise ValueError(
+                "Depthwise separable convolution needs out_channels divisible by in_channels without remainder."
+            )
+
+        super().__init__(
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            groups=out_channels,
+            bias=bias,
+            padding_mode=padding_mode,
+        )
+
+
+class SeparableConv(torch.nn.Module):
+    """Separable convolution layer (a.k.a. depthwise separable convolution).
+
+    Based on input shape it either creates 1D, 2D or 3D separable convolution
+    for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).
+
+    Additional `same` `padding` mode was added and set as default.
+    This mode preserves all dimensions excepts channels.
+
+    **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+    `dilation` and `stride`. If any of those is even you should explicitly pad
+    your input asymmetrically with `torch.functional.pad` or a-like.
+
+    `kernel_size` got a default value of `3`.
+
+    Parameters
+    ----------
+    in_channels : int
+        Number of channels in the input image
+    out_channels : int
+        Number of channels produced by the convolution
+    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `3`
+    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `3`
+    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional
+        Padding added to both sides of the input. String "same" can be used with odd
+        `kernel_size`, `stride` and `dilation`
+        User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `same`
+    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
+        Spacing between kernel elements. String "same" can be used with odd
+        `kernel_size`, `stride` and `dilation`
+        User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `1`
+    bias : bool, optional
+        If ``True``, adds a learnable bias to the output. Default: ``True``
+    padding_mode : string, optional
+        Accepted values `zeros` and `circular` Default: `zeros`
+
+    """
+
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 3,
+        stride: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 1,
+        padding: typing.Union[
+            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = "same",
+        dilation: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = 1,
+        bias: bool = True,
+        padding_mode: str = "zeros",
+    ):
+        self.in_channels: int = in_channels
+        self.out_channels: int = out_channels
+        self.kernel_size: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = kernel_size
+        self.stride: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = stride
+        self.padding: typing.Union[
+            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = padding
+        self.dilation: typing.Union[
+            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = dilation
+        self.bias: bool = bias
+        self.padding_mode: str = padding_mode
+
+        self.depthwise = Conv(
+            in_channels=in_channels,
+            out_channels=in_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            groups=in_channels,
+            bias=bias,
+            padding_mode=padding_mode,
+        )
+
+        self.pointwise = Conv(
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=1,
+            stride=1,
+            padding=0,
+            dilation=1,
+            groups=1,
+            bias=False,
+            padding_mode=padding_mode,
+        )
+
+    def forward(self, inputs):
+        return self.pointwise(self.depthwise(inputs))
 
 
 class ChannelShuffle(_dev_utils.modules.Representation):
