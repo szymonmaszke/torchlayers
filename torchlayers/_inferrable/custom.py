@@ -4,6 +4,8 @@ convolution = (
     "Fire",
     "Conv",
     "ConvTranspose",
+    "DepthwiseConv",
+    "SeparableConv",
     "InvertedResidualBottleneck",
 )
 
