@@ -52,8 +52,6 @@ class Dropout(modules.InferDimension):
     `4D`, `5D` respectively (including batch as first dimension).
     For every other dimension, standard `torch.nn.Dropout` will be used.
 
-    Otherwise works like standard PyTorch's `Dropout <https://pytorch.org/docs/stable/nn.html#dropout-layers>`__
-
     Parameters
     ----------
     p: float, optional
@@ -69,3 +67,12 @@ class Dropout(modules.InferDimension):
     # Dropout can have any input shape according to documentation
     def _module_not_found(self, inputs):
         return torch.nn.Dropout
+
+
+class StandardNormalNoise(torch.nn.Module):
+    """Add noise from standard normal distribution during forward pass."""
+
+    def forward(self, inputs):
+        if self.training:
+            return inputs + torch.randn_like(inputs)
+        return inputs
