@@ -4,8 +4,8 @@ import warnings
 
 import torch
 
-from . import (_dev_utils, _inferrable, activations, convolution,
-               normalization, pooling, regularization, upsample)
+from . import (_dev_utils, _inferable, activations, convolution, normalization,
+               pooling, regularization, upsample)
 from ._general import Concatenate, Lambda, Reshape
 from ._version import __version__
 
@@ -110,21 +110,21 @@ class Infer:
         # Other argument than self
         if len(init_arguments) > 1:
             name = module_class.__name__
-            inferred_module = type(
+            infered_module = type(
                 name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class},
             )
-            parsed_arguments, uninferrable_arguments = _dev_utils.infer.parse_arguments(
-                init_arguments, inferred_module
+            parsed_arguments, uninferable_arguments = _dev_utils.infer.parse_arguments(
+                init_arguments, infered_module
             )
 
             setattr(
-                inferred_module,
+                infered_module,
                 "__init__",
                 _dev_utils.infer.create_init(parsed_arguments),
             )
 
             setattr(
-                inferred_module,
+                infered_module,
                 "forward",
                 _dev_utils.infer.create_forward(
                     _dev_utils.infer.MODULE,
@@ -134,27 +134,27 @@ class Infer:
                 ),
             )
             setattr(
-                inferred_module,
+                infered_module,
                 "__repr__",
                 _dev_utils.infer.create_repr(
-                    _dev_utils.infer.MODULE, **uninferrable_arguments
+                    _dev_utils.infer.MODULE, **uninferable_arguments
                 ),
             )
             setattr(
-                inferred_module,
+                infered_module,
                 "__getattr__",
                 _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
             )
 
             setattr(
-                inferred_module,
+                infered_module,
                 "__reduce__",
                 _dev_utils.infer.create_reduce(
                     _dev_utils.infer.MODULE, parsed_arguments
                 ),
             )
 
-            return inferred_module
+            return infered_module
 
         return module_class
 
@@ -168,19 +168,19 @@ class Infer:
 #     # Only self, do not use inference if not required
 #     if len(init_arguments) > 1:
 #         name = module_class.__name__
-#         inferred_module = type(
+#         infered_module = type(
 #             name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
 #         )
-#         parsed_arguments, uninferrable_arguments = _dev_utils.infer.parse_arguments(
-#             init_arguments, inferred_module
+#         parsed_arguments, uninferable_arguments = _dev_utils.infer.parse_arguments(
+#             init_arguments, infered_module
 #         )
 
 #         setattr(
-#             inferred_module, "__init__", _dev_utils.infer.create_init(parsed_arguments),
+#             infered_module, "__init__", _dev_utils.infer.create_init(parsed_arguments),
 #         )
 
 #         setattr(
-#             inferred_module,
+#             infered_module,
 #             "forward",
 #             _dev_utils.infer.create_forward(
 #                 _dev_utils.infer.MODULE,
@@ -189,25 +189,25 @@ class Infer:
 #             ),
 #         )
 #         setattr(
-#             inferred_module,
+#             infered_module,
 #             "__repr__",
 #             _dev_utils.infer.create_repr(
-#                 _dev_utils.infer.MODULE, **uninferrable_arguments
+#                 _dev_utils.infer.MODULE, **uninferable_arguments
 #             ),
 #         )
 #         setattr(
-#             inferred_module,
+#             infered_module,
 #             "__getattr__",
 #             _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
 #         )
 
 #         setattr(
-#             inferred_module,
+#             infered_module,
 #             "__reduce__",
 #             _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, parsed_arguments),
 #         )
 
-#     return inferred_module
+#     return infered_module
 
 
 ###############################################################################
@@ -226,6 +226,7 @@ def __dir__():
         + dir(upsample)
         + dir(pooling)
         + dir(regularization)
+        + dir(activations)
     )
 
 
@@ -238,6 +239,7 @@ def __getattr__(name: str):
             pooling,
             regularization,
             upsample,
+            activations,
             torch.nn,
         ):
             module_class = getattr(module, name, None)
@@ -247,7 +249,7 @@ def __getattr__(name: str):
         raise AttributeError("module {} has no attribute {}".format(__name__, name))
 
     module_class = _getattr(name)
-    if name in _inferrable.torch.all() + _inferrable.custom.all():
+    if name in _inferable.torch.all() + _inferable.custom.all():
         return Infer(_dev_utils.helpers.get_per_module_index(module_class))(
             module_class
         )
