@@ -27,10 +27,19 @@ normalization = (
 
 linear = ("Linear",)
 
+
+attention = ("MultiheadAttention",)
+
 transformer = ("Transformer", "TransformerEncoderLayer", "TransformerDecoderLayer")
 
 
 def all():
     return (
-        recurrent + recurrent_cells + convolution + normalization + linear + transformer
+        recurrent
+        + recurrent_cells
+        + convolution
+        + normalization
+        + linear
+        + attention
+        + transformer
     )
