@@ -10,7 +10,65 @@ from . import _dev_utils, normalization, pooling
 # Add types where possible and ensure torch jit compatibility
 
 
-class Conv(_dev_utils.modules.InferDimension):
+class _Conv(_dev_utils.modules.InferDimension):
+    """Base layer for convolution-like modules.
+
+    Passes all arguments to `_dev_utils.modules.InferDimension` and sets up
+    `same` padding.
+
+    See concrete classes (e.g. `Conv` or `DepthwiseConv`) for specific use cases.
+
+    Parameters
+    ----------
+    module_name : str
+        `str` representation of `module` name.
+    **kwargs
+        Any arguments needed for class creation.
+
+    """
+
+    def __init__(
+        self, module_name: str, **kwargs,
+    ):
+        super().__init__(instance_creator=Conv._pad, module_name=module_name, **kwargs)
+
+    @classmethod
+    def _dimension_pad(cls, dimension, kernel_size, stride, dilation):
+        if kernel_size % 2 == 0:
+            raise ValueError(
+                'Only odd kernel size for padding "same" is currently supported.'
+            )
+
+        return math.ceil(
+            (dimension * stride - dimension + dilation * (kernel_size - 1)) / 2
+        )
+
+    @classmethod
+    def _expand_if_needed(cls, dimensions, argument):
+        if isinstance(argument, collections.abc.Iterable):
+            return argument
+        return tuple(itertools.repeat(argument, len(dimensions)))
+
+    @classmethod
+    def _pad(cls, inputs, inner_class, **kwargs):
+        if isinstance(kwargs["padding"], str) and kwargs["padding"].lower() == "same":
+            dimensions = inputs.shape[2:]
+            paddings = tuple(
+                cls._dimension_pad(dimension, kernel_size, stride, dilation)
+                for dimension, kernel_size, stride, dilation in zip(
+                    dimensions,
+                    *[
+                        cls._expand_if_needed(dimensions, kwargs[name])
+                        for name in ("kernel_size", "stride", "dilation")
+                    ],
+                )
+            )
+            kwargs["padding"] = paddings
+
+        return inner_class(**kwargs)
+
+
+class Conv(_Conv):
     """Standard convolution layer.
 
     Based on input shape it either creates 1D, 2D or 3D convolution for inputs of shape
@@ -80,7 +138,7 @@ class Conv(_dev_utils.modules.InferDimension):
         padding_mode: str = "zeros",
     ):
         super().__init__(
-            instance_creator=Conv._pad,
+            module_name="Conv",
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
@@ -92,43 +150,9 @@ class Conv(_dev_utils.modules.InferDimension):
             padding_mode=padding_mode,
         )
 
-    @classmethod
-    def _dimension_pad(cls, dimension, kernel_size, stride, dilation):
-        if kernel_size % 2 == 0:
-            raise ValueError(
-                'Only odd kernel size for padding "same" is currently supported.'
-            )
 
-        return math.ceil(
-            (dimension * stride - dimension + dilation * (kernel_size - 1)) / 2
-        )
-
-    @classmethod
-    def _expand_if_needed(cls, dimensions, argument):
-        if isinstance(argument, collections.abc.Iterable):
-            return argument
-        return tuple(itertools.repeat(argument, len(dimensions)))
-
-    @classmethod
-    def _pad(cls, inputs, inner_class, **kwargs):
-        if isinstance(kwargs["padding"], str) and kwargs["padding"].lower() == "same":
-            dimensions = inputs.shape[2:]
-            paddings = tuple(
-                cls._dimension_pad(dimension, kernel_size, stride, dilation)
-                for dimension, kernel_size, stride, dilation in zip(
-                    dimensions,
-                    *[
-                        cls._expand_if_needed(dimensions, kwargs[name])
-                        for name in ("kernel_size", "stride", "dilation")
-                    ],
-                )
-            )
-            kwargs["padding"] = paddings
-
-        return inner_class(**kwargs)
-
-
-class ConvTranspose(_dev_utils.modules.InferDimension):
+# Fix ConvTranspose and add same padding?
+class ConvTranspose(_Conv):
     """Standard transposed convolution layer.
 
     Based on input shape it either creates 1D, 2D or 3D convolution (for inputs of shape
@@ -152,8 +176,10 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
         Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)
         or 3-tuple (for `Conv3d`). Default: `3`
     padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional
-        Padding added to both sides of the input. User can specify `int` or 2-tuple (for `Conv2d`)
-        or 3-tuple (for `Conv3d`). Default: `0`
+        Padding added to both sides of the input. String "same" can be used with odd
+        `kernel_size`, `stride` and `dilation`
+        User can specify `int` or 2-tuple (for `Conv2d`)
+        or 3-tuple (for `Conv3d`). Default: `same`
     output_padding : int or tuple, optional
         Additional size added to one side of the output shape. Default: 0
     dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional
@@ -182,8 +208,8 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
             int, typing.Tuple[int, int], typing.Tuple[int, int, int]
         ] = 1,
         padding: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 0,
+            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
+        ] = "same",
         output_padding: typing.Union[
             int, typing.Tuple[int, int], typing.Tuple[int, int, int]
         ] = 0,
@@ -195,6 +221,7 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
         padding_mode="zeros",
     ):
         super().__init__(
+            module_name="ConvTranspose",
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
@@ -208,7 +235,7 @@ class ConvTranspose(_dev_utils.modules.InferDimension):
         )
 
 
-class DepthwiseConv(Conv):
+class DepthwiseConv(_Conv):
     """Depthwise convolution layer.
 
     Based on input shape it either creates 1D, 2D or 3D depthwise convolution
@@ -274,19 +301,20 @@ class DepthwiseConv(Conv):
         bias: bool = True,
         padding_mode: str = "zeros",
     ):
-        if not out_channels % in_channels:
+        if out_channels % in_channels != 0:
             raise ValueError(
                 "Depthwise separable convolution needs out_channels divisible by in_channels without remainder."
             )
 
         super().__init__(
+            module_name="Conv",
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
             stride=stride,
             padding=padding,
             dilation=dilation,
-            groups=out_channels,
+            groups=in_channels,
             bias=bias,
             padding_mode=padding_mode,
         )
@@ -355,6 +383,8 @@ class SeparableConv(torch.nn.Module):
         bias: bool = True,
         padding_mode: str = "zeros",
     ):
+        super().__init__()
+
         self.in_channels: int = in_channels
         self.out_channels: int = out_channels
         self.kernel_size: typing.Union[
@@ -832,7 +862,7 @@ class InvertedResidualBottleneck(_dev_utils.modules.Representation):
         ] = torch.nn.ReLU6() if activation is None else activation
         self.batchnorm: bool = batchnorm
         self.squeeze_excitation: bool = squeeze_excitation
-        self.squeeze_excitation_hidden: int = self.squeeze_excitation_hidden
+        self.squeeze_excitation_hidden: int = squeeze_excitation_hidden
         self.squeeze_excitation_activation: typing.Callable[
             [torch.Tensor], torch.Tensor
         ] = squeeze_excitation_activation
