@@ -2,6 +2,7 @@
 # Third argument to infer
 recurrent = ("RNN", "LSTM", "GRU")
 
+
 # Second argument to infer
 recurrent_cells = ("RNNCell", "LSTMCell", "GRUCell")
 
@@ -26,6 +27,10 @@ normalization = (
 
 linear = ("Linear",)
 
+transformer = ("Transformer", "TransformerEncoderLayer", "TransformerDecoderLayer")
+
 
 def all():
-    return recurrent + recurrent_cells + convolution + normalization + linear
+    return (
+        recurrent + recurrent_cells + convolution + normalization + linear + transformer
+    )

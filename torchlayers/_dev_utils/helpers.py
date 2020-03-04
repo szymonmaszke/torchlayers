@@ -59,7 +59,7 @@ def get_per_module_index(module: str) -> int:
     int
         Pointer to `tensor.shape` which should be inferred for specific module.
     """
-    if module.__name__ in _inferrable.torch.recurrent:
+    if module.__name__ in _inferrable.torch.recurrent + _inferrable.torch.transformer:
         return 2
     return 1
 
