@@ -5,10 +5,17 @@ import torch
 from . import convolution
 
 
-class Conv2dPixelShuffle(torch.nn.Module):
+class ConvPixelShuffle(torch.nn.Module):
     """Two dimensional convolution with ICNR initialization followed by PixelShuffle.
 
     `kernel_size` got a default value of `3`, `upscaling`
+
+    **IMPORTANT**:
+
+        Currently only `2D` input is allowed (`[batch, channels, height, width]`),
+        due to `torch.nn.PixelShuffle` not supporting `1D` or `3D`.
+        See [this PyTorch PR](https://github.com/pytorch/pytorch/pull/6340/files)
+        for example of dimension-agnostic implementation.
 
     Parameters
     ----------
@@ -32,9 +39,10 @@ class Conv2dPixelShuffle(torch.nn.Module):
         Number of blocked connections from input channels to output channels. Default: 1
     bias: bool, optional
         If ``True``, adds a learnable bias to the output. Default: ``True``
-    initializer: typing.Callable[[torch.Tensor,], torch.Tensor]
+    initializer: typing.Callable[[torch.Tensor,], torch.Tensor], optional
         Initializer for ICNR initialization, can be a function from `torch.nn.init`.
-        Gets and returns tensor after initialization
+        Gets and returns tensor after initialization.
+        Default: `torch.nn.init.kaiming_normal_`
 
     """
 
@@ -50,9 +58,7 @@ class Conv2dPixelShuffle(torch.nn.Module):
         groups: int = 1,
         bias: bool = True,
         padding_mode: str = "zeros",
-        initializer: typing.Callable[
-            [torch.Tensor,], torch.Tensor
-        ] = torch.nn.init.kaiming_normal_,
+        initializer: typing.Callable[[torch.Tensor,], torch.Tensor] = None,
     ):
         super().__init__()
         self.convolution = convolution.Conv(
@@ -68,7 +74,10 @@ class Conv2dPixelShuffle(torch.nn.Module):
         )
 
         self.upsample = torch.nn.PixelShuffle(upscale_factor)
-        self.initializer = initializer
+        if initializer is None:
+            self.initializer = torch.nn.init.kaiming_normal_
+        else:
+            self.initializer = initializer
 
     def post_build(self):
         self.icnr_initialization(self.convolution.weight.data)
