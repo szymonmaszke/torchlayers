@@ -2,14 +2,14 @@ import inspect
 import pickle
 import typing
 
-from .. import _inferrable
+from .. import _inferable
 from . import helpers
 
 VARARGS_VARIABLE = "_torchlayers_varargs_variable"
 KWARGS_VARIABLE = "_torchlayers_kwargs_variable"
 
-MODULE = "_torchlayers_inferred_module"
-MODULE_CLASS = "_torchlayers_inferred_class_module"
+MODULE = "_torchlayers_infered_module"
+MODULE_CLASS = "_torchlayers_infered_class_module"
 
 
 def parse_arguments(
@@ -27,7 +27,7 @@ def parse_arguments(
         arguments (custom exec won't be able to parse type hints without explicit imports)
         - remove `self` so it won't be later assigned to dynamically created non-instantiated
         module
-        - WORKAROUND: add arguments related to recurrent neural networks to the uninferrable group as those
+        - WORKAROUND: add arguments related to recurrent neural networks to the uninferable group as those
         only have *args and **kwargs and are otherwise unparsable.
 
 
@@ -42,16 +42,16 @@ def parse_arguments(
     Returns
     -------
     Tuple[List[str], Dict[str, Any]]
-        First item are arguments used for dynamic __init__ creation of inferrable
+        First item are arguments used for dynamic __init__ creation of inferable
         module. Second item is dictionary where key is name of argument and value can be anything.
-        Those are uninferrable arguments (not present in inferrable __init__)
-        and used solely for inferrable module's __repr__ creation.
+        Those are uninferable arguments (not present in inferable __init__)
+        and used solely for inferable module's __repr__ creation.
 
     """
 
-    def _add_rnn_uninferrable(uninferrable: typing.Dict, module) -> typing.Dict:
-        if module.__name__ in _inferrable.torch.recurrent:
-            uninferrable.update(
+    def _add_rnn_uninferable(uninferable: typing.Dict, module) -> typing.Dict:
+        if module.__name__ in _inferable.torch.recurrent:
+            uninferable.update(
                 {
                     "input_size": "?",
                     "num_layers": 1,
@@ -61,9 +61,9 @@ def parse_arguments(
                     "bidirectional": False,
                 }
             )
-        return uninferrable
+        return uninferable
 
-    def _add_inferred_shape_variable_name(init_arguments: str) -> typing.Dict:
+    def _add_infered_shape_variable_name(init_arguments: str) -> typing.Dict:
         first_argument = helpers.remove_right_side(
             helpers.remove_type_hint(init_arguments[1])
         )
@@ -76,21 +76,21 @@ def parse_arguments(
 
         return {}
 
-    uninferrable_arguments = _add_rnn_uninferrable(
-        _add_inferred_shape_variable_name(init_arguments), module
+    uninferable_arguments = _add_rnn_uninferable(
+        _add_infered_shape_variable_name(init_arguments), module
     )
 
     # Pop self from arguments always so it won't be class-assigned later
     init_arguments.pop(0)
     return (
         [helpers.remove_type_hint(argument) for argument in init_arguments],
-        uninferrable_arguments,
+        uninferable_arguments,
     )
 
 
 def create_init(parsed_init_arguments) -> typing.Callable:
     """
-    Dynamically create inferrable module's `__init__`.
+    Dynamically create inferable module's `__init__`.
 
     Function has to be executed in `namespace` dictionary in order
     to build it from parsed strings.
@@ -187,8 +187,8 @@ def create_forward(
         )
 
     def forward(self, inputs, *args, **kwargs):
-        inferred_module = getattr(self, module, None)
-        if inferred_module is None:
+        infered_module = getattr(self, module, None)
+        if infered_module is None:
             module_cls = getattr(self, module_class)
             # All arguments from non-instantiated module
             init_args = [
@@ -209,14 +209,14 @@ def create_forward(
                 ),
             )
 
-            inferred_module = getattr(self, module)
+            infered_module = getattr(self, module)
 
-        return inferred_module(inputs, *args, **kwargs)
+        return infered_module(inputs, *args, **kwargs)
 
     return forward
 
 
-def create_repr(module, **non_inferrable_names) -> typing.Callable:
+def create_repr(module, **non_inferable_names) -> typing.Callable:
     """
     Uninstantiated module representation.
 
@@ -225,7 +225,7 @@ def create_repr(module, **non_inferrable_names) -> typing.Callable:
 
     Additionally names not saved in module (e.g. `input_shape` to be inferred)
     are added at the beginning. Usually their value is "?", RNNs being and edge
-    case with all their arguments in `non_inferrable_names` group
+    case with all their arguments in `non_inferable_names` group
     (and except the ones provided explicitly by user).
 
 
@@ -234,8 +234,8 @@ def create_repr(module, **non_inferrable_names) -> typing.Callable:
     module : str
         Name of variable where instantiated module will be saved. Usually equal to
         global variable `MODULE`
-    **non_inferrable_names : Dict[str, Any]
-        Non-inferrable names and their respective values of the module
+    **non_inferable_names : Dict[str, Any]
+        Non-inferable names and their respective values of the module
 
     Returns
     -------
@@ -245,17 +245,17 @@ def create_repr(module, **non_inferrable_names) -> typing.Callable:
     """
 
     def __repr__(self) -> str:
-        inferred_module = getattr(self, module, None)
-        if inferred_module is None:
+        infered_module = getattr(self, module, None)
+        if infered_module is None:
             parameters = ", ".join(
                 argument_representation
                 for argument_representation in helpers.create_vars(
-                    self, non_inferrable_names, VARARGS_VARIABLE, KWARGS_VARIABLE
+                    self, non_inferable_names, VARARGS_VARIABLE, KWARGS_VARIABLE
                 )
             )
             return "{}({})".format(type(self).__name__, parameters)
 
-        return repr(inferred_module)
+        return repr(infered_module)
 
     return __repr__
 
@@ -333,24 +333,24 @@ def create_reduce(module, parsed_init_arguments):
     Callable
         __getattr__ function
     """
-    inferred_input, non_inferrable_arguments = helpers.process_arguments(
+    infered_input, non_inferable_arguments = helpers.process_arguments(
         parsed_init_arguments
     )
 
     def __reduce__(self):
-        inferred_module = getattr(self, module, None)
-        if inferred_module is None:
+        infered_module = getattr(self, module, None)
+        if infered_module is None:
             raise ValueError(
                 "Model cannot be pickled as it wasn't instantiated. Pass example input through this module."
             )
 
-        custom_reduce = getattr(inferred_module, "__reduce__", None)
+        custom_reduce = getattr(infered_module, "__reduce__", None)
         if custom_reduce is None:
             return (
-                type(inferred_module),
-                (getattr(inferred_module, inferred_input),)
-                + tuple(getattr(self, arg) for arg in non_inferrable_arguments),
-                inferred_module.state_dict(),
+                type(infered_module),
+                (getattr(infered_module, infered_input),)
+                + tuple(getattr(self, arg) for arg in non_inferable_arguments),
+                infered_module.state_dict(),
             )
         return custom_reduce()
 

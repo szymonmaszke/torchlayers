@@ -2,7 +2,7 @@ import collections
 import itertools
 import typing
 
-from .. import _inferrable
+from .. import _inferable
 
 
 def is_kwarg(argument: str) -> bool:
@@ -61,9 +61,9 @@ def get_per_module_index(module: str) -> int:
     """
     if (
         module.__name__
-        in _inferrable.torch.recurrent
-        + _inferrable.torch.transformer
-        + _inferrable.torch.attention
+        in _inferable.torch.recurrent
+        + _inferable.torch.transformer
+        + _inferable.torch.attention
     ):
         return 2
     return 1
@@ -71,7 +71,7 @@ def get_per_module_index(module: str) -> int:
 
 def create_vars(
     self,
-    non_inferrable_names: typing.Dict[str, typing.Any],
+    non_inferable_names: typing.Dict[str, typing.Any],
     varargs_variable: str,
     kwargs_variable: str,
 ) -> typing.List[str]:
@@ -80,8 +80,8 @@ def create_vars(
 
     Parameters
     ----------
-    **non_inferrable_names : Dict[str, Any]
-        Non-inferrable names and their respective values of the module
+    **non_inferable_names : Dict[str, Any]
+        Non-inferable names and their respective values of the module
     varargs_variable : str
         Name of variable possibly holding varargs for module's __init__.
     kwargs_variable : str
@@ -93,7 +93,7 @@ def create_vars(
         List of strings formatted in the manner argument=value to display
         for uninstantiated module.
     """
-    dictionary = {**non_inferrable_names, **collections.OrderedDict(vars(self))}
+    dictionary = {**non_inferable_names, **collections.OrderedDict(vars(self))}
 
     args = [
         "{}={}".format(key, value)
