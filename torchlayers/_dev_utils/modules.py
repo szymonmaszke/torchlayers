@@ -6,12 +6,19 @@ from . import infer
 
 
 class InferDimension(torch.nn.Module):
-    def __init__(self, *, instance_creator: typing.Callable = None, **kwargs):
+    def __init__(
+        self,
+        instance_creator: typing.Callable = None,
+        module_name: str = None,
+        **kwargs,
+    ):
         super().__init__()
 
         self._inner_module_name = "_inner_module"
 
-        self._module_name: str = type(self).__name__
+        self._module_name: str = type(
+            self
+        ).__name__ if module_name is None else module_name
         self._instance_creator = (
             instance_creator
             if instance_creator is not None
