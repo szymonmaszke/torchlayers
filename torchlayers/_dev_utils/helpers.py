@@ -71,28 +71,27 @@ def get_per_module_index(module: str) -> int:
 
 def create_vars(
     self,
-    non_inferrable_names: typing.Dict[str, Any],
-    VARARGS_VARIABLE: str,
-    KWARGS_VARIABLE: str,
+    non_inferrable_names: typing.Dict[str, typing.Any],
+    varargs_variable: str,
+    kwargs_variable: str,
 ) -> typing.List[str]:
     """
-    Create arguments for
-
-    [TODO:description]
+    Create list of arguments for uninstantiated `__repr__` module.
 
     Parameters
     ----------
-    non_inferrable_names : typing.Dict[str, Any]
-        [TODO:description]
-    VARARGS_VARIABLE : str
-        [TODO:description]
-    KWARGS_VARIABLE : str
-        [TODO:description]
+    **non_inferrable_names : Dict[str, Any]
+        Non-inferrable names and their respective values of the module
+    varargs_variable : str
+        Name of variable possibly holding varargs for module's __init__.
+    kwargs_variable : str
+        Name of variable possibly holding kwargs for module's __init__.
 
     Returns
     -------
     typing.List[str]:
-        [TODO:description]
+        List of strings formatted in the manner argument=value to display
+        for uninstantiated module.
     """
     dictionary = {**non_inferrable_names, **collections.OrderedDict(vars(self))}
 
@@ -101,11 +100,11 @@ def create_vars(
         for key, value in dictionary.items()
         if not key.startswith("_") and key != "training"
     ]
-    varargs = getattr(self, VARARGS_VARIABLE, None)
+    varargs = getattr(self, varargs_variable, None)
     if varargs is not None:
         args += [str(var) for var in varargs]
 
-    kwargs = getattr(self, KWARGS_VARIABLE, None)
+    kwargs = getattr(self, kwargs_variable, None)
     if kwargs is not None:
         args += ["{}={}".format(key, value) for key, value in kwargs.items()]
 
@@ -113,6 +112,7 @@ def create_vars(
 
 
 def process_arguments(arguments):
+    """Remove type hint and right-hand side or string representation o arguments."""
     processed_arguments = [
         remove_type_hint(remove_right_side(argument)) for argument in arguments
     ]

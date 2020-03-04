@@ -14,7 +14,7 @@ MODULE_CLASS = "_torchlayers_inferred_class_module"
 
 def parse_arguments(
     init_arguments: typing.List[str], module
-) -> typing.Tuple[typing.List[str], typing.Dict[str, Any]]:
+) -> typing.Tuple[typing.List[str], typing.Dict[str, typing.Any]]:
     """Parse init arguments.
 
     This function will:
@@ -142,7 +142,9 @@ def create_init(parsed_init_arguments) -> typing.Callable:
     return namespace["__init__"]
 
 
-def create_forward(module, module_class, parsed_init_arguments) -> typing.Callable:
+def create_forward(
+    module, module_class, parsed_init_arguments, inference_index: int
+) -> typing.Callable:
     """
     Return forward function which instantiates module after first pass.
 
@@ -201,7 +203,7 @@ def create_forward(module, module_class, parsed_init_arguments) -> typing.Callab
                 module,
                 module_cls(
                     # Shape to be inferred. Either 1 for all modules or 2 for RNNs
-                    inputs.shape[helpers.get_per_module_index(module_cls)],
+                    inputs.shape[inference_index],
                     *init_args,
                     **init_kwargs
                 ),

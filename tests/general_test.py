@@ -4,7 +4,7 @@ import pytest
 import torchlayers
 
 
-@torchlayers.inferrable
+@torchlayers.Infer()
 class CustomLinear(torch.nn.Linear):
     def __init__(self, in_features, out_features, bias: bool = True):
         super().__init__(in_features, out_features, bias)

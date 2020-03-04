@@ -25,7 +25,7 @@ def build(module, *args, **kwargs):
     shape was inferred (weight initialization example below):
 
 
-        @torchlayers.inferrable
+        @torchlayers.infer
         class MyModule(torch.nn.Linear):
             def post_build(self):
                 # You can do anything here really
@@ -69,15 +69,15 @@ def build(module, *args, **kwargs):
     return module
 
 
-def inferrable(module_class):
-    """
-    Allows custom user modules to infer input shape.
+class Infer:
+    """Allows custom user modules to infer input shape.
 
     Input shape should be the first argument after `self`.
 
     Usually used as class decorator, e.g.::
 
-        @torchlayers.inferrable
+        # Remember it's a class, it has to be instantiated
+        @torchlayers.Infer()
         class StrangeLinear(torch.nn.Linear):
             def __init__(self, in_features, out_features, bias: bool = True):
                 super().__init__(in_features, out_features, bias)
@@ -92,57 +92,122 @@ def inferrable(module_class):
 
     Parameters
     ----------
-    module_class : torch.nn.Module
-        Module (layer-like) to give inferrable possibilities
+    inference_index: int, optional
+        Index into `tensor.shape` input which should be inferred, e.g. tensor.shape[1].
+        Default: `1` (`0` being batch dimension)
 
     """
-    name = module_class.__name__
-    inferred_module = type(
-        name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
-    )
 
-    init_signature = inspect.signature(module_class.__init__)
-    init_arguments = [str(argument) for argument in init_signature.parameters.values()]
+    def __init__(self, inference_index: int = 1):
+        self.inference_index: int = inference_index
 
-    # Only self, do not use inference if not required
-    if len(init_arguments) > 1:
-        parsed_arguments, uninferrable_arguments = _dev_utils.infer.parse_arguments(
-            init_arguments, inferred_module
-        )
+    def __call__(self, module_class):
+        init_arguments = [
+            str(argument)
+            for argument in inspect.signature(module_class.__init__).parameters.values()
+        ]
 
-        setattr(
-            inferred_module, "__init__", _dev_utils.infer.create_init(parsed_arguments),
-        )
+        # Other argument than self
+        if len(init_arguments) > 1:
+            name = module_class.__name__
+            inferred_module = type(
+                name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class},
+            )
+            parsed_arguments, uninferrable_arguments = _dev_utils.infer.parse_arguments(
+                init_arguments, inferred_module
+            )
 
-        setattr(
-            inferred_module,
-            "forward",
-            _dev_utils.infer.create_forward(
-                _dev_utils.infer.MODULE,
-                _dev_utils.infer.MODULE_CLASS,
-                parsed_arguments,
-            ),
-        )
-        setattr(
-            inferred_module,
-            "__repr__",
-            _dev_utils.infer.create_repr(
-                _dev_utils.infer.MODULE, **uninferrable_arguments
-            ),
-        )
-        setattr(
-            inferred_module,
-            "__getattr__",
-            _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
-        )
+            setattr(
+                inferred_module,
+                "__init__",
+                _dev_utils.infer.create_init(parsed_arguments),
+            )
 
-        setattr(
-            inferred_module,
-            "__reduce__",
-            _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, parsed_arguments),
-        )
+            setattr(
+                inferred_module,
+                "forward",
+                _dev_utils.infer.create_forward(
+                    _dev_utils.infer.MODULE,
+                    _dev_utils.infer.MODULE_CLASS,
+                    parsed_arguments,
+                    self.inference_index,
+                ),
+            )
+            setattr(
+                inferred_module,
+                "__repr__",
+                _dev_utils.infer.create_repr(
+                    _dev_utils.infer.MODULE, **uninferrable_arguments
+                ),
+            )
+            setattr(
+                inferred_module,
+                "__getattr__",
+                _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
+            )
 
-    return inferred_module
+            setattr(
+                inferred_module,
+                "__reduce__",
+                _dev_utils.infer.create_reduce(
+                    _dev_utils.infer.MODULE, parsed_arguments
+                ),
+            )
+
+            return inferred_module
+
+        return module_class
+
+
+# def infer(module_class):
+#     init_arguments = [
+#         str(argument)
+#         for argument in inspect.signature(module_class.__init__).parameters.values()
+#     ]
+
+#     # Only self, do not use inference if not required
+#     if len(init_arguments) > 1:
+#         name = module_class.__name__
+#         inferred_module = type(
+#             name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
+#         )
+#         parsed_arguments, uninferrable_arguments = _dev_utils.infer.parse_arguments(
+#             init_arguments, inferred_module
+#         )
+
+#         setattr(
+#             inferred_module, "__init__", _dev_utils.infer.create_init(parsed_arguments),
+#         )
+
+#         setattr(
+#             inferred_module,
+#             "forward",
+#             _dev_utils.infer.create_forward(
+#                 _dev_utils.infer.MODULE,
+#                 _dev_utils.infer.MODULE_CLASS,
+#                 parsed_arguments,
+#             ),
+#         )
+#         setattr(
+#             inferred_module,
+#             "__repr__",
+#             _dev_utils.infer.create_repr(
+#                 _dev_utils.infer.MODULE, **uninferrable_arguments
+#             ),
+#         )
+#         setattr(
+#             inferred_module,
+#             "__getattr__",
+#             _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
+#         )
+
+#         setattr(
+#             inferred_module,
+#             "__reduce__",
+#             _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, parsed_arguments),
+#         )
+
+#     return inferred_module
 
 
 ###############################################################################
@@ -183,5 +248,7 @@ def __getattr__(name: str):
 
     module_class = _getattr(name)
     if name in _inferrable.torch.all() + _inferrable.custom.all():
-        return inferrable(module_class)
+        return Infer(_dev_utils.helpers.get_per_module_index(module_class))(
+            module_class
+        )
     return module_class
