@@ -64,7 +64,7 @@ def swish(tensor: torch.Tensor, beta: float = 1.0) -> torch.Tensor:
     -------
     torch.Tensor
     """
-    return torch.nn.functional.sigmoid(beta * tensor) * tensor
+    return torch.sigmoid(beta * tensor) * tensor
 
 
 class Swish(torch.nn.Module):
@@ -88,6 +88,7 @@ class Swish(torch.nn.Module):
     """
 
     def __init__(self, beta: float = 1.0):
+        super().__init__()
         self.beta = beta
 
     def forward(self, tensor: torch.Tensor):
