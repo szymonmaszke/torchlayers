@@ -29,6 +29,7 @@ class AutoEncoder(torch.nn.Module):
             torchlayers.InvertedResidualBottleneck(),
             torchlayers.MaxPool(),  # shape 512 x 16 x 16
             torchlayers.InvertedResidualBottleneck(squeeze_excitation=False),
+            torchlayers.Dropout(),  # Default 0.5 and Dropout2d for images
             # Randomly Switch the last two layers with 0.5 probability
             torchlayers.StochasticDepth(
                 torch.nn.Sequential(
@@ -48,6 +49,7 @@ class AutoEncoder(torch.nn.Module):
             # Shape 512 x 16 x 16 after PixelShuffle
             torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=3),
             torchlayers.ConvPixelShuffle(out_channels=256, upscale_factor=2),
+            torchlayers.StandardNormalNoise(),  # add Gaussian Noise
             # Shape 256 x 32 x 32
             torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=3),
             torchlayers.ConvPixelShuffle(out_channels=128, upscale_factor=2),
@@ -81,7 +83,7 @@ def classification_model():
             torchlayers.Sequential(
                 torchlayers.Conv(64, groups=16),
                 torchlayers.ReLU(),
-                torchlayers.BatchNorm(),
+                torchlayers.GroupNorm(num_groups=4),
                 torchlayers.Conv(64, groups=16),
                 torchlayers.ChannelShuffle(groups=16),
                 torchlayers.ReLU(),
@@ -162,42 +164,42 @@ def test_autoencoder(autoencoder_model):
         optimizer.zero_grad()
 
 
-# def test_same_padding_1d():
-#     inputs = torch.randn(1, 5, 125)
-#     for kernel_size, stride, dilation in itertools.product(
-#         range(1, 20, 2), *[range(1, 20, 2) for _ in range(2)]
-#     ):
-#         classification_model = torchlayers.build(
-#             torchlayers.Conv(
-#                 5,
-#                 kernel_size=kernel_size,
-#                 stride=stride,
-#                 dilation=dilation,
-#                 padding="same",
-#             ),
-#             inputs,
-#         )
-#         output = classification_model(inputs)
-#         assert output.shape == inputs.shape
+def test_same_padding_1d():
+    inputs = torch.randn(1, 5, 125)
+    for kernel_size, stride, dilation in itertools.product(
+        range(1, 20, 2), *[range(1, 20, 2) for _ in range(2)]
+    ):
+        classification_model = torchlayers.build(
+            torchlayers.Conv(
+                5,
+                kernel_size=kernel_size,
+                stride=stride,
+                dilation=dilation,
+                padding="same",
+            ),
+            inputs,
+        )
+        output = classification_model(inputs)
+        assert output.shape == inputs.shape
 
 
-# def test_same_padding_2d():
-#     inputs = torch.randn(1, 5, 100, 100)
-#     for kernel_size, stride, dilation in itertools.product(
-#         range(1, 15, 2), *[range(1, 8, 2) for _ in range(2)]
-#     ):
-#         for kernel_size2, stride2, dilation2 in itertools.product(
-#             range(1, 8, 2), *[range(1, 8, 2) for _ in range(2)]
-#         ):
-#             classification_model = torchlayers.build(
-#                 torchlayers.Conv(
-#                     5,
-#                     kernel_size=(kernel_size, kernel_size2),
-#                     stride=(stride, stride2),
-#                     dilation=(dilation, dilation2),
-#                     padding="same",
-#                 ),
-#                 inputs,
-#             )
-#             output = classification_model(inputs)
-#             assert output.shape == inputs.shape
+def test_same_padding_2d():
+    inputs = torch.randn(1, 5, 100, 100)
+    for kernel_size, stride, dilation in itertools.product(
+        range(1, 15, 2), *[range(1, 8, 2) for _ in range(2)]
+    ):
+        for kernel_size2, stride2, dilation2 in itertools.product(
+            range(1, 8, 2), *[range(1, 8, 2) for _ in range(2)]
+        ):
+            classification_model = torchlayers.build(
+                torchlayers.Conv(
+                    5,
+                    kernel_size=(kernel_size, kernel_size2),
+                    stride=(stride, stride2),
+                    dilation=(dilation, dilation2),
+                    padding="same",
+                ),
+                inputs,
+            )
+            output = classification_model(inputs)
+            assert output.shape == inputs.shape
