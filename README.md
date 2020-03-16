@@ -2,9 +2,10 @@
 
 --------------------------------------------------------------------------------
 
-| Version | Docs | Tests | Coverage | Style | PyPI | Python | PyTorch |
-|---------|------|-------|----------|-------|------|--------|---------|
-| [![Version](https://img.shields.io/static/v1?label=&message=0.1.0&color=377EF0&style=for-the-badge)](https://github.com/szymonmaszke/torchlayers/releases) | [![Documentation](https://img.shields.io/static/v1?label=&message=docs&color=EE4C2C&style=for-the-badge)](https://szymonmaszke.github.io/torchlayers/)  | ![Tests](https://github.com/szymonmaszke/torchlayers/workflows/test/badge.svg) | ![Coverage](https://img.shields.io/codecov/c/github/szymonmaszke/torchlayers?label=%20&logo=codecov&style=for-the-badge) | [![codebeat](https://img.shields.io/static/v1?label=&message=CB&color=27A8E0&style=for-the-badge)](https://codebeat.co/projects/github-com-szymonmaszke-torchlayers-master) | [![PyPI](https://img.shields.io/static/v1?label=&message=PyPI&color=377EF0&style=for-the-badge)](https://pypi.org/project/torchlayers/) | [![Python](https://img.shields.io/static/v1?label=&message=>3.5&color=377EF0&style=for-the-badge&logo=python&logoColor=F8C63D)](https://www.python.org/) | [![PyTorch](https://img.shields.io/static/v1?label=&message=>=1.3.0&color=EE4C2C&style=for-the-badge)](https://pytorch.org/) | [![Docker](https://img.shields.io/static/v1?label=&message=docker&color=309cef&style=for-the-badge)](https://cloud.docker.com/u/szymonmaszke/repository/docker/szymonmaszke/torchlayers) |
+
+| Version | Docs | Tests | Coverage | Style | PyPI | Python | PyTorch | Docker |
+|---------|------|-------|----------|-------|------|--------|---------|--------|
+| [![Version](https://img.shields.io/static/v1?label=&message=0.1.0&color=377EF0&style=for-the-badge)](https://github.com/szymonmaszke/torchlayers/releases) | [![Documentation](https://img.shields.io/static/v1?label=&message=docs&color=EE4C2C&style=for-the-badge)](https://szymonmaszke.github.io/torchlayers/)  | ![Tests](https://github.com/szymonmaszke/torchlayers/workflows/test/badge.svg) | ![Coverage](https://img.shields.io/codecov/c/github/szymonmaszke/torchlayers?label=%20&logo=codecov&style=for-the-badge) | [![codebeat](https://img.shields.io/static/v1?label=&message=CB&color=27A8E0&style=for-the-badge)](https://codebeat.co/projects/github-com-szymonmaszke-torchlayers-master) | [![PyPI](https://img.shields.io/static/v1?label=&message=PyPI&color=377EF0&style=for-the-badge)](https://pypi.org/project/torchlayers/) | [![Python](https://img.shields.io/static/v1?label=&message=>=3.6&color=377EF0&style=for-the-badge&logo=python&logoColor=F8C63D)](https://www.python.org/) | [![PyTorch](https://img.shields.io/static/v1?label=&message=>=1.3.0&color=EE4C2C&style=for-the-badge)](https://pytorch.org/) | [![Docker](https://img.shields.io/static/v1?label=&message=docker&color=309cef&style=for-the-badge)](https://cloud.docker.com/u/szymonmaszke/repository/docker/szymonmaszke/torchlayers) |
 
 [__torchlayers__](https://szymonmaszke.github.io/torchlayers/) is a library based on [__PyTorch__](https://pytorch.org/)
 providing __automatic shape and dimensionality inference of `torch.nn` layers__ + additional
@@ -242,3 +243,7 @@ docker pull szymonmaszke/torchlayers:18.04
 
 Nightly builds are also available, just prefix tag with `nightly_`. If you are going for `GPU` image make sure you have
 [nvidia/docker](https://github.com/NVIDIA/nvidia-docker) installed and it's runtime set.
+
+# Contributing
+
+If you find issue or would like to see some functionality (or implement one), please [open new Issue](https://help.github.com/en/articles/creating-an-issue) or [create Pull Request](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork).
