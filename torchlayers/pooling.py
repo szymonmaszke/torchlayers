@@ -19,7 +19,7 @@ class _GlobalPool(torch.nn.Module):
         return values
 
     def __repr__(self):
-        return f"{type(self).__name__}()"
+        return "{}()".format(type(self).__name__)
 
     def forward(self, inputs):
         while len(inputs.shape) > 2:

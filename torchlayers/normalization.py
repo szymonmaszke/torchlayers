@@ -99,13 +99,15 @@ class BatchNorm(_dev_utils.modules.InferDimension):
 
     def _module_not_found(self, inputs):
         if len(inputs.shape) == 2:
-            inner_class = getattr(torch.nn, f"{self._module_name}1d", None)
+            inner_class = getattr(torch.nn, "{}1d".format(self._module_name), None)
             if inner_class is not None:
                 return inner_class
 
         raise ValueError(
-            f"{self._module_name} could not be inferred from shape. "
-            f"Only 5, 4, 3 or 2 dimensional input allowed (including batch dimension), got {len(inputs.shape)}."
+            "{} could not be inferred from shape. ".format(self._module_name)
+            + "Only 5, 4, 3 or 2 dimensional input allowed (including batch dimension), got {}.".format(
+                len(inputs.shape)
+            )
         )
 
 

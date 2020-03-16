@@ -24,7 +24,7 @@ setuptools.setup(
     url="https://github.com/pypa/torchlayers",
     packages=setuptools.find_packages(),
     install_requires=["torch>=1.3.0"],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python",

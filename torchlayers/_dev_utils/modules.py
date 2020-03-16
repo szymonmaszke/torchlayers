@@ -42,8 +42,10 @@ class InferDimension(torch.nn.Module):
 
     def _module_not_found(self, inputs):
         raise ValueError(
-            f"{self._module_name} could not be inferred from shape. "
-            f"Only 5, 4 or 3 dimensional input allowed (including batch dimension), got {len(inputs.shape)}."
+            "{} could not be inferred from shape. ".format(self._module_name)
+            + "Only 5, 4 or 3 dimensional input allowed (including batch dimension), got {}.".format(
+                len(inputs.shape)
+            )
         )
 
     def forward(self, inputs):
@@ -51,7 +53,7 @@ class InferDimension(torch.nn.Module):
         if module is None:
             dimensions = len(inputs.shape)
             inner_class = getattr(
-                torch.nn, f"{self._module_name}{dimensions - 2}d", None
+                torch.nn, "{}{}d".format(self._module_name, dimensions - 2), None
             )
             if inner_class is None:
                 inner_class = self._module_not_found(inputs)
@@ -74,9 +76,9 @@ class Representation(torch.nn.Module):
     def __repr__(self):
         parameters = ", ".join(
             [
-                f"{key}={value}"
+                "{}={}".format(key, value)
                 for key, value in vars(self).items()
                 if not key.startswith("_") and key != "training"
             ]
         )
-        return f"{type(self).__name__}({parameters})"
+        return "{}({})".format(type(self).__name__, parameters)
