@@ -1,0 +1,79 @@
+---
+name: deploy
+
+on:
+  release:
+    types: [created]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  docker-gpu:
+    name: "Base image nvidia/cuda:${{ matrix.tag }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag:
+          - "9.2-runtime-ubuntu18.04"
+          - "9.2-cudnn7-runtime-ubuntu18.04"
+          - "10.0-runtime-ubuntu18.04"
+          - "10.0-cudnn7-runtime-ubuntu18.04"
+          - "10.1-runtime-ubuntu18.04"
+          - "10.1-cudnn7-runtime-ubuntu18.04"
+    steps:
+      - uses: actions/checkout@master
+      - name: Clone repository
+        run: git clone https://github.com/szymonmaszke/torchstar-docker
+      - name: Login
+        run: >
+          docker login
+          -u ${{ secrets.DOCKER_USERNAME }}
+          -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push the image
+        run: >
+          ./torchstar-docker/src/entrypoint
+          nvidia/cuda ${{ matrix.tag }}
+          ${GITHUB_REPOSITORY}
+          ${{ github.event_name }}
+
+  docker:
+    name: "Base image ubuntu:18.04 (CPU deployment)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Clone repository
+        run: git clone https://github.com/szymonmaszke/torchstar-docker
+      - name: Login
+        run: >
+          docker login
+          -u ${{ secrets.DOCKER_USERNAME }}
+          -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push the image
+        run: >
+          ./torchstar-docker/src/entrypoint
+          ubuntu
+          "18.04"
+          ${GITHUB_REPOSITORY}
+          ${{ github.event_name }}
+  python:
+    name: Create and publish packages to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Change version and name if nightly
+        if: github.event_name != 'release'
+        run: ./nightly
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel
+      - name: Build package
+        run: python setup.py sdist bdist_wheel
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_PASSWORD }}
