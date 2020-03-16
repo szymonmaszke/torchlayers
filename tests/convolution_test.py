@@ -105,7 +105,6 @@ def classification_model():
             ),
             order=2,
         ),
-        # torchlayers.InvertedResidualBottleneck(),
         torchlayers.AvgPool(),
         torchlayers.StochasticDepth(torchlayers.Fire(128, hidden_channels=64)),
         torchlayers.ReLU(),
@@ -117,6 +116,21 @@ def classification_model():
 @pytest.fixture
 def autoencoder_model():
     return AutoEncoder()
+
+
+def test_text_cnn():
+    model = torch.nn.Sequential(
+        torchlayers.Conv(64),  # specify ONLY out_channels
+        torch.nn.ReLU(),  # use torch.nn wherever you wish
+        torchlayers.BatchNorm(),  # BatchNormNd inferred from input
+        torchlayers.Conv(128),  # Default kernel_size equal to 3
+        torchlayers.ReLU(),
+        torchlayers.Conv(256, kernel_size=11),  # "same" padding as default
+        torchlayers.GlobalMaxPool(),  # Known from Keras
+        torchlayers.Linear(10),  # Output for 10 classes
+    )
+
+    torchlayers.build(model, torch.randn(2, 300, 1))
 
 
 def test_classification(classification_model):
