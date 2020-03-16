@@ -11,21 +11,18 @@ class StochasticDepth(torch.nn.Module):
 
     Originally devised as regularization, though `other research <https://web.stanford.edu/class/cs331b/2016/projects/kaplan_smith_jiang.pdf>`__  suggests:
 
-    - "[...] StochasticDepth Nets are less tuned for low-level feature extraction
-    but more tuned for higher level feature differentiation."
-    - "[...] Stochasticity does not help with the ”dead neurons” problem;
-    in fact the problem is actually more pronounced in the early layers.
-    Nonetheless, the Stochastic Depth Network has relatively fewer dead neurons in later layers."
+    - "[...] StochasticDepth Nets are less tuned for low-level feature extraction but more tuned for higher level feature differentiation."
+    - "[...] Stochasticity does not help with the ”dead neurons” problem; in fact the problem is actually more pronounced in the early layers. Nonetheless, the Stochastic Depth Network has relatively fewer dead neurons in later layers."
 
     It might be useful to employ this technique to layers closer to the bottleneck.
 
     Parameters
     ----------
     module: torch.nn.Module
-            Any module whose output might be skipped
-            (output shape of it has to be equal to the shape of inputs).
-    p: float
-            Probability of survival (e.g. the layer will be kept).
+        Any module whose output might be skipped
+        (output shape of it has to be equal to the shape of inputs).
+    p: float, optional
+        Probability of survival (e.g. the layer will be kept). Default: ``0.5``
 
     """
 

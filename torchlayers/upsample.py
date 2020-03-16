@@ -8,12 +8,17 @@ from . import convolution
 class ConvPixelShuffle(torch.nn.Module):
     """Two dimensional convolution with ICNR initialization followed by PixelShuffle.
 
-    `kernel_size` got a default value of `3`, `upscaling`
+    Increases `height` and `width` of `input` tensor by scale, acts like
+    learnable upsampling. Due to `ICNR weight initialization <https://arxiv.org/abs/1707.02937>`__
+    of `convolution` it has similar starting point to nearest neighbour upsampling.
 
-    **IMPORTANT**:
+    `kernel_size` got a default value of `3`, `upscale_factor` got a default
+    value of `2`
 
-        Currently only `2D` input is allowed (`[batch, channels, height, width]`),
-        due to `torch.nn.PixelShuffle` not supporting `1D` or `3D`.
+    .. note::
+
+        Currently only `4D` input is allowed (`[batch, channels, height, width]`),
+        due to `torch.nn.PixelShuffle` not supporting `1D` or `3D` versions.
         See [this PyTorch PR](https://github.com/pytorch/pytorch/pull/6340/files)
         for example of dimension-agnostic implementation.
 
@@ -23,7 +28,7 @@ class ConvPixelShuffle(torch.nn.Module):
         Number of channels in the input image
     out_channels : int
         Number of channels produced after PixelShuffle
-    upscale_factor : int
+    upscale_factor : int, optional
         Factor to increase spatial resolution by. Default: `2`
     kernel_size : int or tuple, optional
         Size of the convolving kernel. Default: `3`
@@ -80,12 +85,14 @@ class ConvPixelShuffle(torch.nn.Module):
             self.initializer = initializer
 
     def post_build(self):
+        """Initialize weights after layer was built."""
         self.icnr_initialization(self.convolution.weight.data)
 
     def icnr_initialization(self, tensor):
         """ICNR initializer for checkerboard artifact free sub pixel convolution.
 
-        Originally presented in https://arxiv.org/abs/1707.02937.
+        Originally presented in
+        `Checkerboard artifact free sub-pixel convolution: A note on sub-pixel convolution, resize convolution and convolution resize <https://arxiv.org/abs/1707.02937>`__
         Initializes convolutional layer prior to `torch.nn.PixelShuffle`.
         Weights are initialized according to `initializer` passed to to `__init__`.
 

@@ -7,7 +7,7 @@ import torch
 
 from . import _dev_utils, normalization, pooling
 
-# Add types where possible and ensure torch jit compatibility
+# TO-DO: Ensure torch.jit compatibility of layers below
 
 
 class _Conv(_dev_utils.modules.InferDimension):
@@ -36,7 +36,15 @@ class _Conv(_dev_utils.modules.InferDimension):
     def _dimension_pad(cls, dimension, kernel_size, stride, dilation):
         if kernel_size % 2 == 0:
             raise ValueError(
-                'Only odd kernel size for padding "same" is currently supported.'
+                'Only asymmetric "same" padding is currently supported. `kernel_size` size has to be odd, but got `kernel_size={}`'.format(
+                    kernel_size
+                )
+            )
+        if stride % 2 == 0:
+            raise ValueError(
+                'Only asymmetric "same" padding is currently supported. `stride` size has to be odd, but got `stride={}`'.format(
+                    kernel_size
+                )
             )
 
         return math.ceil(
@@ -77,14 +85,16 @@ class Conv(_Conv):
     Additional `same` `padding` mode was added and set as default.
     This mode preserves all dimensions excepts channels.
 
-    **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
-    `dilation` and `stride`. If any of those is even you should explicitly pad
-    your input asymmetrically with `torch.functional.pad` or a-like.
 
     `kernel_size` got a default value of `3`.
 
     Otherwise acts exactly like PyTorch's Convolution, see
     `documentation <https://pytorch.org/docs/stable/nn.html#convolution-layers>`__.
+
+    .. note::
+                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+                `dilation` and `stride`. If any of those is even you should explicitly pad
+                your input asymmetrically with `torch.functional.pad` or a-like.
 
     Parameters
     ----------
@@ -162,6 +172,11 @@ class ConvTranspose(_Conv):
     `documentation <https://pytorch.org/docs/stable/nn.html#convolution-layers>`__.
 
     Default argument for `kernel_size` was added equal to `3`.
+
+    .. note::
+                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+                `dilation` and `stride`. If any of those is even you should explicitly pad
+                your input asymmetrically with `torch.functional.pad` or a-like.
 
     Parameters
     ----------
@@ -244,14 +259,17 @@ class DepthwiseConv(_Conv):
     Additional `same` `padding` mode was added and set as default.
     This mode preserves all dimensions excepts channels.
 
-    **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
-    `dilation` and `stride`. If any of those is even you should explicitly pad
-    your input asymmetrically with `torch.functional.pad` or a-like.
-
-    **IMPORTANT**: `out_channels` has to be divisible by `in_channels` without remainder
-    (e.g. `out_channels=64` and `in_channels=32`), otherwise error is thrown.
-
     `kernel_size` got a default value of `3`.
+
+    .. note::
+                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+                `dilation` and `stride`. If any of those is even you should explicitly pad
+                your input asymmetrically with `torch.functional.pad` or a-like.
+
+    .. note::
+                **IMPORTANT**: `out_channels` has to be divisible by `in_channels` without remainder
+                (e.g. `out_channels=64` and `in_channels=32`), otherwise error is thrown.
+
 
     Parameters
     ----------
@@ -329,11 +347,12 @@ class SeparableConv(torch.nn.Module):
     Additional `same` `padding` mode was added and set as default.
     This mode preserves all dimensions excepts channels.
 
-    **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
-    `dilation` and `stride`. If any of those is even you should explicitly pad
-    your input asymmetrically with `torch.functional.pad` or a-like.
-
     `kernel_size` got a default value of `3`.
+
+    .. note::
+                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
+                `dilation` and `stride`. If any of those is even you should explicitly pad
+                your input asymmetrically with `torch.functional.pad` or a-like.
 
     Parameters
     ----------
@@ -431,7 +450,7 @@ class SeparableConv(torch.nn.Module):
 
 
 class ChannelShuffle(_dev_utils.modules.Representation):
-    """Shuffle output channels from _dev_utils.modules.
+    """Shuffle output channels.
 
     When using group convolution knowledge transfer between next layers is reduced
     (as the same input channels are convolved with the same output channels).
@@ -462,7 +481,7 @@ class ChannelShuffle(_dev_utils.modules.Representation):
 
 
 class ChannelSplit(_dev_utils.modules.Representation):
-    """Convenience layer splitting tensor using p.
+    """Convenience layer splitting tensor using `p`.
 
     Returns two outputs, splitted accordingly to parameters.
 
@@ -496,9 +515,7 @@ class Residual(torch.nn.Module):
 
     For correct usage it is advised to keep input line (skip connection) without
     any layer or activation and implement transformations only in module arguments
-    (as per https://arxiv.org/pdf/1603.05027.pdf).
-
-    Above can be easily achieved by using one of BatchNormConv competitorch _dev_utils.modules.
+    (as per `Identity Mappings in Deep Residual Networks <https://arxiv.org/pdf/1603.05027.pdf>`__).
 
     Parameters
     ----------
@@ -554,9 +571,10 @@ class Dense(torch.nn.Module):
 class Poly(torch.nn.Module):
     """Apply one module to input multiple times and sum.
 
-    It's equation for `order` equal to :math:`N` can be written as::
+    It's equation for `order` equal to :math:`N` could be expressed as
 
     .. math::
+
         I + F + F^2 + ... + F^N
 
     where :math:`I` is identity mapping and :math:`F` is output of `module` applied :math:`^N` times.
@@ -596,10 +614,11 @@ class Poly(torch.nn.Module):
 class MPoly(torch.nn.Module):
     """Apply multiple modules to input multiple times and sum.
 
-    It's equation for `poly_modules` length equal to :math:`N` could be expressed as::
+    It's equation for `poly_modules` length equal to :math:`N` could be expressed by
 
     .. math::
-        I + F_0 + F_1(F_0) + ... + F_N(F_{N-1}...F_0)
+
+        I + F_1 + F_1(F_0) + ... + F_N(F_{N-1}...F_0)
 
     where :math:`I` is identity and consecutive :math:`F_N` are consecutive modules
     applied to output of previous ones.
@@ -630,9 +649,10 @@ class MPoly(torch.nn.Module):
 class WayPoly(torch.nn.Module):
     """Apply multiple modules to input and sum.
 
-    It's equation for `poly_modules` length equal to :math:`N` could be expressed as::
+    It's equation for `poly_modules` length equal to :math:`N` could be expressed by
 
     .. math::
+
         I + F_1(I) + F_2(I) + ... + F_N
 
     where :math:`I` is identity and consecutive :math:`F_N` are consecutive `poly_modules`

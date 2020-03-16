@@ -39,7 +39,7 @@ class GlobalMaxPool(_GlobalPool):
     Returns
     -------
     `torch.Tensor`
-            `2D` tensor `(batch, channels)`
+        `2D` tensor `(batch, features)`
 
     """
 
@@ -56,7 +56,7 @@ class GlobalAvgPool(_GlobalPool):
     Returns
     -------
     `torch.Tensor`
-            `2D` tensor `(batch, channels)`
+        `2D` tensor `(batch, features)`
 
     """
 
@@ -70,21 +70,38 @@ class MaxPool(_dev_utils.modules.InferDimension):
 
     Default value for `kernel_size` (`2`) was added.
 
+    Parameters
+    ----------
+    kernel_size: int, optional
+        The size of the window to take a max over. Default: `2`
+    stride: int, optional
+        The stride of the window. Default value is :attr:`kernel_size`
+    padding: int, optional
+        Implicit zero padding to be added on both sides. Default: `0`
+    dilation: int
+        Parameter controlling the stride of elements in the window. Default: `1`
+    return_indices: bool, optional
+        If ``True``, will return the max indices along with the outputs.
+        Useful for :class:`torch.nn.MaxUnpool` later. Default: `False`
+    ceil_mode: bool, optional
+        When True, will use `ceil` instead of `floor` to compute the output shape.
+        Default: `False`
+
     Returns
     -------
     `torch.Tensor`
-            Same shape as `input` with values pooled.
+        Same shape as `input` with values pooled.
 
     """
 
     def __init__(
         self,
-        kernel_size=2,
-        stride=None,
-        padding=0,
-        dilation=1,
-        return_indices=False,
-        ceil_mode=False,
+        kernel_size: int = 2,
+        stride: int = None,
+        padding: int = 0,
+        dilation: int = 1,
+        return_indices: bool = False,
+        ceil_mode: bool = False,
     ):
         super().__init__(
             kernel_size=kernel_size,
@@ -105,20 +122,34 @@ class AvgPool(_dev_utils.modules.InferDimension):
 
     Default value for `kernel_size` (`2`) was added.
 
+    Parameters
+    ----------
+    kernel_size: int, optional
+        The size of the window. Default: `2`
+    stride: int, optional
+        The stride of the window. Default value is :attr:`kernel_size`
+    padding: int, oprtional
+        Implicit zero padding to be added on both sides. Default: `0`
+    ceil_mode: bool, opriontal
+        When True, will use `ceil` instead of `floor` to compute the output shape.
+        Default: `True`
+    count_include_pad: bool, optional
+        When True, will include the zero-padding in the averaging. Default: `True`
+
     Returns
     -------
     `torch.Tensor`
-            Same shape as `input` with values pooled.
+        Same shape as `input` with values pooled.
 
     """
 
     def __init__(
         self,
-        kernel_size=2,
-        stride=None,
-        padding=0,
-        ceil_mode=False,
-        count_include_pad=True,
+        kernel_size: int = 2,
+        stride: int = None,
+        padding: int = 0,
+        ceil_mode: bool = False,
+        count_include_pad: bool = True,
     ):
         super().__init__(
             kernel_size=kernel_size,

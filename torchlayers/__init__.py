@@ -1,13 +1,15 @@
 import inspect
 import io
+import typing
 import warnings
 
 import torch
 
 from . import (_dev_utils, _inferable, activations, convolution, normalization,
                pooling, regularization, upsample)
-from ._general import Concatenate, Lambda, Reshape
 from ._version import __version__
+
+__all__ = ["build", "Infer", "Lambda", "Reshape", "Concatenate"]
 
 
 def build(module, *args, **kwargs):
@@ -22,7 +24,7 @@ def build(module, *args, **kwargs):
     overhead.
 
     `torchlayers` also supports `post_build` function to perform some action after
-    shape was inferred (weight initialization example below):
+    shape was inferred (weight initialization example below)::
 
 
         @torchlayers.infer
@@ -44,7 +46,7 @@ def build(module, *args, **kwargs):
         Keyword arguments required by module's `forward`
     """
 
-    def cast_to_torch(module):
+    def torch_compile(module):
         with io.BytesIO() as buffer:
             torch.save(module, buffer)
             return torch.load(io.BytesIO(buffer.getvalue()))
@@ -64,7 +66,7 @@ def build(module, *args, **kwargs):
         module.eval()
         module(*args, **kwargs)
     module.train()
-    module = cast_to_torch(module)
+    module = torch_compile(module)
     run_post(module)
     return module
 
@@ -92,14 +94,14 @@ class Infer:
 
     Parameters
     ----------
-    inference_index: int, optional
+    index: int, optional
         Index into `tensor.shape` input which should be inferred, e.g. tensor.shape[1].
         Default: `1` (`0` being batch dimension)
 
     """
 
-    def __init__(self, inference_index: int = 1):
-        self.inference_index: int = inference_index
+    def __init__(self, index: int = 1):
+        self.index: int = index
 
     def __call__(self, module_class):
         init_arguments = [
@@ -130,7 +132,7 @@ class Infer:
                     _dev_utils.infer.MODULE,
                     _dev_utils.infer.MODULE_CLASS,
                     parsed_arguments,
-                    self.inference_index,
+                    self.index,
                 ),
             )
             setattr(
@@ -159,55 +161,103 @@ class Infer:
         return module_class
 
 
-# def infer(module_class):
-#     init_arguments = [
-#         str(argument)
-#         for argument in inspect.signature(module_class.__init__).parameters.values()
-#     ]
+class Lambda(torch.nn.Module):
+    """Use any function as `torch.nn.Module`
 
-#     # Only self, do not use inference if not required
-#     if len(init_arguments) > 1:
-#         name = module_class.__name__
-#         infered_module = type(
-#             name, (torch.nn.Module,), {_dev_utils.infer.MODULE_CLASS: module_class}
-#         )
-#         parsed_arguments, uninferable_arguments = _dev_utils.infer.parse_arguments(
-#             init_arguments, infered_module
-#         )
+    Simple proxy which allows you to use your own custom in
+    `torch.nn.Sequential` and other requiring `torch.nn.Module` as input::
 
-#         setattr(
-#             infered_module, "__init__", _dev_utils.infer.create_init(parsed_arguments),
-#         )
+        model = torch.nn.Sequential(torchlayers.Lambda(lambda tensor: tensor ** 2))
+        model(torch.randn(64 , 20))
 
-#         setattr(
-#             infered_module,
-#             "forward",
-#             _dev_utils.infer.create_forward(
-#                 _dev_utils.infer.MODULE,
-#                 _dev_utils.infer.MODULE_CLASS,
-#                 parsed_arguments,
-#             ),
-#         )
-#         setattr(
-#             infered_module,
-#             "__repr__",
-#             _dev_utils.infer.create_repr(
-#                 _dev_utils.infer.MODULE, **uninferable_arguments
-#             ),
-#         )
-#         setattr(
-#             infered_module,
-#             "__getattr__",
-#             _dev_utils.infer.create_getattr(_dev_utils.infer.MODULE),
-#         )
+    Parameters
+    ----------
+    function : Callable
+        Any user specified function
 
-#         setattr(
-#             infered_module,
-#             "__reduce__",
-#             _dev_utils.infer.create_reduce(_dev_utils.infer.MODULE, parsed_arguments),
-#         )
+    Returns
+    -------
+    Any
+        Anything `function` returns
 
-#     return infered_module
+    """
+
+    def __init__(self, function: typing.Callable):
+        super().__init__()
+        self.function: typing.Callable = function
+
+    def forward(self, *args, **kwargs) -> typing.Any:
+        return self.function(*args, **kwargs)
+
+
+class Concatenate(torch.nn.Module):
+    """Concatenate list of tensors.
+
+    Mainly useful in `torch.nn.Sequential` when previous layer returns multiple
+    tensors, e.g.::
+
+        class Foo(torch.nn.Module):
+            # Return same tensor three times
+            # You could explicitly return a list or tuple as well
+            def forward(tensor):
+                return tensor, tensor, tensor
+
+
+        model = torch.nn.Sequential(Foo(), torchlayers.Concatenate())
+        model(torch.randn(64 , 20))
+
+    All tensors must have the same shape (except in the concatenating dimension).
+
+    Parameters
+    ----------
+    dim : int
+        Dimension along which tensors will be concatenated
+
+    Returns
+    -------
+    torch.Tensor
+        Concatenated tensor along specified `dim`.
+
+    """
+
+    def __init__(self, dim: int):
+        super().__init__()
+        self.dim: int = dim
+
+    def forward(self, inputs):
+        return torch.cat(inputs, dim=self.dim)
+
+
+class Reshape(torch.nn.Module):
+    """Reshape tensor excluding `batch` dimension
+
+    Reshapes input `torch.Tensor` features while preserving batch dimension.
+    Standard `torch.reshape` values (e.g. `-1`) are supported, e.g.::
+
+        layer = torchlayers.Reshape(20, -1)
+        layer(torch.randn(64, 80)) # shape (64, 20, 4)
+
+    All tensors must have the same shape (except in the concatenating dimension).
+    If possible, no copy of `tensor` will be performed.
+
+    Parameters
+    ----------
+    shapes: *int
+        Variable length list of shapes used in view function
+
+    Returns
+    -------
+    torch.Tensor
+        Concatenated tensor
+
+    """
+
+    def __init__(self, *shapes: int):
+        super().__init__()
+        self.shapes: typing.Tuple[int] = shapes
+
+    def forward(self, tensor):
+        return torch.reshape(tensor, (tensor.shape[0], *self.shapes))
 
 
 ###############################################################################
@@ -220,7 +270,7 @@ class Infer:
 def __dir__():
     return (
         dir(torch.nn)
-        + ["Flatten", "Lambda"]
+        + ["Lambda", "Concatenate", "Reshape"]
         + dir(convolution)
         + dir(normalization)
         + dir(upsample)
