@@ -1,0 +1,979 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers.convolution module &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/packages/torchlayers.convolution.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="torchlayers.normalization module" href="torchlayers.normalization.html" />
+    <link rel="prev" title="torchlayers.activations module" href="torchlayers.activations.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="torchlayers.html">torchlayers package</a> &gt;</li>
+        
+      <li>torchlayers.convolution module</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/packages/torchlayers.convolution.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <div class="section" id="module-torchlayers.convolution">
+<span id="torchlayers-convolution-module"></span><h1>torchlayers.convolution module<a class="headerlink" href="#module-torchlayers.convolution" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="torchlayers.convolution.ChannelShuffle">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ChannelShuffle</code><span class="sig-paren">(</span><em class="sig-param">groups: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ChannelShuffle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ChannelShuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffle output channels.</p>
+<p>When using group convolution knowledge transfer between next layers is reduced
+(as the same input channels are convolved with the same output channels).</p>
+<p>This layer reshuffles output channels via simple <code class="xref py py-obj docutils literal notranslate"><span class="pre">reshape</span></code> in order to mix the representation
+from separate groups and improve knowledge transfer.</p>
+<p>Originally proposed by Xiangyu Zhang et. al in:
+<a class="reference external" href="https://arxiv.org/abs/1707.01083">ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of groups used in the previous convolutional layer.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.ChannelShuffle.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ChannelShuffle.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ChannelShuffle.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.ChannelSplit">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ChannelSplit</code><span class="sig-paren">(</span><em class="sig-param">p: float</em>, <em class="sig-param">dim: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ChannelSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ChannelSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience layer splitting tensor using <code class="xref py py-obj docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<p>Returns two outputs, splitted accordingly to parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Percentage of channels to go into first group</p></li>
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Dimension along which input will be splitted. Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code> (channel dimension)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.ChannelSplit.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ChannelSplit.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ChannelSplit.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.Conv">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Conv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, groups: int = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Conv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard convolution layer.</p>
+<p>Based on input shape it either creates 1D, 2D or 3D convolution for inputs of shape
+3D, 4D, 5D respectively (including batch as first dimension).</p>
+<p>Additional <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">padding</span></code> mode was added and set as default.
+This mode preserves all dimensions excepts channels.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> got a default value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<p>Otherwise acts exactly like PyTorch’s Convolution, see
+<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#convolution-layers">documentation</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> currently works only for odd values of <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code>. If any of those is even you should explicitly pad
+your input asymmetrically with <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.functional.pad</span></code> or a-like.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input image</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced by the convolution</p></li>
+<li><p><strong>kernel_size</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of the convolving kernel. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>stride</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Stride of the convolution. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>padding</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Padding added to both sides of the input. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code></p></li>
+<li><p><strong>dilation</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Spacing between kernel elements. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><strong>groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Number of blocked connections from input channels to output channels. Default: 1</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, adds a learnable bias to the output. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>padding_mode</strong> (<em>string</em><em>, </em><em>optional</em>) – Accepted values <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">circular</span></code> Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.ConvTranspose">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ConvTranspose</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', output_padding: Union[int, Tuple[int, int], Tuple[int, int, int]] = 0, dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, groups: int = 1, bias: bool = True, padding_mode='zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ConvTranspose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ConvTranspose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard transposed convolution layer.</p>
+<p>Based on input shape it either creates 1D, 2D or 3D convolution (for inputs of shape
+3D, 4D, 5D including batch as first dimension).</p>
+<p>Otherwise acts exactly like PyTorch’s Convolution, see
+<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#convolution-layers">documentation</a>.</p>
+<p>Default argument for <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> was added equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> currently works only for odd values of <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code>. If any of those is even you should explicitly pad
+your input asymmetrically with <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.functional.pad</span></code> or a-like.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input image</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced by the convolution</p></li>
+<li><p><strong>kernel_size</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of the convolving kernel. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>stride</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Stride of the convolution. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>padding</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Padding added to both sides of the input. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code></p></li>
+<li><p><strong>output_padding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><em>optional</em>) – Additional size added to one side of the output shape. Default: 0</p></li>
+<li><p><strong>dilation</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Spacing between kernel elements. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><strong>groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Number of blocked connections from input channels to output channels. Default: 1</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, adds a learnable bias to the output. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>
+dilation (int or tuple, optional): Spacing between kernel elements. Default: 1</p></li>
+<li><p><strong>padding_mode</strong> (<em>string</em><em>, </em><em>optional</em>) – Accepted values <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">circular</span></code> Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.Dense">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Dense</code><span class="sig-paren">(</span><em class="sig-param">module: torch.nn.modules.module.Module</em>, <em class="sig-param">dim: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Dense"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Dense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dense residual connection concatenating input channels and output channels of provided module.</p>
+<p>Originally proposed by Gao Huang et. al in <a class="reference external" href="https://arxiv.org/abs/1608.06993">Densely Connected Convolutional Networks</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a>) – Convolutional PyTorch module (or other compatible module).
+Shape of module’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> has to be equal to it’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code>, both
+should be addable <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a> instances.</p></li>
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Dimension along which <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></a> and module’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code> will be concatenated.
+Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code> (channel-wise)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.Dense.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Dense.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Dense.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.DepthwiseConv">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">DepthwiseConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#DepthwiseConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.DepthwiseConv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depthwise convolution layer.</p>
+<p>Based on input shape it either creates 1D, 2D or 3D depthwise convolution
+for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</p>
+<p>Additional <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">padding</span></code> mode was added and set as default.
+This mode preserves all dimensions excepts channels.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> got a default value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> currently works only for odd values of <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code>. If any of those is even you should explicitly pad
+your input asymmetrically with <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.functional.pad</span></code> or a-like.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_channels</span></code> has to be divisible by <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code> without remainder
+(e.g. <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_channels=64</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels=32</span></code>), otherwise error is thrown.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input image</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced by the convolution</p></li>
+<li><p><strong>kernel_size</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of the convolving kernel. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>stride</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Stride of the convolution. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>padding</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Padding added to both sides of the input. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code></p></li>
+<li><p><strong>dilation</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Spacing between kernel elements. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, adds a learnable bias to the output. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>padding_mode</strong> (<em>string</em><em>, </em><em>optional</em>) – Accepted values <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">circular</span></code> Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.Fire">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Fire</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">out_channels: int</em>, <em class="sig-param">hidden_channels=None</em>, <em class="sig-param">p: float = 0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Fire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Fire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Squeeze and Expand number of channels efficiently operation-wise.</p>
+<p>First input channels will be squeezed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">hidden</span></code> channels and <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>x</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">1 x 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">x</span><span class="mord">1</span></span></span></span>
+
+</span> convolution.
+After that those will be expanded to <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_channels</span></code> partially done by <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>x</mi><mn>3</mn></mrow><annotation encoding="application/x-tex">3 x 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord mathdefault">x</span><span class="mord">3</span></span></span></span>
+
+</span> convolution
+and partially by <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>x</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">1 x 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">x</span><span class="mord">1</span></span></span></span>
+
+</span> convolution (as specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">p</span></code> parameter).</p>
+<p>Originally proposed by Forrest N. Iandola et. al in
+<a class="reference external" href="https://arxiv.org/abs/1602.07360">SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced by Fire module</p></li>
+<li><p><strong>hidden_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Number of hidden channels (squeeze convolution layer).
+Default: <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> (half of <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code>)</p></li>
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – Ratio of <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>x</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">1 x 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">x</span><span class="mord">1</span></span></span></span>
+
+</span> convolution taken from total <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_channels</span></code>.
+The more, the more <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>x</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">1 x 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathdefault">x</span><span class="mord">1</span></span></span></span>
+
+</span> convolution will be used during expanding.
+Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">0.5</span></code> (half of <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_channels</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.Fire.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Fire.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Fire.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.InvertedResidualBottleneck">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">InvertedResidualBottleneck</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, hidden_channels: int = None, activation: Callable[[torch.Tensor], torch.Tensor] = None, batchnorm: bool = True, squeeze_excitation: bool = True, squeeze_excitation_hidden: int = None, squeeze_excitation_activation: Callable[[torch.Tensor], torch.Tensor] = None, squeeze_excitation_sigmoid: Callable[[torch.Tensor], torch.Tensor] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#InvertedResidualBottleneck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.InvertedResidualBottleneck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.</p>
+<p>Originally proposed by Mark Sandler et. al in
+<a class="reference external" href="https://arxiv.org/abs/1801.04381">MobileNetV2: Inverted Residuals and Linear Bottlenecks &lt;0.5MB model size</a></p>
+<p>Expanded with <a class="reference internal" href="#torchlayers.convolution.SqueezeExcitation" title="torchlayers.convolution.SqueezeExcitation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeExcitation</span></code></a> after depthwise convolution by Mingxing Tan et. al in
+<a class="reference external" href="https://arxiv.org/abs/1807.11626">MnasNet: Platform-Aware Neural Architecture Search for Mobile</a></p>
+<p>Due to it’s customizable nature blocks from other research papers could be easily produced, e.g.
+<a class="reference external" href="https://arxiv.org/pdf/1905.02244.pdf">Searching for MobileNetV3</a> by providing
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.HardSwish()</span></code> as <code class="xref py py-obj docutils literal notranslate"><span class="pre">activation</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.HardSigmoid()</span></code> as <code class="xref py py-obj docutils literal notranslate"><span class="pre">squeeze_excitation_activation</span></code>
+and <code class="xref py py-obj docutils literal notranslate"><span class="pre">squeeze_excitation_hidden</span></code> equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">hidden_channels</span> <span class="pre">//</span> <span class="pre">4</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input</p></li>
+<li><p><strong>hidden_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Number of hidden channels (expanded). Should be greater than <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code>, usually
+by factor of <code class="xref py py-obj docutils literal notranslate"><span class="pre">4</span></code>. Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span> <span class="pre">*</span> <span class="pre">4</span></code></p></li>
+<li><p><strong>activation</strong> (<em>typing.Callable</em><em>, </em><em>optional</em>) – One argument callable performing activation after hidden layer.
+Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.ReLU6()</span></code></p></li>
+<li><p><strong>batchnorm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply Batch Normalization layer after initial convolution,
+depthwise expanding part (before squeeze excitation) and final squeeze.
+Default: <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a></p></li>
+<li><p><strong>squeeze_excitation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use standard <a class="reference internal" href="#torchlayers.convolution.SqueezeExcitation" title="torchlayers.convolution.SqueezeExcitation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeExcitation</span></code></a> (see <a class="reference internal" href="#torchlayers.convolution.SqueezeExcitation" title="torchlayers.convolution.SqueezeExcitation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeExcitation</span></code></a> module)
+after depthwise convolution.
+Default: <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a></p></li>
+<li><p><strong>squeeze_excitation_hidden</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Size of the hidden <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Linear" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code></a> layer. Usually smaller than <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code>
+(at least in original research paper). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1/16</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code> as
+suggested by original paper.</p></li>
+<li><p><strong>squeeze_excitation_activation</strong> (<em>typing.Callable</em><em>, </em><em>optional</em>) – One argument callable performing activation after hidden layer.
+Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.ReLU()</span></code></p></li>
+<li><p><strong>squeeze_excitation_sigmoid</strong> (<em>typing.Callable</em><em>, </em><em>optional</em>) – One argument callable squashing values after excitation.
+Default: <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sigmoid" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Sigmoid</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.InvertedResidualBottleneck.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#InvertedResidualBottleneck.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.InvertedResidualBottleneck.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.MPoly">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">MPoly</code><span class="sig-paren">(</span><em class="sig-param">*poly_modules: torch.nn.modules.module.Module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#MPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.MPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply multiple modules to input multiple times and sum.</p>
+<p>It’s equation for <code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_modules</span></code> length equal to <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>
+
+</span> could be expressed by</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>+</mo><msub><mi>F</mi><mn>1</mn></msub><mo>+</mo><msub><mi>F</mi><mn>1</mn></msub><mo stretchy="false">(</mo><msub><mi>F</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msub><mi>F</mi><mi>N</mi></msub><mo stretchy="false">(</mo><msub><mi>F</mi><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msub><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><msub><mi>F</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">I + F_1 + F_1(F_0) + ... + F_N(F_{N-1}...F_0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.328331em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>
+
+</div><p>where <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>
+
+</span> is identity and consecutive <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">F_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>
+
+</span> are consecutive modules
+applied to output of previous ones.</p>
+<p>Originally proposed by Xingcheng Zhang et. al in
+<a class="reference external" href="https://arxiv.org/abs/1608.06993">PolyNet: A Pursuit of Structural Diversity in Very Deep Networks</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*poly_modules</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a>) – Variable arg of modules to use. If empty, acts as an identity.
+For single module acts like <code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNet</span></code>. <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code> was used in original paper.
+All modules need <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code> of equal <code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.MPoly.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#MPoly.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.MPoly.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.Poly">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Poly</code><span class="sig-paren">(</span><em class="sig-param">module: torch.nn.modules.module.Module</em>, <em class="sig-param">order: int = 2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Poly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Poly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply one module to input multiple times and sum.</p>
+<p>It’s equation for <code class="xref py py-obj docutils literal notranslate"><span class="pre">order</span></code> equal to <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>
+
+</span> could be expressed as</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>+</mo><mi>F</mi><mo>+</mo><msup><mi>F</mi><mn>2</mn></msup><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msup><mi>F</mi><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">I + F + F^2 + ... + F^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8913309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span></span>
+
+</div><p>where <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>
+
+</span> is identity mapping and <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi></mrow><annotation encoding="application/x-tex">F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span></span></span></span>
+
+</span> is output of <code class="xref py py-obj docutils literal notranslate"><span class="pre">module</span></code> applied <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow></mrow><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span>
+
+</span> times.</p>
+<p>Originally proposed by Xingcheng Zhang et. al in
+<a class="reference external" href="https://arxiv.org/abs/1608.06993">PolyNet: A Pursuit of Structural Diversity in Very Deep Networks</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a>) – Convolutional PyTorch module (or other compatible module).
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> shape has to be equal to it’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">output</span></code> shape
+(for 2D convolution it would be <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>C</mi><mo separator="true">,</mo><mi>H</mi><mo separator="true">,</mo><mi>W</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(C, H, W)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mclose">)</span></span></span></span>
+
+</span>)</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Order of PolyInception module. For order equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code> acts just like
+ResNet, order of <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code> was used in original paper. Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.Poly.extra_repr">
+<code class="sig-name descname">extra_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Poly.extra_repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Poly.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra representation of the module</p>
+<p>To print customized extra information, you should reimplement
+this method in your own modules. Both single-line and multi-line
+strings are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="torchlayers.convolution.Poly.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Poly.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Poly.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.Residual">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Residual</code><span class="sig-paren">(</span><em class="sig-param">module: torch.nn.modules.module.Module</em>, <em class="sig-param">projection: torch.nn.modules.module.Module = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Residual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Residual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Residual connection adding input to output of provided module.</p>
+<p>Originally proposed by He et. al in <a class="reference external" href="www.arxiv.org/abs/1512.03385">ResNet</a></p>
+<p>For correct usage it is advised to keep input line (skip connection) without
+any layer or activation and implement transformations only in module arguments
+(as per <a class="reference external" href="https://arxiv.org/pdf/1603.05027.pdf">Identity Mappings in Deep Residual Networks</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a>) – Convolutional PyTorch module (or other compatible module).
+Shape of module’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> has to be equal to it’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code>, both
+should be addable <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a> instances.</p></li>
+<li><p><strong>projection</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a><em>, </em><em>optional</em>) – If shapes of <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">module</span></code> results are different, it’s user
+responsibility to add custom <code class="xref py py-obj docutils literal notranslate"><span class="pre">projection</span></code> module (usually <code class="xref py py-obj docutils literal notranslate"><span class="pre">1x1</span></code> convolution).
+Default: <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.Residual.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Residual.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Residual.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.SeparableConv">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SeparableConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SeparableConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SeparableConv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separable convolution layer (a.k.a. depthwise separable convolution).</p>
+<p>Based on input shape it either creates 1D, 2D or 3D separable convolution
+for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</p>
+<p>Additional <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">padding</span></code> mode was added and set as default.
+This mode preserves all dimensions excepts channels.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> got a default value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> currently works only for odd values of <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code>. If any of those is even you should explicitly pad
+your input asymmetrically with <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.functional.pad</span></code> or a-like.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input image</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced by the convolution</p></li>
+<li><p><strong>kernel_size</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of the convolving kernel. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>stride</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Stride of the convolution. User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>padding</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Padding added to both sides of the input. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code></p></li>
+<li><p><strong>dilation</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Spacing between kernel elements. String “same” can be used with odd
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stride</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">dilation</span></code>
+User can specify <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> or 2-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv2d</span></code>)
+or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv3d</span></code>). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, adds a learnable bias to the output. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>padding_mode</strong> (<em>string</em><em>, </em><em>optional</em>) – Accepted values <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">circular</span></code> Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.SeparableConv.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SeparableConv.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SeparableConv.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.SqueezeExcitation">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SqueezeExcitation</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, hidden: int = None, activation: Callable[[torch.Tensor], torch.Tensor] = None, sigmoid: Callable[[torch.Tensor], torch.Tensor] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SqueezeExcitation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SqueezeExcitation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Learn channel-wise excitation maps for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+<p>Provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> will be squeezed into <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code> via average pooling,
+passed through two non-linear layers, rescaled to <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>
+
+</span> via <code class="xref py py-obj docutils literal notranslate"><span class="pre">sigmoid</span></code>-like function
+and multiplied with original input channel-wise.</p>
+<p>Originally proposed by Xingcheng Zhang et. al in
+<a class="reference external" href="https://arxiv.org/abs/1709.01507">Squeeze-and-Excitation Networks</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input</p></li>
+<li><p><strong>hidden</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Size of the hidden <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Linear" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code></a> layer. Usually smaller than <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code>
+(at least in original research paper). Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1/16</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code> as
+suggested by original paper.</p></li>
+<li><p><strong>activation</strong> (<em>Callable</em><em>[</em><em>[</em><em>Tensor</em><em>]</em><em>, </em><em>Tensor</em><em>]</em><em>, </em><em>optional</em>) – One argument callable performing activation after hidden layer.
+Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.ReLU()</span></code></p></li>
+<li><p><strong>sigmoid</strong> (<em>Callable</em><em>[</em><em>[</em><em>Tensor</em><em>]</em><em>, </em><em>Tensor</em><em>]</em><em>, </em><em>optional</em>) – One argument callable squashing values after excitation.
+Default: <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Sigmoid" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Sigmoid</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.SqueezeExcitation.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SqueezeExcitation.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SqueezeExcitation.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.convolution.WayPoly">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">WayPoly</code><span class="sig-paren">(</span><em class="sig-param">*poly_modules: torch.nn.modules.module.Module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#WayPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.WayPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply multiple modules to input and sum.</p>
+<p>It’s equation for <code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_modules</span></code> length equal to <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>
+
+</span> could be expressed by</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>+</mo><msub><mi>F</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>I</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>F</mi><mn>2</mn></msub><mo stretchy="false">(</mo><mi>I</mi><mo stretchy="false">)</mo><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msub><mi>F</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">I + F_1(I) + F_2(I) + ... + F_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>
+
+</div><p>where <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span></span>
+
+</span> is identity and consecutive <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">F_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>
+
+</span> are consecutive <code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_modules</span></code>
+applied to input.</p>
+<p>Could be considered as an extension of standard <code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNet</span></code> to many parallel modules.</p>
+<p>Originally proposed by Xingcheng Zhang et. al in
+<a class="reference external" href="https://arxiv.org/abs/1608.06993">PolyNet: A Pursuit of Structural Diversity in Very Deep Networks</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*poly_modules</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.Module" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.nn.Module</em></a>) – Variable arg of modules to use. If empty, acts as an identity.
+For single module acts like <code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNet</span></code>. <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code> was used in original paper.
+All modules need <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code> of equal <code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.convolution.WayPoly.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#WayPoly.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.WayPoly.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+             </article>
+             
+            </div>
+            <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="torchlayers.normalization.html" class="btn btn-neutral float-right" title="torchlayers.normalization module" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+        <a href="torchlayers.activations.html" class="btn btn-neutral" title="torchlayers.activations module" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+      
+    </div>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              <ul>
+<li><a class="reference internal" href="#">torchlayers.convolution module</a></li>
+</ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+         <script src="../_static/jquery.js"></script>
+         <script src="../_static/underscore.js"></script>
+         <script src="../_static/doctools.js"></script>
+         <script src="../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

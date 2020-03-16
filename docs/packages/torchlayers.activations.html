@@ -1,0 +1,535 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers.activations module &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/packages/torchlayers.activations.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="torchlayers.convolution module" href="torchlayers.convolution.html" />
+    <link rel="prev" title="torchlayers package" href="torchlayers.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="torchlayers.html">torchlayers package</a> &gt;</li>
+        
+      <li>torchlayers.activations module</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/packages/torchlayers.activations.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <div class="section" id="module-torchlayers.activations">
+<span id="torchlayers-activations-module"></span><h1>torchlayers.activations module<a class="headerlink" href="#module-torchlayers.activations" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="torchlayers.activations.HardSigmoid">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">HardSigmoid</code><a class="reference internal" href="../_modules/torchlayers/activations.html#HardSigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.HardSigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies HardSigmoid function element-wise.</p>
+<p>Uses <a class="reference external" href="https://pytorch.org/docs/stable/nn.functional.html#torch.nn.functional.hardtanh" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.functional.hardtanh</span></code></a> internally with <code class="xref py py-obj docutils literal notranslate"><span class="pre">0</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code> ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor activated element-wise</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.activations.HardSigmoid.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/activations.html#HardSigmoid.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.HardSigmoid.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.activations.HardSwish">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">HardSwish</code><a class="reference internal" href="../_modules/torchlayers/activations.html#HardSwish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.HardSwish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies HardSwish function element-wise.</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>S</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>h</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>x</mi><mo>∗</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mi>x</mi><mo>+</mo><mn>3</mn><mo stretchy="false">)</mo><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">HardSwish(x) = x * \min(\max(0,x + 3), 6) / 6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">h</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mop">max</span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mord">/</span><span class="mord">6</span></span></span></span></span>
+
+</div><p>While similar in effect to <a class="reference internal" href="#torchlayers.activations.Swish" title="torchlayers.activations.Swish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Swish</span></code></a> should be more CPU-efficient.
+Above formula proposed by in Andrew Howard et. al in <a class="reference external" href="https://arxiv.org/pdf/1905.02244.pdf">Searching for MobileNetV3</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor activated element-wise</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.activations.HardSwish.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/activations.html#HardSwish.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.HardSwish.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="torchlayers.activations.Swish">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">Swish</code><span class="sig-paren">(</span><em class="sig-param">beta: float = 1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/activations.html#Swish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.Swish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Swish function element-wise.</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>h</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>x</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>exp</mi><mo>⁡</mo><mo stretchy="false">(</mo><mo>−</mo><mi>b</mi><mi>e</mi><mi>t</mi><mi>a</mi><mo>∗</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Swish(x) = x / (1 + \exp(-beta * x))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">h</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mord">/</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">(</span><span class="mord">−</span><span class="mord mathdefault">b</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span></span>
+
+</div><p>This form was originally proposed by Prajit Ramachandran et. al in
+<a class="reference external" href="https://arxiv.org/pdf/1710.05941.pdf">Searching for Activation Functions</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – Multiplier used for sigmoid. Default: 1.0 (no multiplier)</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.activations.Swish.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/activations.html#Swish.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.Swish.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="torchlayers.activations.hard_sigmoid">
+<code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">hard_sigmoid</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="reference internal" href="../_modules/torchlayers/activations.html#hard_sigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.hard_sigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies HardSigmoid function element-wise.</p>
+<p>See <a class="reference internal" href="#torchlayers.activations.HardSigmoid" title="torchlayers.activations.HardSigmoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">torchlayers.activations.HardSigmoid</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor activated element-wise</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether operation should be performed <code class="xref py py-obj docutils literal notranslate"><span class="pre">in-place</span></code>. Default: <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="torchlayers.activations.hard_swish">
+<code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">hard_swish</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="reference internal" href="../_modules/torchlayers/activations.html#hard_swish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.hard_swish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies HardSwish function element-wise.</p>
+<p>See <a class="reference internal" href="#torchlayers.activations.HardSwish" title="torchlayers.activations.HardSwish"><code class="xref py py-class docutils literal notranslate"><span class="pre">torchlayers.activations.HardSwish</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor activated element-wise</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="torchlayers.activations.swish">
+<code class="sig-prename descclassname">torchlayers.activations.</code><code class="sig-name descname">swish</code><span class="sig-paren">(</span><em class="sig-param">tensor: torch.Tensor</em>, <em class="sig-param">beta: float = 1.0</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="reference internal" href="../_modules/torchlayers/activations.html#swish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.activations.swish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Swish function element-wise.</p>
+<p>See <a class="reference internal" href="#torchlayers.activations.Swish" title="torchlayers.activations.Swish"><code class="xref py py-class docutils literal notranslate"><span class="pre">torchlayers.activations.Swish</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor activated element-wise</p></li>
+<li><p><strong>beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – Multiplier used for sigmoid. Default: 1.0 (no multiplier)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+             </article>
+             
+            </div>
+            <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="torchlayers.convolution.html" class="btn btn-neutral float-right" title="torchlayers.convolution module" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+        <a href="torchlayers.html" class="btn btn-neutral" title="torchlayers package" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+      
+    </div>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              <ul>
+<li><a class="reference internal" href="#">torchlayers.activations module</a></li>
+</ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+         <script src="../_static/jquery.js"></script>
+         <script src="../_static/underscore.js"></script>
+         <script src="../_static/doctools.js"></script>
+         <script src="../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

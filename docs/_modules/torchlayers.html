@@ -1,0 +1,675 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/_modules/torchlayers.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packages/torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="index.html">Module code</a> &gt;</li>
+        
+      <li>torchlayers</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <h1>Source code for torchlayers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_dev_utils</span><span class="p">,</span> <span class="n">_inferable</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">convolution</span><span class="p">,</span> <span class="n">normalization</span><span class="p">,</span>
+               <span class="n">pooling</span><span class="p">,</span> <span class="n">regularization</span><span class="p">,</span> <span class="n">upsample</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">._version</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="s2">&quot;Infer&quot;</span><span class="p">,</span> <span class="s2">&quot;Lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;Reshape&quot;</span><span class="p">,</span> <span class="s2">&quot;Concatenate&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="build"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.build">[docs]</a><span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build PyTorch layer or module by providing example input.</span>
+
+<span class="sd">    This method should be used **always** after creating module using `torchlayers`</span>
+<span class="sd">    and shape inference especially.</span>
+
+<span class="sd">    Works similarly to `build` functionality provided by `keras`.</span>
+
+<span class="sd">    Provided module will be &quot;compiled&quot; to PyTorch primitives to remove any</span>
+<span class="sd">    overhead.</span>
+
+<span class="sd">    `torchlayers` also supports `post_build` function to perform some action after</span>
+<span class="sd">    shape was inferred (weight initialization example below)::</span>
+
+
+<span class="sd">        @torchlayers.infer</span>
+<span class="sd">        class MyModule(torch.nn.Linear):</span>
+<span class="sd">            def post_build(self):</span>
+<span class="sd">                # You can do anything here really</span>
+<span class="sd">                torch.nn.init.eye_(self.weights)</span>
+
+<span class="sd">    `post_build` should have no arguments other than `self` so all necessary</span>
+<span class="sd">    data should be saved in `module` beforehand.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module : torch.nn.Module</span>
+<span class="sd">        Instance of module to build</span>
+<span class="sd">    *args</span>
+<span class="sd">        Arguments required by module&#39;s `forward`</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments required by module&#39;s `forward`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">torch_compile</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">buffer</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="nf">run_post</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">submodule</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">submodule</span><span class="p">,</span> <span class="s2">&quot;post_build&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">post_build</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">submodule</span><span class="p">,</span> <span class="s2">&quot;post_build&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">post_build</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&#39;s post_build is required to be a method.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">submodule</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">submodule</span><span class="o">.</span><span class="n">post_build</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">module</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">module</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">torch_compile</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="n">run_post</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">module</span></div>
+
+
+<div class="viewcode-block" id="Infer"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Infer">[docs]</a><span class="k">class</span> <span class="nc">Infer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Allows custom user modules to infer input shape.</span>
+
+<span class="sd">    Input shape should be the first argument after `self`.</span>
+
+<span class="sd">    Usually used as class decorator, e.g.::</span>
+
+<span class="sd">        # Remember it&#39;s a class, it has to be instantiated</span>
+<span class="sd">        @torchlayers.Infer()</span>
+<span class="sd">        class StrangeLinear(torch.nn.Linear):</span>
+<span class="sd">            def __init__(self, in_features, out_features, bias: bool = True):</span>
+<span class="sd">                super().__init__(in_features, out_features, bias)</span>
+<span class="sd">                self.params = torch.nn.Parameter(torch.randn(out_features))</span>
+
+<span class="sd">            def forward(self, inputs):</span>
+<span class="sd">                super().forward(inputs) + self.params</span>
+
+<span class="sd">        # in_features can be inferred</span>
+<span class="sd">        layer = StrangeLinear(out_features=64)</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index: int, optional</span>
+<span class="sd">        Index into `tensor.shape` input which should be inferred, e.g. tensor.shape[1].</span>
+<span class="sd">        Default: `1` (`0` being batch dimension)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_class</span><span class="p">):</span>
+        <span class="n">init_arguments</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">module_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Other argument than self</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_arguments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">module_class</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">infered_module</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,),</span> <span class="p">{</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">:</span> <span class="n">module_class</span><span class="p">},</span>
+            <span class="p">)</span>
+            <span class="n">parsed_arguments</span><span class="p">,</span> <span class="n">uninferable_arguments</span> <span class="o">=</span> <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">parse_arguments</span><span class="p">(</span>
+                <span class="n">init_arguments</span><span class="p">,</span> <span class="n">infered_module</span>
+            <span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">infered_module</span><span class="p">,</span>
+                <span class="s2">&quot;__init__&quot;</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_init</span><span class="p">(</span><span class="n">parsed_arguments</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">infered_module</span><span class="p">,</span>
+                <span class="s2">&quot;forward&quot;</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_forward</span><span class="p">(</span>
+                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span>
+                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">,</span>
+                    <span class="n">parsed_arguments</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">infered_module</span><span class="p">,</span>
+                <span class="s2">&quot;__repr__&quot;</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_repr</span><span class="p">(</span>
+                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="o">**</span><span class="n">uninferable_arguments</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">infered_module</span><span class="p">,</span>
+                <span class="s2">&quot;__getattr__&quot;</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_getattr</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">infered_module</span><span class="p">,</span>
+                <span class="s2">&quot;__reduce__&quot;</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_reduce</span><span class="p">(</span>
+                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="n">parsed_arguments</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">infered_module</span>
+
+        <span class="k">return</span> <span class="n">module_class</span></div>
+
+
+<div class="viewcode-block" id="Lambda"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Lambda">[docs]</a><span class="k">class</span> <span class="nc">Lambda</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Use any function as `torch.nn.Module`</span>
+
+<span class="sd">    Simple proxy which allows you to use your own custom in</span>
+<span class="sd">    `torch.nn.Sequential` and other requiring `torch.nn.Module` as input::</span>
+
+<span class="sd">        model = torch.nn.Sequential(torchlayers.Lambda(lambda tensor: tensor ** 2))</span>
+<span class="sd">        model(torch.randn(64 , 20))</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : Callable</span>
+<span class="sd">        Any user specified function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Any</span>
+<span class="sd">        Anything `function` returns</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span> <span class="o">=</span> <span class="n">function</span>
+
+<div class="viewcode-block" id="Lambda.forward"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Lambda.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Concatenate"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Concatenate">[docs]</a><span class="k">class</span> <span class="nc">Concatenate</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concatenate list of tensors.</span>
+
+<span class="sd">    Mainly useful in `torch.nn.Sequential` when previous layer returns multiple</span>
+<span class="sd">    tensors, e.g.::</span>
+
+<span class="sd">        class Foo(torch.nn.Module):</span>
+<span class="sd">            # Return same tensor three times</span>
+<span class="sd">            # You could explicitly return a list or tuple as well</span>
+<span class="sd">            def forward(tensor):</span>
+<span class="sd">                return tensor, tensor, tensor</span>
+
+
+<span class="sd">        model = torch.nn.Sequential(Foo(), torchlayers.Concatenate())</span>
+<span class="sd">        model(torch.randn(64 , 20))</span>
+
+<span class="sd">    All tensors must have the same shape (except in the concatenating dimension).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : int</span>
+<span class="sd">        Dimension along which tensors will be concatenated</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.Tensor</span>
+<span class="sd">        Concatenated tensor along specified `dim`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">dim</span>
+
+<div class="viewcode-block" id="Concatenate.forward"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Concatenate.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Reshape"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Reshape">[docs]</a><span class="k">class</span> <span class="nc">Reshape</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reshape tensor excluding `batch` dimension</span>
+
+<span class="sd">    Reshapes input `torch.Tensor` features while preserving batch dimension.</span>
+<span class="sd">    Standard `torch.reshape` values (e.g. `-1`) are supported, e.g.::</span>
+
+<span class="sd">        layer = torchlayers.Reshape(20, -1)</span>
+<span class="sd">        layer(torch.randn(64, 80)) # shape (64, 20, 4)</span>
+
+<span class="sd">    All tensors must have the same shape (except in the concatenating dimension).</span>
+<span class="sd">    If possible, no copy of `tensor` will be performed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shapes: *int</span>
+<span class="sd">        Variable length list of shapes used in view function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.Tensor</span>
+<span class="sd">        Concatenated tensor</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">shapes</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">shapes</span>
+
+<div class="viewcode-block" id="Reshape.forward"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Reshape.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">))</span></div></div>
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#                       MODULE ATTRIBUTE GETTERS</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+
+
+<span class="k">def</span> <span class="fm">__dir__</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">dir</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;Concatenate&quot;</span><span class="p">,</span> <span class="s2">&quot;Reshape&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">convolution</span><span class="p">)</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">normalization</span><span class="p">)</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">upsample</span><span class="p">)</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">pooling</span><span class="p">)</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">regularization</span><span class="p">)</span>
+        <span class="o">+</span> <span class="nb">dir</span><span class="p">(</span><span class="n">activations</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getattr</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">module_class</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">convolution</span><span class="p">,</span>
+            <span class="n">normalization</span><span class="p">,</span>
+            <span class="n">pooling</span><span class="p">,</span>
+            <span class="n">regularization</span><span class="p">,</span>
+            <span class="n">upsample</span><span class="p">,</span>
+            <span class="n">activations</span><span class="p">,</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">module_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">module_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">module_class</span>
+
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;module </span><span class="si">{}</span><span class="s2"> has no attribute </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+    <span class="n">module_class</span> <span class="o">=</span> <span class="n">_getattr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_inferable</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">+</span> <span class="n">_inferable</span><span class="o">.</span><span class="n">custom</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">Infer</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_per_module_index</span><span class="p">(</span><span class="n">module_class</span><span class="p">))(</span>
+            <span class="n">module_class</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">module_class</span>
+</pre></div>
+
+             </article>
+             
+            </div>
+            <footer>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+         <script src="../_static/jquery.js"></script>
+         <script src="../_static/underscore.js"></script>
+         <script src="../_static/doctools.js"></script>
+         <script src="../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

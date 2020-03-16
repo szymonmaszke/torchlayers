@@ -1,0 +1,495 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/index.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="torchlayers package" href="packages/torchlayers.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="#">
+        </a> &gt;
+      </li>
+
+        
+      <li>torchlayers</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+            
+            
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/szymonmaszke/torchlayers" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <div class="section" id="torchlayers">
+<h1>torchlayers<a class="headerlink" href="#torchlayers" title="Permalink to this headline">¶</a></h1>
+<p><strong>torchlayers</strong> is a PyTorch based library
+providing <strong>automatic shape and dimensionality inference of `torch.nn` layers</strong> and  additional
+building blocks featured in current SOTA architectures (e.g. <a class="reference external" href="https://arxiv.org/abs/1905.11946">Efficient-Net</a>).</p>
+<p>Above requires no user intervention (except single call to <a class="reference internal" href="packages/torchlayers.html#torchlayers.build" title="torchlayers.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.build</span></code></a>)
+similarly to the one seen in <a class="reference external" href="https://www.tensorflow.org/guide/keras">Keras</a>.</p>
+<p><strong>Main functionalities:</strong></p>
+<ul class="simple">
+<li><p><strong>Shape inference</strong> for most of <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#module-torch.nn" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn</span></code></a> module (<strong>convolutional, recurrent, transformer, attention and linear layers</strong>)</p></li>
+<li><p><strong>Dimensionality inference</strong> (e.g. <code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.Conv</span></code> working as <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Conv1d/2d/3d</span></code> based on <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span> <span class="pre">shape</span></code>)</p></li>
+<li><p><strong>Shape inference of custom modules</strong> (see <a class="reference external" href="https://github.com/szymonmaszke/torchlayers/blob/86bb6f6fca0a9490f4d7fb4602cf246862150ab9/README.md#examples">GitHub README</a>)</p></li>
+<li><p><strong>Additional</strong> <a class="reference external" href="https://www.tensorflow.org/guide/keras">Keras-like</a> <strong>layers</strong> (e.g. <a class="reference internal" href="packages/torchlayers.html#torchlayers.Reshape" title="torchlayers.Reshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.Reshape</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.StandardNormalNoise</span></code>)</p></li>
+<li><p><strong>Additional SOTA layers</strong> mostly from ImageNet competitions (e.g. <a class="reference external" href="https://arxiv.org/abs/1608.06993">PolyNet</a>, <a class="reference external" href="https://arxiv.org/abs/1709.01507">Squeeze-And-Excitation</a>, <a class="reference external" href="www.arxiv.org/abs/1512.03385">StochasticDepth</a>)</p></li>
+<li><p><strong>Useful defaults</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;same&quot;</span></code> padding and default <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size=3</span></code> for <code class="xref py py-obj docutils literal notranslate"><span class="pre">Conv</span></code>, dropout rates etc.)</p></li>
+<li><p><strong>Zero overhead and</strong> <a class="reference external" href="https://pytorch.org/docs/stable/jit.html">torchscript</a> <strong>support</strong></p></li>
+</ul>
+<div class="section" id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<p>If you import classes from modules listed belows using <a class="reference internal" href="packages/torchlayers.html#module-torchlayers" title="torchlayers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers</span></code></a> you will get
+shape inferrable version, e.g. <code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.Conv</span></code> instead of <a class="reference internal" href="packages/torchlayers.convolution.html#torchlayers.convolution.Conv" title="torchlayers.convolution.Conv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.convolution.Conv</span></code></a>.</p>
+<p>If you wish to use those without shape inferrence capabilities use fully qualified module name,
+e.g. <a class="reference internal" href="packages/torchlayers.convolution.html#torchlayers.convolution.SqueezeExcitation" title="torchlayers.convolution.SqueezeExcitation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.convolution.SqueezeExcitation</span></code></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packages/torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Following installation methods are available:</p>
+<div class="section" id="pip">
+<h3><a class="reference external" href="https://pypi.org/project/torchlayers/">pip:</a><a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
+<p>To install latest release:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install --user torchlayers
+</pre></div>
+</div>
+<p>To install <code class="xref py py-obj docutils literal notranslate"><span class="pre">nightly</span></code> version:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install --user torchlayers-nightly
+</pre></div>
+</div>
+</div>
+<div class="section" id="docker">
+<h3><a class="reference external" href="https://cloud.docker.com/repository/docker/szymonmaszke/torchlayers">Docker:</a><a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
+<p>Various <a class="reference internal" href="packages/torchlayers.html#module-torchlayers" title="torchlayers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers</span></code></a> images are available both CPU and GPU-enabled.
+You can find them at Docker Cloud at <code class="xref py py-obj docutils literal notranslate"><span class="pre">szymonmaszke/torchlayers</span></code></p>
+<div class="section" id="cpu">
+<h4>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h4>
+<p>CPU image is based on <a class="reference external" href="https://hub.docker.com/_/ubuntu">ubuntu:18.04</a> and
+official release can be pulled with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker pull szymonmaszke/torchlayers:18.04
+</pre></div>
+</div>
+<p>For <code class="xref py py-obj docutils literal notranslate"><span class="pre">nightly</span></code> release:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker pull szymonmaszke/torchlayers:nightly_18.04
+</pre></div>
+</div>
+<p>This image is significantly lighter due to lack of GPU support.</p>
+</div>
+<div class="section" id="gpu">
+<h4>GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">¶</a></h4>
+<p>All images are based on <a class="reference external" href="https://hub.docker.com/r/nvidia/cuda/">nvidia/cuda</a> Docker image.
+Each has corresponding CUDA version tag ( <code class="xref py py-obj docutils literal notranslate"><span class="pre">10.1</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">10</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">9.2</span></code>) CUDNN7 support
+and base image ( <a class="reference external" href="https://hub.docker.com/_/ubuntu">ubuntu:18.04</a> ).</p>
+<p>Following images are available:</p>
+<ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">10.1-cudnn7-runtime-ubuntu18.04</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">10.1-runtime-ubuntu18.04</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">10.0-cudnn7-runtime-ubuntu18.04</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">10.0-runtime-ubuntu18.04</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">9.2-cudnn7-runtime-ubuntu18.04</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">9.2-runtime-ubuntu18.04</span></code></p></li>
+</ul>
+<p>Example pull:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker pull szymonmaszke/torchlayers:10.1-cudnn7-runtime-ubuntu18.04
+</pre></div>
+</div>
+<p>You can use <code class="xref py py-obj docutils literal notranslate"><span class="pre">nightly</span></code> builds as well, just prefix the tag with <code class="xref py py-obj docutils literal notranslate"><span class="pre">nightly_</span></code>, for example
+like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker pull szymonmaszke/torchlayers:nightly_10.1-cudnn7-runtime-ubuntu18.04
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+             </article>
+             
+            </div>
+            <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="packages/torchlayers.html" class="btn btn-neutral float-right" title="torchlayers package" accesskey="n" rel="next">Next <img src="_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+    </div>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              <ul>
+<li><a class="reference internal" href="#">torchlayers</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#pip">pip:</a></li>
+<li><a class="reference internal" href="#docker">Docker:</a><ul>
+<li><a class="reference internal" href="#cpu">CPU</a></li>
+<li><a class="reference internal" href="#gpu">GPU</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+         <script src="_static/jquery.js"></script>
+         <script src="_static/underscore.js"></script>
+         <script src="_static/doctools.js"></script>
+         <script src="_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

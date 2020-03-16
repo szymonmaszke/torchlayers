@@ -1,0 +1,512 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers.normalization &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/_modules/torchlayers/normalization.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="../index.html">Module code</a> &gt;</li>
+        
+          <li><a href="../torchlayers.html">torchlayers</a> &gt;</li>
+        
+      <li>torchlayers.normalization</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <h1>Source code for torchlayers.normalization</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_dev_utils</span>
+
+
+<div class="viewcode-block" id="InstanceNorm"><a class="viewcode-back" href="../../packages/torchlayers.normalization.html#torchlayers.normalization.InstanceNorm">[docs]</a><span class="k">class</span> <span class="nc">InstanceNorm</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">InferDimension</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply Instance Normalization over inferred dimension (3D up to 5D).</span>
+
+<span class="sd">    Based on input shape it either creates 1D, 2D or 3D instance normalization for inputs of shape</span>
+<span class="sd">    3D, 4D, 5D respectively (including batch as first dimension).</span>
+
+<span class="sd">    Otherwise works like standard PyTorch&#39;s `InstanceNorm &lt;https://pytorch.org/docs/stable/nn.html#torch.nn.InstanceNorm1d&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_features : int</span>
+<span class="sd">        :math:`C` (number of channels in input) from an expected input.</span>
+<span class="sd">        Can be number of outputs of previous linear layer as well</span>
+<span class="sd">    eps : float, optional</span>
+<span class="sd">        Value added to the denominator for numerical stability.</span>
+<span class="sd">        Default: `1e-5`</span>
+<span class="sd">    momentum : float, optional</span>
+<span class="sd">        Value used for the `running_mean` and `running_var`</span>
+<span class="sd">        computation. Default: `0.1`</span>
+<span class="sd">    affine : bool, optional</span>
+<span class="sd">        If ``True``, this module has learnable affine parameters, initialized just like in batch normalization.</span>
+<span class="sd">        Default: ``False``</span>
+<span class="sd">    track_running_stats : bool, optional</span>
+<span class="sd">        If ``True``, this module tracks the running mean and variance,</span>
+<span class="sd">        and when set to ``False``, this module does not track such statistics and always uses batch</span>
+<span class="sd">        statistics in both training and eval modes.</span>
+<span class="sd">        Default: ``False``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">num_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-05</span><span class="p">,</span>
+        <span class="n">momentum</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">affine</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">track_running_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="n">num_features</span><span class="p">,</span>
+            <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+            <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span>
+            <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span>
+            <span class="n">track_running_stats</span><span class="o">=</span><span class="n">track_running_stats</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BatchNorm"><a class="viewcode-back" href="../../packages/torchlayers.normalization.html#torchlayers.normalization.BatchNorm">[docs]</a><span class="k">class</span> <span class="nc">BatchNorm</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">InferDimension</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply Batch Normalization over inferred dimension (2D up to 5D).</span>
+
+<span class="sd">    Based on input shape it either creates `1D`, `2D` or `3D` batch normalization for inputs of shape</span>
+<span class="sd">    `2D/3D`, `4D`, `5D` respectively (including batch as first dimension).</span>
+
+<span class="sd">    Otherwise works like standard PyTorch&#39;s `BatchNorm &lt;https://pytorch.org/docs/stable/nn.html#batchnorm1d&gt;`__.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_features : int</span>
+<span class="sd">        :math:`C` (number of channels in input) from an expected input.</span>
+<span class="sd">        Can be number of outputs of previous linear layer as well</span>
+<span class="sd">    eps : float, optional</span>
+<span class="sd">        Value added to the denominator for numerical stability.</span>
+<span class="sd">        Default: `1e-5`</span>
+<span class="sd">    momentum : float, optional</span>
+<span class="sd">        Value used for the `running_mean` and `running_var`</span>
+<span class="sd">        computation. Can be set to ``None`` for cumulative moving average</span>
+<span class="sd">        (i.e. simple average). Default: `0.1`</span>
+<span class="sd">    affine : bool, optional</span>
+<span class="sd">        If ``True``, this module has learnable affine parameters.</span>
+<span class="sd">        Default: ``True``</span>
+<span class="sd">    track_running_stats : bool, optional</span>
+<span class="sd">        If ``True``, this module tracks the running mean and variance,</span>
+<span class="sd">        and when set to ``False``, this module does not track such statistics and always uses batch</span>
+<span class="sd">        statistics in both training and eval modes.</span>
+<span class="sd">        Default: ``True``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">num_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-05</span><span class="p">,</span>
+        <span class="n">momentum</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">affine</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">track_running_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="n">num_features</span><span class="p">,</span>
+            <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+            <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span>
+            <span class="n">affine</span><span class="o">=</span><span class="n">affine</span><span class="p">,</span>
+            <span class="n">track_running_stats</span><span class="o">=</span><span class="n">track_running_stats</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_module_not_found</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">inner_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_module_name</span><span class="si">}</span><span class="s2">1d&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">inner_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">inner_class</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_module_name</span><span class="si">}</span><span class="s2"> could not be inferred from shape. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Only 5, 4, 3 or 2 dimensional input allowed (including batch dimension), got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span></div>
+
+
+<span class="c1"># Arguments had the wrong order unfortunately</span>
+<div class="viewcode-block" id="GroupNorm"><a class="viewcode-back" href="../../packages/torchlayers.normalization.html#torchlayers.normalization.GroupNorm">[docs]</a><span class="k">class</span> <span class="nc">GroupNorm</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply Group Normalization over a mini-batch of inputs.</span>
+
+<span class="sd">    Works exactly like PyTorch&#39;s counterpart, but `num_channels` is used as first argument</span>
+<span class="sd">    so it can be inferred during first forward pass.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_channels : int</span>
+<span class="sd">        Number of channels expected in input</span>
+<span class="sd">    num_groups : int</span>
+<span class="sd">        Number of groups to separate the channels into</span>
+<span class="sd">    eps : float, optional</span>
+<span class="sd">        Value added to the denominator for numerical stability.</span>
+<span class="sd">        Default: `1e-5`</span>
+<span class="sd">    affine : bool, optional</span>
+<span class="sd">        If ``True``, this module has learnable affine parameters.</span>
+<span class="sd">        Default: ``True``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">num_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_groups</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-05</span><span class="p">,</span>
+        <span class="n">affine</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_groups</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span></div>
+</pre></div>
+
+             </article>
+             
+            </div>
+            <footer>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+         <script src="../../_static/jquery.js"></script>
+         <script src="../../_static/underscore.js"></script>
+         <script src="../../_static/doctools.js"></script>
+         <script src="../../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

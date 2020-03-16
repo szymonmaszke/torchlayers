@@ -1,0 +1,467 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers.upsample module &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/packages/torchlayers.upsample.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Related projects" href="../related.html" />
+    <link rel="prev" title="torchlayers.regularization module" href="torchlayers.regularization.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="torchlayers.html">torchlayers package</a> &gt;</li>
+        
+      <li>torchlayers.upsample module</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/packages/torchlayers.upsample.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <div class="section" id="module-torchlayers.upsample">
+<span id="torchlayers-upsample-module"></span><h1>torchlayers.upsample module<a class="headerlink" href="#module-torchlayers.upsample" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="torchlayers.upsample.ConvPixelShuffle">
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.upsample.</code><code class="sig-name descname">ConvPixelShuffle</code><span class="sig-paren">(</span><em class="sig-param">in_channels, out_channels, upscale_factor: int = 2, kernel_size: int = 3, stride: int = 1, padding: Union[Tuple[int, int], int, str] = 'same', dilation: int = 1, groups: int = 1, bias: bool = True, padding_mode: str = 'zeros', initializer: Callable[[torch.Tensor], torch.Tensor] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/upsample.html#ConvPixelShuffle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.upsample.ConvPixelShuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two dimensional convolution with ICNR initialization followed by PixelShuffle.</p>
+<p>Increases <code class="xref py py-obj docutils literal notranslate"><span class="pre">height</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">width</span></code> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code></a> tensor by scale, acts like
+learnable upsampling. Due to <a class="reference external" href="https://arxiv.org/abs/1707.02937">ICNR weight initialization</a>
+of <code class="xref py py-obj docutils literal notranslate"><span class="pre">convolution</span></code> it has similar starting point to nearest neighbour upsampling.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> got a default value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">upscale_factor</span></code> got a default
+value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently only <code class="xref py py-obj docutils literal notranslate"><span class="pre">4D</span></code> input is allowed (<code class="xref py py-obj docutils literal notranslate"><span class="pre">[batch,</span> <span class="pre">channels,</span> <span class="pre">height,</span> <span class="pre">width]</span></code>),
+due to <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.PixelShuffle" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.PixelShuffle</span></code></a> not supporting <code class="xref py py-obj docutils literal notranslate"><span class="pre">1D</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">3D</span></code> versions.
+See [this PyTorch PR](<a class="reference external" href="https://github.com/pytorch/pytorch/pull/6340/files">https://github.com/pytorch/pytorch/pull/6340/files</a>)
+for example of dimension-agnostic implementation.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels in the input image</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of channels produced after PixelShuffle</p></li>
+<li><p><strong>upscale_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Factor to increase spatial resolution by. Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code></p></li>
+<li><p><strong>kernel_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><em>optional</em>) – Size of the convolving kernel. Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><em>optional</em>) – Stride of the convolution. Default: 1</p></li>
+<li><p><strong>padding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><em>optional</em>) – Zero-padding added to both sides of the input. Default: 0</p></li>
+<li><p><strong>padding_mode</strong> (<em>string</em><em>, </em><em>optional</em>) – Accepted values <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">circular</span></code> Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></p></li>
+<li><p><strong>dilation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><em>optional</em>) – Spacing between kernel elements. Default: 1</p></li>
+<li><p><strong>groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Number of blocked connections from input channels to output channels. Default: 1</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, adds a learnable bias to the output. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>initializer</strong> (<em>typing.Callable</em><em>[</em><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a><em>,</em><em>]</em><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a><em>]</em><em>, </em><em>optional</em>) – Initializer for ICNR initialization, can be a function from <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.init</span></code>.
+Gets and returns tensor after initialization.
+Default: <a class="reference external" href="https://pytorch.org/docs/stable/nn.init.html#torch.nn.init.kaiming_normal_" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.init.kaiming_normal_</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="torchlayers.upsample.ConvPixelShuffle.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/upsample.html#ConvPixelShuffle.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.upsample.ConvPixelShuffle.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="torchlayers.upsample.ConvPixelShuffle.icnr_initialization">
+<code class="sig-name descname">icnr_initialization</code><span class="sig-paren">(</span><em class="sig-param">tensor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/upsample.html#ConvPixelShuffle.icnr_initialization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.upsample.ConvPixelShuffle.icnr_initialization" title="Permalink to this definition">¶</a></dt>
+<dd><p>ICNR initializer for checkerboard artifact free sub pixel convolution.</p>
+<p>Originally presented in
+<a class="reference external" href="https://arxiv.org/abs/1707.02937">Checkerboard artifact free sub-pixel convolution: A note on sub-pixel convolution, resize convolution and convolution resize</a>
+Initializes convolutional layer prior to <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#torch.nn.PixelShuffle" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.PixelShuffle</span></code></a>.
+Weights are initialized according to <code class="xref py py-obj docutils literal notranslate"><span class="pre">initializer</span></code> passed to to <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))"><em>torch.Tensor</em></a>) – Tensor to be initialized using ICNR init.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor initialized using ICNR.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.4.0a0+919fcbb ))">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="torchlayers.upsample.ConvPixelShuffle.post_build">
+<code class="sig-name descname">post_build</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/upsample.html#ConvPixelShuffle.post_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.upsample.ConvPixelShuffle.post_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize weights after layer was built.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+             </article>
+             
+            </div>
+            <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../related.html" class="btn btn-neutral float-right" title="Related projects" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+        <a href="torchlayers.regularization.html" class="btn btn-neutral" title="torchlayers.regularization module" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+      
+    </div>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              <ul>
+<li><a class="reference internal" href="#">torchlayers.upsample module</a></li>
+</ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+         <script src="../_static/jquery.js"></script>
+         <script src="../_static/underscore.js"></script>
+         <script src="../_static/doctools.js"></script>
+         <script src="../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>

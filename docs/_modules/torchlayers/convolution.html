@@ -1,0 +1,1312 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>torchlayers.convolution &mdash; torchlayers  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://szymonmaszke.github.io/torchlayers/_modules/torchlayers/convolution.html"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+  <!-- Preload the theme fonts -->
+
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- Preload the katex fonts -->
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+</head>
+
+<div class="container-fluid header-holder tutorials-header" id="header-holder">
+  <div class="container">
+    <div class="header-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a>
+          </li>
+
+          <li>
+            <a href="https://szymonmaszke.github.io/torchlayers/related.html">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/szymonmaszke/torchlayers">Github</a>
+          </li>
+        </ul>
+      </div>
+
+      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+    </div>
+
+  </div>
+</div>
+
+
+<body class="pytorch-body">
+
+   
+
+    
+
+    <div class="table-of-contents-link-wrapper">
+      <span>Table of Contents</span>
+      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
+    </div>
+
+    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
+      <div class="pytorch-side-scroll">
+        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          <div class="pytorch-left-menu-search">
+            
+
+            
+              
+              
+                <div class="version">
+                  0.1.0
+                </div>
+              
+            
+
+            
+
+
+  
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+            
+          </div>
+
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.html">torchlayers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.activations.html">torchlayers.activations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.convolution.html">torchlayers.convolution module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.normalization.html">torchlayers.normalization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.pooling.html">torchlayers.pooling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.regularization.html">torchlayers.regularization module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packages/torchlayers.upsample.html">torchlayers.upsample module</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Related projects</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <div class="pytorch-container">
+      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+        <div class="pytorch-breadcrumbs-wrapper">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="pytorch-breadcrumbs">
+    
+      <li>
+        <a href="../../index.html">
+        </a> &gt;
+      </li>
+
+        
+          <li><a href="../index.html">Module code</a> &gt;</li>
+        
+          <li><a href="../torchlayers.html">torchlayers</a> &gt;</li>
+        
+      <li>torchlayers.convolution</li>
+    
+    
+      <li class="pytorch-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+</div>
+        </div>
+
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
+          Shortcuts
+        </div>
+      </div>
+
+      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
+        <div class="pytorch-content-left">
+          
+          <div class="rst-content">
+          
+            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
+             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
+              
+  <h1>Source code for torchlayers.convolution</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_dev_utils</span><span class="p">,</span> <span class="n">normalization</span><span class="p">,</span> <span class="n">pooling</span>
+
+<span class="c1"># TO-DO: Ensure torch.jit compatibility of layers below</span>
+
+
+<span class="k">class</span> <span class="nc">_Conv</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">InferDimension</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base layer for convolution-like modules.</span>
+
+<span class="sd">    Passes all arguments to `_dev_utils.modules.InferDimension` and sets up</span>
+<span class="sd">    `same` padding.</span>
+
+<span class="sd">    See concrete classes (e.g. `Conv` or `DepthwiseConv`) for specific use cases.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_name : str</span>
+<span class="sd">        `str` representation of `module` name.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Any arguments needed for class creation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">instance_creator</span><span class="o">=</span><span class="n">Conv</span><span class="o">.</span><span class="n">_pad</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_dimension_pad</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dimension</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">dilation</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kernel_size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Only asymmetric &quot;same&quot; padding is currently supported. `kernel_size` size has to be odd, but got `kernel_size=</span><span class="si">{}</span><span class="s1">`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">kernel_size</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">stride</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Only asymmetric &quot;same&quot; padding is currently supported. `stride` size has to be odd, but got `stride=</span><span class="si">{}</span><span class="s1">`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">kernel_size</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dimension</span> <span class="o">*</span> <span class="n">stride</span> <span class="o">-</span> <span class="n">dimension</span> <span class="o">+</span> <span class="n">dilation</span> <span class="o">*</span> <span class="p">(</span><span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_expand_if_needed</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">argument</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">argument</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_pad</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">inner_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;same&quot;</span><span class="p">:</span>
+            <span class="n">dimensions</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+            <span class="n">paddings</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_dimension_pad</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">dilation</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">dimension</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">dilation</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">dimensions</span><span class="p">,</span>
+                    <span class="o">*</span><span class="p">[</span>
+                        <span class="bp">cls</span><span class="o">.</span><span class="n">_expand_if_needed</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;kernel_size&quot;</span><span class="p">,</span> <span class="s2">&quot;stride&quot;</span><span class="p">,</span> <span class="s2">&quot;dilation&quot;</span><span class="p">)</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paddings</span>
+
+        <span class="k">return</span> <span class="n">inner_class</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Conv"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Conv">[docs]</a><span class="k">class</span> <span class="nc">Conv</span><span class="p">(</span><span class="n">_Conv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Standard convolution layer.</span>
+
+<span class="sd">    Based on input shape it either creates 1D, 2D or 3D convolution for inputs of shape</span>
+<span class="sd">    3D, 4D, 5D respectively (including batch as first dimension).</span>
+
+<span class="sd">    Additional `same` `padding` mode was added and set as default.</span>
+<span class="sd">    This mode preserves all dimensions excepts channels.</span>
+
+
+<span class="sd">    `kernel_size` got a default value of `3`.</span>
+
+<span class="sd">    Otherwise acts exactly like PyTorch&#39;s Convolution, see</span>
+<span class="sd">    `documentation &lt;https://pytorch.org/docs/stable/nn.html#convolution-layers&gt;`__.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,</span>
+<span class="sd">                `dilation` and `stride`. If any of those is even you should explicitly pad</span>
+<span class="sd">                your input asymmetrically with `torch.functional.pad` or a-like.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input image</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of channels produced by the convolution</span>
+<span class="sd">    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Padding added to both sides of the input. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `same`</span>
+<span class="sd">    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Spacing between kernel elements. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `1`</span>
+<span class="sd">    groups : int, optional</span>
+<span class="sd">        Number of blocked connections from input channels to output channels. Default: 1</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        If ``True``, adds a learnable bias to the output. Default: ``True``</span>
+<span class="sd">    padding_mode : string, optional</span>
+<span class="sd">        Accepted values `zeros` and `circular` Default: `zeros`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">stride</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">dilation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">out_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span>
+            <span class="n">padding_mode</span><span class="o">=</span><span class="n">padding_mode</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<span class="c1"># Fix ConvTranspose and add same padding?</span>
+<div class="viewcode-block" id="ConvTranspose"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.ConvTranspose">[docs]</a><span class="k">class</span> <span class="nc">ConvTranspose</span><span class="p">(</span><span class="n">_Conv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Standard transposed convolution layer.</span>
+
+<span class="sd">    Based on input shape it either creates 1D, 2D or 3D convolution (for inputs of shape</span>
+<span class="sd">    3D, 4D, 5D including batch as first dimension).</span>
+
+<span class="sd">    Otherwise acts exactly like PyTorch&#39;s Convolution, see</span>
+<span class="sd">    `documentation &lt;https://pytorch.org/docs/stable/nn.html#convolution-layers&gt;`__.</span>
+
+<span class="sd">    Default argument for `kernel_size` was added equal to `3`.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,</span>
+<span class="sd">                `dilation` and `stride`. If any of those is even you should explicitly pad</span>
+<span class="sd">                your input asymmetrically with `torch.functional.pad` or a-like.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input image</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of channels produced by the convolution</span>
+<span class="sd">    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Padding added to both sides of the input. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `same`</span>
+<span class="sd">    output_padding : int or tuple, optional</span>
+<span class="sd">        Additional size added to one side of the output shape. Default: 0</span>
+<span class="sd">    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Spacing between kernel elements. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `1`</span>
+<span class="sd">    groups : int, optional</span>
+<span class="sd">        Number of blocked connections from input channels to output channels. Default: 1</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        If ``True``, adds a learnable bias to the output. Default: ``True``</span>
+<span class="sd">        dilation (int or tuple, optional): Spacing between kernel elements. Default: 1</span>
+<span class="sd">    padding_mode : string, optional</span>
+<span class="sd">        Accepted values `zeros` and `circular` Default: `zeros`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">stride</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">output_padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">dilation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding_mode</span><span class="o">=</span><span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;ConvTranspose&quot;</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">out_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+            <span class="n">output_padding</span><span class="o">=</span><span class="n">output_padding</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span>
+            <span class="n">padding_mode</span><span class="o">=</span><span class="n">padding_mode</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DepthwiseConv"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.DepthwiseConv">[docs]</a><span class="k">class</span> <span class="nc">DepthwiseConv</span><span class="p">(</span><span class="n">_Conv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Depthwise convolution layer.</span>
+
+<span class="sd">    Based on input shape it either creates 1D, 2D or 3D depthwise convolution</span>
+<span class="sd">    for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</span>
+
+<span class="sd">    Additional `same` `padding` mode was added and set as default.</span>
+<span class="sd">    This mode preserves all dimensions excepts channels.</span>
+
+<span class="sd">    `kernel_size` got a default value of `3`.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,</span>
+<span class="sd">                `dilation` and `stride`. If any of those is even you should explicitly pad</span>
+<span class="sd">                your input asymmetrically with `torch.functional.pad` or a-like.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">                **IMPORTANT**: `out_channels` has to be divisible by `in_channels` without remainder</span>
+<span class="sd">                (e.g. `out_channels=64` and `in_channels=32`), otherwise error is thrown.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input image</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of channels produced by the convolution</span>
+<span class="sd">    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Padding added to both sides of the input. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `same`</span>
+<span class="sd">    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Spacing between kernel elements. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `1`</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        If ``True``, adds a learnable bias to the output. Default: ``True``</span>
+<span class="sd">    padding_mode : string, optional</span>
+<span class="sd">        Accepted values `zeros` and `circular` Default: `zeros`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">stride</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">dilation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">out_channels</span> <span class="o">%</span> <span class="n">in_channels</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Depthwise separable convolution needs out_channels divisible by in_channels without remainder.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">out_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span>
+            <span class="n">padding_mode</span><span class="o">=</span><span class="n">padding_mode</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SeparableConv"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.SeparableConv">[docs]</a><span class="k">class</span> <span class="nc">SeparableConv</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Separable convolution layer (a.k.a. depthwise separable convolution).</span>
+
+<span class="sd">    Based on input shape it either creates 1D, 2D or 3D separable convolution</span>
+<span class="sd">    for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</span>
+
+<span class="sd">    Additional `same` `padding` mode was added and set as default.</span>
+<span class="sd">    This mode preserves all dimensions excepts channels.</span>
+
+<span class="sd">    `kernel_size` got a default value of `3`.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">                **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,</span>
+<span class="sd">                `dilation` and `stride`. If any of those is even you should explicitly pad</span>
+<span class="sd">                your input asymmetrically with `torch.functional.pad` or a-like.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input image</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of channels produced by the convolution</span>
+<span class="sd">    kernel_size : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Size of the convolving kernel. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    stride : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Stride of the convolution. User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `3`</span>
+<span class="sd">    padding : Union[str, int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Padding added to both sides of the input. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `same`</span>
+<span class="sd">    dilation : Union[int, Tuple[int, int], Tuple[int, int, int]], optional</span>
+<span class="sd">        Spacing between kernel elements. String &quot;same&quot; can be used with odd</span>
+<span class="sd">        `kernel_size`, `stride` and `dilation`</span>
+<span class="sd">        User can specify `int` or 2-tuple (for `Conv2d`)</span>
+<span class="sd">        or 3-tuple (for `Conv3d`). Default: `1`</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        If ``True``, adds a learnable bias to the output. Default: ``True``</span>
+<span class="sd">    padding_mode : string, optional</span>
+<span class="sd">        Accepted values `zeros` and `circular` Default: `zeros`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">stride</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">dilation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">out_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">stride</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">padding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dilation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">dilation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">bias</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">padding_mode</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">depthwise</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span>
+            <span class="n">padding_mode</span><span class="o">=</span><span class="n">padding_mode</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointwise</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">out_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">padding_mode</span><span class="o">=</span><span class="n">padding_mode</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SeparableConv.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.SeparableConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointwise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depthwise</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="ChannelShuffle"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.ChannelShuffle">[docs]</a><span class="k">class</span> <span class="nc">ChannelShuffle</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Representation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Shuffle output channels.</span>
+
+<span class="sd">    When using group convolution knowledge transfer between next layers is reduced</span>
+<span class="sd">    (as the same input channels are convolved with the same output channels).</span>
+
+<span class="sd">    This layer reshuffles output channels via simple `reshape` in order to mix the representation</span>
+<span class="sd">    from separate groups and improve knowledge transfer.</span>
+
+<span class="sd">    Originally proposed by Xiangyu Zhang et. al in:</span>
+<span class="sd">    `ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices &lt;https://arxiv.org/abs/1707.01083&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    groups : int</span>
+<span class="sd">        Number of groups used in the previous convolutional layer.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">groups</span>
+
+<div class="viewcode-block" id="ChannelShuffle.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.ChannelShuffle.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+            <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChannelSplit"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.ChannelSplit">[docs]</a><span class="k">class</span> <span class="nc">ChannelSplit</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Representation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience layer splitting tensor using `p`.</span>
+
+<span class="sd">    Returns two outputs, splitted accordingly to parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : float</span>
+<span class="sd">        Percentage of channels to go into first group</span>
+<span class="sd">    dim : int, optional</span>
+<span class="sd">        Dimension along which input will be splitted. Default: `1` (channel dimension)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Ratio of small expand fire module has to be between 0 and 1.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">dim</span>
+
+<div class="viewcode-block" id="ChannelSplit.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.ChannelSplit.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Residual"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Residual">[docs]</a><span class="k">class</span> <span class="nc">Residual</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Residual connection adding input to output of provided module.</span>
+
+<span class="sd">    Originally proposed by He et. al in `ResNet &lt;www.arxiv.org/abs/1512.03385&gt;`__</span>
+
+<span class="sd">    For correct usage it is advised to keep input line (skip connection) without</span>
+<span class="sd">    any layer or activation and implement transformations only in module arguments</span>
+<span class="sd">    (as per `Identity Mappings in Deep Residual Networks &lt;https://arxiv.org/pdf/1603.05027.pdf&gt;`__).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module : torch.nn.Module</span>
+<span class="sd">        Convolutional PyTorch module (or other compatible module).</span>
+<span class="sd">        Shape of module&#39;s `inputs` has to be equal to it&#39;s `outputs`, both</span>
+<span class="sd">        should be addable `torch.Tensor` instances.</span>
+<span class="sd">    projection : torch.nn.Module, optional</span>
+<span class="sd">        If shapes of `inputs` and `module` results are different, it&#39;s user</span>
+<span class="sd">        responsibility to add custom `projection` module (usually `1x1` convolution).</span>
+<span class="sd">        Default: `None`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">projection</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">projection</span>
+
+<div class="viewcode-block" id="Residual.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Residual.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projections</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span> <span class="o">+</span> <span class="n">inputs</span></div></div>
+
+
+<div class="viewcode-block" id="Dense"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Dense">[docs]</a><span class="k">class</span> <span class="nc">Dense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dense residual connection concatenating input channels and output channels of provided module.</span>
+
+<span class="sd">    Originally proposed by Gao Huang et. al in `Densely Connected Convolutional Networks &lt;https://arxiv.org/abs/1608.06993&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module : torch.nn.Module</span>
+<span class="sd">        Convolutional PyTorch module (or other compatible module).</span>
+<span class="sd">        Shape of module&#39;s `inputs` has to be equal to it&#39;s `outputs`, both</span>
+<span class="sd">        should be addable `torch.Tensor` instances.</span>
+<span class="sd">    dim : int, optional</span>
+<span class="sd">        Dimension along which `input` and module&#39;s `output` will be concatenated.</span>
+<span class="sd">        Default: `1` (channel-wise)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">dim</span>
+
+<div class="viewcode-block" id="Dense.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Dense.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Poly"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Poly">[docs]</a><span class="k">class</span> <span class="nc">Poly</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply one module to input multiple times and sum.</span>
+
+<span class="sd">    It&#39;s equation for `order` equal to :math:`N` could be expressed as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        I + F + F^2 + ... + F^N</span>
+
+<span class="sd">    where :math:`I` is identity mapping and :math:`F` is output of `module` applied :math:`^N` times.</span>
+
+<span class="sd">    Originally proposed by Xingcheng Zhang et. al in</span>
+<span class="sd">    `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks &lt;https://arxiv.org/abs/1608.06993&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module : torch.nn.Module</span>
+<span class="sd">        Convolutional PyTorch module (or other compatible module).</span>
+<span class="sd">        `inputs` shape has to be equal to it&#39;s `output` shape</span>
+<span class="sd">        (for 2D convolution it would be :math:`(C, H, W)`)</span>
+<span class="sd">    order : int, optional</span>
+<span class="sd">        Order of PolyInception module. For order equal to `1` acts just like</span>
+<span class="sd">        ResNet, order of `2` was used in original paper. Default: `2`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Order of Poly cannot be less than 1.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">order</span>
+
+<div class="viewcode-block" id="Poly.extra_repr"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Poly.extra_repr">[docs]</a>    <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;order=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="si">}</span><span class="s2">,&quot;</span></div>
+
+<div class="viewcode-block" id="Poly.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Poly.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">):</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">inputs</span><span class="p">]</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MPoly"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.MPoly">[docs]</a><span class="k">class</span> <span class="nc">MPoly</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply multiple modules to input multiple times and sum.</span>
+
+<span class="sd">    It&#39;s equation for `poly_modules` length equal to :math:`N` could be expressed by</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        I + F_1 + F_1(F_0) + ... + F_N(F_{N-1}...F_0)</span>
+
+<span class="sd">    where :math:`I` is identity and consecutive :math:`F_N` are consecutive modules</span>
+<span class="sd">    applied to output of previous ones.</span>
+
+<span class="sd">    Originally proposed by Xingcheng Zhang et. al in</span>
+<span class="sd">    `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks &lt;https://arxiv.org/abs/1608.06993&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *poly_modules : torch.nn.Module</span>
+<span class="sd">        Variable arg of modules to use. If empty, acts as an identity.</span>
+<span class="sd">        For single module acts like `ResNet`. `2` was used in original paper.</span>
+<span class="sd">        All modules need `inputs` and `outputs` of equal `shape`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">poly_modules</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poly_modules</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">poly_modules</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MPoly.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.MPoly.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">poly_modules</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">inputs</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly_modules</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">inputs</span><span class="p">]</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="WayPoly"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.WayPoly">[docs]</a><span class="k">class</span> <span class="nc">WayPoly</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply multiple modules to input and sum.</span>
+
+<span class="sd">    It&#39;s equation for `poly_modules` length equal to :math:`N` could be expressed by</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        I + F_1(I) + F_2(I) + ... + F_N</span>
+
+<span class="sd">    where :math:`I` is identity and consecutive :math:`F_N` are consecutive `poly_modules`</span>
+<span class="sd">    applied to input.</span>
+
+<span class="sd">    Could be considered as an extension of standard `ResNet` to many parallel modules.</span>
+
+<span class="sd">    Originally proposed by Xingcheng Zhang et. al in</span>
+<span class="sd">    `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks &lt;https://arxiv.org/abs/1608.06993&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *poly_modules : torch.nn.Module</span>
+<span class="sd">        Variable arg of modules to use. If empty, acts as an identity.</span>
+<span class="sd">        For single module acts like `ResNet`. `2` was used in original paper.</span>
+<span class="sd">        All modules need `inputs` and `outputs` of equal `shape`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">poly_modules</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poly_modules</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">poly_modules</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WayPoly.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.WayPoly.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly_modules</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">inputs</span><span class="p">]</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SqueezeExcitation"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.SqueezeExcitation">[docs]</a><span class="k">class</span> <span class="nc">SqueezeExcitation</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Representation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Learn channel-wise excitation maps for `inputs`.</span>
+
+<span class="sd">    Provided `inputs` will be squeezed into `in_channels` via average pooling,</span>
+<span class="sd">    passed through two non-linear layers, rescaled to :math:`[0, 1]` via `sigmoid`-like function</span>
+<span class="sd">    and multiplied with original input channel-wise.</span>
+
+<span class="sd">    Originally proposed by Xingcheng Zhang et. al in</span>
+<span class="sd">    `Squeeze-and-Excitation Networks &lt;https://arxiv.org/abs/1709.01507&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input</span>
+<span class="sd">    hidden : int, optional</span>
+<span class="sd">        Size of the hidden `torch.nn.Linear` layer. Usually smaller than `in_channels`</span>
+<span class="sd">        (at least in original research paper). Default: `1/16` of `in_channels` as</span>
+<span class="sd">        suggested by original paper.</span>
+<span class="sd">    activation : Callable[[Tensor], Tensor], optional</span>
+<span class="sd">        One argument callable performing activation after hidden layer.</span>
+<span class="sd">        Default: `torch.nn.ReLU()`</span>
+<span class="sd">    sigmoid : Callable[[Tensor], Tensor], optional</span>
+<span class="sd">        One argument callable squashing values after excitation.</span>
+<span class="sd">        Default: `torch.nn.Sigmoid`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sigmoid</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">hidden</span> <span class="k">if</span> <span class="n">hidden</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">in_channels</span> <span class="o">//</span> <span class="mi">16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">activation</span> <span class="k">if</span> <span class="n">activation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">sigmoid</span> <span class="k">if</span> <span class="n">sigmoid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pooling</span> <span class="o">=</span> <span class="n">pooling</span><span class="o">.</span><span class="n">GlobalAvgPool</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_first</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_second</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SqueezeExcitation.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.SqueezeExcitation.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">excitation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_second</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_first</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pooling</span><span class="p">(</span><span class="n">inputs</span><span class="p">))))</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inputs</span> <span class="o">*</span> <span class="n">excitation</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">excitation</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="o">*</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Fire"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Fire">[docs]</a><span class="k">class</span> <span class="nc">Fire</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Representation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Squeeze and Expand number of channels efficiently operation-wise.</span>
+
+<span class="sd">    First input channels will be squeezed to `hidden` channels and :math:`1 x 1` convolution.</span>
+<span class="sd">    After that those will be expanded to `out_channels` partially done by :math:`3 x 3` convolution</span>
+<span class="sd">    and partially by :math:`1 x 1` convolution (as specified by `p` parameter).</span>
+
+<span class="sd">    Originally proposed by Forrest N. Iandola et. al in</span>
+<span class="sd">    `SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size &lt;https://arxiv.org/abs/1602.07360&gt;`__</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of channels in the input</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of channels produced by Fire module</span>
+<span class="sd">    hidden_channels : int, optional</span>
+<span class="sd">        Number of hidden channels (squeeze convolution layer).</span>
+<span class="sd">        Default: `None` (half of `in_channels`)</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        Ratio of :math:`1 x 1` convolution taken from total `out_channels`.</span>
+<span class="sd">        The more, the more :math:`1 x 1` convolution will be used during expanding.</span>
+<span class="sd">        Default: `0.5` (half of `out_channels`)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">out_channels</span>
+
+        <span class="k">if</span> <span class="n">hidden_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">in_channels</span> <span class="o">&gt;=</span> <span class="mi">16</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span> <span class="o">=</span> <span class="n">in_channels</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span> <span class="o">=</span> <span class="n">hidden_channels</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fire&#39;s p has to be between 0 and 1, got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">p</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">small_out_channels</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">out_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expand_small</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span> <span class="n">small_out_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expand_large</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span> <span class="o">-</span> <span class="n">small_out_channels</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Fire.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.Fire.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">squeeze</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expand_small</span><span class="p">(</span><span class="n">squeeze</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_large</span><span class="p">(</span><span class="n">squeeze</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="c1"># To test</span>
+<div class="viewcode-block" id="InvertedResidualBottleneck"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.InvertedResidualBottleneck">[docs]</a><span class="k">class</span> <span class="nc">InvertedResidualBottleneck</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Representation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.</span>
+
+<span class="sd">    Originally proposed by Mark Sandler et. al in</span>
+<span class="sd">    `MobileNetV2: Inverted Residuals and Linear Bottlenecks &lt;0.5MB model size &lt;https://arxiv.org/abs/1801.04381&gt;`__</span>
+
+<span class="sd">    Expanded with `SqueezeExcitation` after depthwise convolution by Mingxing Tan et. al in</span>
+<span class="sd">    `MnasNet: Platform-Aware Neural Architecture Search for Mobile &lt;https://arxiv.org/abs/1807.11626&gt;`__</span>
+
+<span class="sd">    Due to it&#39;s customizable nature blocks from other research papers could be easily produced, e.g.</span>
+<span class="sd">    `Searching for MobileNetV3 &lt;https://arxiv.org/pdf/1905.02244.pdf&gt;`__ by providing</span>
+<span class="sd">    `torchlayers.HardSwish()` as `activation`, `torchlayers.HardSigmoid()` as `squeeze_excitation_activation`</span>
+<span class="sd">    and `squeeze_excitation_hidden` equal to `hidden_channels // 4`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels: int</span>
+<span class="sd">        Number of channels in the input</span>
+<span class="sd">    hidden_channels: int, optional</span>
+<span class="sd">        Number of hidden channels (expanded). Should be greater than `in_channels`, usually</span>
+<span class="sd">        by factor of `4`. Default: `in_channels * 4`</span>
+<span class="sd">    activation: typing.Callable, optional</span>
+<span class="sd">        One argument callable performing activation after hidden layer.</span>
+<span class="sd">        Default: `torch.nn.ReLU6()`</span>
+<span class="sd">    batchnorm: bool, optional</span>
+<span class="sd">        Whether to apply Batch Normalization layer after initial convolution,</span>
+<span class="sd">        depthwise expanding part (before squeeze excitation) and final squeeze.</span>
+<span class="sd">        Default: `True`</span>
+<span class="sd">    squeeze_excitation: bool, optional</span>
+<span class="sd">        Whether to use standard `SqueezeExcitation` (see `SqueezeExcitation` module)</span>
+<span class="sd">        after depthwise convolution.</span>
+<span class="sd">        Default: `True`</span>
+<span class="sd">    squeeze_excitation_hidden: int, optional</span>
+<span class="sd">        Size of the hidden `torch.nn.Linear` layer. Usually smaller than `in_channels`</span>
+<span class="sd">        (at least in original research paper). Default: `1/16` of `in_channels` as</span>
+<span class="sd">        suggested by original paper.</span>
+<span class="sd">    squeeze_excitation_activation: typing.Callable, optional</span>
+<span class="sd">        One argument callable performing activation after hidden layer.</span>
+<span class="sd">        Default: `torch.nn.ReLU()`</span>
+<span class="sd">    squeeze_excitation_sigmoid: typing.Callable, optional</span>
+<span class="sd">        One argument callable squashing values after excitation.</span>
+<span class="sd">        Default: `torch.nn.Sigmoid`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">batchnorm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">squeeze_excitation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">squeeze_excitation_hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">squeeze_excitation_activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">squeeze_excitation_sigmoid</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_add_batchnorm</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">channels</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">batchnorm</span><span class="p">:</span>
+                <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalization</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">(</span><span class="n">channels</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">block</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Argument assignments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">hidden_channels</span> <span class="k">if</span> <span class="n">hidden_channels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">in_channels</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">()</span> <span class="k">if</span> <span class="n">activation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batchnorm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">batchnorm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_excitation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">squeeze_excitation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_excitation_hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">squeeze_excitation_hidden</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_excitation_activation</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">squeeze_excitation_activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_excitation_sigmoid</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">squeeze_excitation_sigmoid</span>
+
+        <span class="c1"># Initial expanding block</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">_add_batchnorm</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">Conv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Depthwise block</span>
+        <span class="n">depthwise_modules</span> <span class="o">=</span> <span class="n">_add_batchnorm</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Conv</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+                    <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                    <span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">squeeze_excitation</span><span class="p">:</span>
+            <span class="n">depthwise_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">SqueezeExcitation</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span>
+                    <span class="n">squeeze_excitation_hidden</span><span class="p">,</span>
+                    <span class="n">squeeze_excitation_activation</span><span class="p">,</span>
+                    <span class="n">squeeze_excitation_sigmoid</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">depthwise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">depthwise_modules</span><span class="p">)</span>
+
+        <span class="c1"># Squeeze to in channels</span>
+        <span class="n">squeeze</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">_add_batchnorm</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">Conv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,),],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="n">Residual</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">initial</span><span class="p">,</span> <span class="n">depthwise</span><span class="p">,</span> <span class="n">squeeze</span><span class="p">))</span>
+
+<div class="viewcode-block" id="InvertedResidualBottleneck.forward"><a class="viewcode-back" href="../../packages/torchlayers.convolution.html#torchlayers.convolution.InvertedResidualBottleneck.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span></div></div>
+</pre></div>
+
+             </article>
+             
+            </div>
+            <footer>
+  
+
+    <hr>
+
+  <!-- Spacing. -->
+  <div role="contentinfo">
+  </div>
+    
+      <div>
+        Built with Sphinx using <a href="https://github.com/pytorch/pytorch_sphinx_theme">PyTorch's theme</a> provided originally by <a href="https://readthedocs.org">Read the Docs</a>.
+      </div>
+      <div>
+      </div>
+    
+
+  <div role="contentinfo">
+  </div> 
+
+</footer>
+          </div>
+        </div>
+
+        <div class="pytorch-content-right" id="pytorch-content-right">
+          <div class="pytorch-right-menu" id="pytorch-right-menu">
+            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+              
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  
+
+
+  
+
+     
+       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+         <script src="../../_static/jquery.js"></script>
+         <script src="../../_static/underscore.js"></script>
+         <script src="../../_static/doctools.js"></script>
+         <script src="../../_static/language_data.js"></script>
+     
+
+  
+
+  <script type="text/javascript" src="../../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+  <!-- Begin Footer -->
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-logo-wrapper">
+        <a href="" class="footer-logo"></a>
+      </div>
+
+      <div class="footer-links-wrapper">
+        <div class="footer-links-col">
+          <ul>
+            <li class="list-title"><a href="https://szymonmaszke.github.io/torchlayers">Home</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">PyTorch</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#torchlayers">Documentation</a></li>
+            <li><a href="https://szymonmaszke.github.io/torchlayers/#installation">Installation</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers">GitHub</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">Github Issues</a></li>
+            <li><a href="https://github.com/szymonmaszke/torchlayers/blob/master/ROADMAP.md">Roadmap</a></li>
+            <li><a href="https://github.com/szymonmaszke" target="_blank">Author</a></li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- End Footer -->
+
+  <!-- Begin Mobile Menu -->
+
+  <div class="mobile-main-menu">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="mobile-main-menu-header-container">
+          <a class="header-logo" href="" aria-label="torchutils"></a>
+          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-main-menu-links-container">
+      <div class="main-menu">
+        <ul>
+          <li>
+            <a href="#">Docs</a>
+          </li>
+
+          <li>
+            <a href="#">Related Projects</a>
+          </li>
+
+          <li>
+            <a href="#">GitHub</a>
+          </li>
+
+          <li>
+            <a href="">Docs</a>
+          </li>
+
+          <li>
+            <a href="">Github</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Mobile Menu -->
+
+  <script type="text/javascript" src="../../_static/js/vendor/anchor.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+</body>
+</html>
