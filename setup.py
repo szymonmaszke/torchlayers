@@ -23,7 +23,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/torchlayers",
     packages=setuptools.find_packages(),
-    install_requires=["torch>=1.3.0", "numpy>=1.18.1"],
+    install_requires=["torch>=1.3.0",],
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
