@@ -111,22 +111,25 @@ User can define any module and make it shape inferable with `torchlayers.Infer`
 decorator class:
 
 ```python
-@torchlayers.Infer() # Remember to instantiate it
+@torchlayers.Infer()  # Remember to instantiate it
 class MyLinear(torch.nn.Module):
     def __init__(self, in_features: int, out_features: int):
-        self.weight = torch.nn.Parameter(torch.randn(in_features, out_features))
+        super().__init__()
+        self.weight = torch.nn.Parameter(torch.randn(out_features, in_features))
         self.bias = torch.nn.Parameter(torch.randn(out_features))
 
     def forward(self, inputs):
         return torch.nn.functional.linear(inputs, self.weight, self.bias)
 
+
 layer = MyLinear(out_features=32)
-# build and just like before
+# [WIP] Currently custom layers are unbuildable, you can still use them without build though
+layer(torch.randn(1, 64))
 ```
 
 By default `inputs.shape[1]` will be used as `in_features` value
 during initial `forward` pass. If you wish to use different `index` (e.g. to infer using
-`inputs.shape[3]`) use `@torchlayers.Infer(index=3)` as a decorator
+`inputs.shape[3]`) use `@torchlayers.Infer(index=3)` as a decorator.
 
 ## Autoencoder with inverted residual bottleneck and pixel shuffle
 
