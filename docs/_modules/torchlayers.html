@@ -226,7 +226,7 @@
                <span class="n">pooling</span><span class="p">,</span> <span class="n">regularization</span><span class="p">,</span> <span class="n">upsample</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">._version</span> <span class="kn">import</span> <span class="n">__version__</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="s2">&quot;Infer&quot;</span><span class="p">,</span> <span class="s2">&quot;Lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;Reshape&quot;</span><span class="p">,</span> <span class="s2">&quot;Concatenate&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="s2">&quot;infer&quot;</span><span class="p">,</span> <span class="s2">&quot;Lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;Reshape&quot;</span><span class="p">,</span> <span class="s2">&quot;Concatenate&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="build"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.build">[docs]</a><span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -288,16 +288,14 @@
     <span class="k">return</span> <span class="n">module</span></div>
 
 
-<div class="viewcode-block" id="Infer"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Infer">[docs]</a><span class="k">class</span> <span class="nc">Infer</span><span class="p">:</span>
+<div class="viewcode-block" id="infer"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.infer">[docs]</a><span class="k">def</span> <span class="nf">infer</span><span class="p">(</span><span class="n">module_class</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Allows custom user modules to infer input shape.</span>
 
 <span class="sd">    Input shape should be the first argument after `self`.</span>
 
 <span class="sd">    Usually used as class decorator, e.g.::</span>
 
-<span class="sd">        # Remember it&#39;s a class, it has to be instantiated</span>
-<span class="sd">        @torchlayers.Infer()</span>
-<span class="sd">        class StrangeLinear(torch.nn.Linear):</span>
+<span class="sd">        class _StrangeLinearImpl(torch.nn.Linear):</span>
 <span class="sd">            def __init__(self, in_features, out_features, bias: bool = True):</span>
 <span class="sd">                super().__init__(in_features, out_features, bias)</span>
 <span class="sd">                self.params = torch.nn.Parameter(torch.randn(out_features))</span>
@@ -305,77 +303,75 @@
 <span class="sd">            def forward(self, inputs):</span>
 <span class="sd">                super().forward(inputs) + self.params</span>
 
+<span class="sd">        # Now you can use shape inference of in_features</span>
+<span class="sd">        StrangeLinear = torchlayers.infer(_StrangeLinearImpl)</span>
+
 <span class="sd">        # in_features can be inferred</span>
 <span class="sd">        layer = StrangeLinear(out_features=64)</span>
 
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    module_class: torch.nn.Module</span>
+<span class="sd">        Class of module to be updated with shape inference capabilities.</span>
+
 <span class="sd">    index: int, optional</span>
 <span class="sd">        Index into `tensor.shape` input which should be inferred, e.g. tensor.shape[1].</span>
 <span class="sd">        Default: `1` (`0` being batch dimension)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">index</span>
+    <span class="n">init_arguments</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">module_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_class</span><span class="p">):</span>
-        <span class="n">init_arguments</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="nb">str</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">module_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">]</span>
+    <span class="c1"># Other argument than self</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_arguments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">module_class</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">infered_module</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,),</span> <span class="p">{</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">:</span> <span class="n">module_class</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">parsed_arguments</span><span class="p">,</span> <span class="n">uninferable_arguments</span> <span class="o">=</span> <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">parse_arguments</span><span class="p">(</span>
+            <span class="n">init_arguments</span><span class="p">,</span> <span class="n">infered_module</span>
+        <span class="p">)</span>
 
-        <span class="c1"># Other argument than self</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_arguments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">module_class</span><span class="o">.</span><span class="vm">__name__</span>
-            <span class="n">infered_module</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
-                <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,),</span> <span class="p">{</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">:</span> <span class="n">module_class</span><span class="p">},</span>
-            <span class="p">)</span>
-            <span class="n">parsed_arguments</span><span class="p">,</span> <span class="n">uninferable_arguments</span> <span class="o">=</span> <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">parse_arguments</span><span class="p">(</span>
-                <span class="n">init_arguments</span><span class="p">,</span> <span class="n">infered_module</span>
-            <span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="n">infered_module</span><span class="p">,</span> <span class="s2">&quot;__init__&quot;</span><span class="p">,</span> <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_init</span><span class="p">(</span><span class="n">parsed_arguments</span><span class="p">),</span>
+        <span class="p">)</span>
 
-            <span class="nb">setattr</span><span class="p">(</span>
-                <span class="n">infered_module</span><span class="p">,</span>
-                <span class="s2">&quot;__init__&quot;</span><span class="p">,</span>
-                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_init</span><span class="p">(</span><span class="n">parsed_arguments</span><span class="p">),</span>
-            <span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="n">infered_module</span><span class="p">,</span>
+            <span class="s2">&quot;forward&quot;</span><span class="p">,</span>
+            <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_forward</span><span class="p">(</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">,</span>
+                <span class="n">parsed_arguments</span><span class="p">,</span>
+                <span class="n">index</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="n">infered_module</span><span class="p">,</span>
+            <span class="s2">&quot;__repr__&quot;</span><span class="p">,</span>
+            <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_repr</span><span class="p">(</span>
+                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="o">**</span><span class="n">uninferable_arguments</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="n">infered_module</span><span class="p">,</span>
+            <span class="s2">&quot;__getattr__&quot;</span><span class="p">,</span>
+            <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_getattr</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">),</span>
+        <span class="p">)</span>
 
-            <span class="nb">setattr</span><span class="p">(</span>
-                <span class="n">infered_module</span><span class="p">,</span>
-                <span class="s2">&quot;forward&quot;</span><span class="p">,</span>
-                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_forward</span><span class="p">(</span>
-                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span>
-                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE_CLASS</span><span class="p">,</span>
-                    <span class="n">parsed_arguments</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
-            <span class="nb">setattr</span><span class="p">(</span>
-                <span class="n">infered_module</span><span class="p">,</span>
-                <span class="s2">&quot;__repr__&quot;</span><span class="p">,</span>
-                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_repr</span><span class="p">(</span>
-                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="o">**</span><span class="n">uninferable_arguments</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
-            <span class="nb">setattr</span><span class="p">(</span>
-                <span class="n">infered_module</span><span class="p">,</span>
-                <span class="s2">&quot;__getattr__&quot;</span><span class="p">,</span>
-                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_getattr</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">),</span>
-            <span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="n">infered_module</span><span class="p">,</span>
+            <span class="s2">&quot;__reduce__&quot;</span><span class="p">,</span>
+            <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_reduce</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="n">parsed_arguments</span><span class="p">),</span>
+        <span class="p">)</span>
 
-            <span class="nb">setattr</span><span class="p">(</span>
-                <span class="n">infered_module</span><span class="p">,</span>
-                <span class="s2">&quot;__reduce__&quot;</span><span class="p">,</span>
-                <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">create_reduce</span><span class="p">(</span>
-                    <span class="n">_dev_utils</span><span class="o">.</span><span class="n">infer</span><span class="o">.</span><span class="n">MODULE</span><span class="p">,</span> <span class="n">parsed_arguments</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">infered_module</span>
 
-            <span class="k">return</span> <span class="n">infered_module</span>
-
-        <span class="k">return</span> <span class="n">module_class</span></div>
+    <span class="k">return</span> <span class="n">module_class</span></div>
 
 
 <div class="viewcode-block" id="Lambda"><a class="viewcode-back" href="../packages/torchlayers.html#torchlayers.Lambda">[docs]</a><span class="k">class</span> <span class="nc">Lambda</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -517,8 +513,8 @@
 
     <span class="n">module_class</span> <span class="o">=</span> <span class="n">_getattr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_inferable</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">+</span> <span class="n">_inferable</span><span class="o">.</span><span class="n">custom</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">Infer</span><span class="p">(</span><span class="n">_dev_utils</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_per_module_index</span><span class="p">(</span><span class="n">module_class</span><span class="p">))(</span>
-            <span class="n">module_class</span>
+        <span class="k">return</span> <span class="n">infer</span><span class="p">(</span>
+            <span class="n">module_class</span><span class="p">,</span> <span class="n">_dev_utils</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_per_module_index</span><span class="p">(</span><span class="n">module_class</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">module_class</span>
 </pre></div>

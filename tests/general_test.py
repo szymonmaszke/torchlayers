@@ -11,11 +11,13 @@ class ConcatenateProxy(torch.nn.Module):
         return tensor, tensor, tensor
 
 
-@torchlayers.Infer()
-class CustomLinear(torch.nn.Linear):
+class _CustomLinearImpl(torch.nn.Linear):
     def __init__(self, in_features, out_features, bias: bool = True):
         super().__init__(in_features, out_features, bias)
         self.some_params = torch.nn.Parameter(torch.randn(2, out_features))
+
+
+CustomLinear = torchlayers.infer(_CustomLinearImpl)
 
 
 @pytest.fixture
@@ -56,4 +58,10 @@ def test_custom_inferable_output():
 def test_custom_inferable_parameters():
     layer = CustomLinear(32)
     layer(torch.rand(16, 64))
+    assert layer.some_params.shape == (2, 32)
+
+
+def test_custom_inferable_build():
+    layer = CustomLinear(32)
+    layer = torchlayers.build(layer, torch.rand(16, 64))
     assert layer.some_params.shape == (2, 32)
