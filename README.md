@@ -29,7 +29,7 @@ similarly to the one seen in [__Keras__](https://www.tensorflow.org/guide/keras)
 
 # Examples
 
-For full functionality please check [__torchlayers documentation__](https://img.shields.io/static/v1?label=&message=docs&color=EE4C2C&style=for-the-badge).
+For full functionality please check [__torchlayers documentation__](https://szymonmaszke.github.io/torchlayers/).
 Below examples should introduce all necessary concepts you should know.
 
 ## Simple convolutional image and text classifier
@@ -136,7 +136,7 @@ during initial `forward` pass. If you wish to use different `index` (e.g. to inf
 
 ## Autoencoder with inverted residual bottleneck and pixel shuffle
 
-Please check code comments and [__documentation__](https://img.shields.io/static/v1?label=&message=docs&color=EE4C2C&style=for-the-badge)
+Please check code comments and [__documentation__](https://szymonmaszke.github.io/torchlayers/)
 if needed. If you are unsure what autoencoder is you could see
 [__this example blog post__](https://towardsdatascience.com/auto-encoder-what-is-it-and-what-is-it-used-for-part-1-3e5c6f017726).
 
