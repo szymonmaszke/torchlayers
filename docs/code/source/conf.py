@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath("../../.."))
 project = "torchlayers"
 copyright = "2019, Szymon Maszke"
 author = "Szymon Maszke"
-version = "0.1.0"
+version = "0.1.1"
 
 
 # -- General configuration ---------------------------------------------------
