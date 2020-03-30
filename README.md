@@ -89,7 +89,7 @@ text_model = torchlayers.build(model, torch.randn(2, 300, 1))
 by-side for readability (__notice different dimenstionality, e.g. `Conv2d` vs `Conv1d` after `torchlayers.build`__):
 
 ```python
-                # MNIST CLASSIFIER                TEXT CLASSIFIER
+                # TEXT CLASSIFIER                 MNIST CLASSIFIER
 
                 Sequential(                       Sequential(
                   (0): Conv1d(300, 64)              (0): Conv2d(3, 64)
