@@ -27,12 +27,57 @@ similarly to the one seen in [__Keras__](https://www.tensorflow.org/guide/keras)
 * __Useful defaults__ (`"same"` padding and default `kernel_size=3` for `Conv`, dropout rates etc.)
 * __Zero overhead and [torchscript](https://pytorch.org/docs/stable/jit.html) support__
 
+__Keep in mind this library works almost exactly like PyTorch originally__.
+What that means is you can use `Sequential`, __define your own networks of any complexity using
+`torch.nn.Module`__, create new layers with shape inference etc.
+
+_See below to get some intuition about library_.
+
 # Examples
 
 For full functionality please check [__torchlayers documentation__](https://szymonmaszke.github.io/torchlayers/).
 Below examples should introduce all necessary concepts you should know.
 
-## Simple convolutional image and text classifier
+## Basic classifier
+
+__All__ `torch.nn` modules can be used through `torchlayers` and __each module with input shape__
+will be appropriately modified with it's input inferable counterpart.
+
+
+```python
+import torchlayers as tl
+
+
+class Classifier(tl.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = tl.Conv2d(64, kernel_size=6)
+        self.conv2 = tl.Conv2d(128, kernel_size=3)
+        self.conv3 = tl.Conv2d(256, kernel_size=3, padding=1)
+        # New layer, more on that in the next example
+        self.pooling = tl.GlobalMaxPool()
+        self.dense = tl.Linear(10)
+
+    def forward(self, x):
+        x = torch.relu(self.conv1(x))
+        x = torch.relu(self.conv2(x))
+        x = torch.relu(self.conv3(x))
+        return self.dense(self.pooling(x))
+
+# Pass model and any example inputs afterwards
+clf = torchlayers.build(Classifier(), torch.randn(1, 3, 32, 32))
+```
+
+Above `torchlayers.Linear(out_features=10)` is used. It is "equivalent" to
+original PyTorch's `torch.nn.Linear(in_features=?, out_features=10)` where `in_features`
+will be inferred from example input input during `torchlayers.build` call.
+
+Same thing happens with `torch.nn.Conv2d(in_channels, out_channels, kernel_size, ...)`
+which can be replaced directly by `tl.Conv2d(out_channels, kernel_size, ...)`.
+
+__Just remember to pass example input through the network!__
+
+## Simple image and text classifier in one!
 
 * We will use single "model" for both tasks.
 Firstly let's define it using `torch.nn` and `torchlayers`:
