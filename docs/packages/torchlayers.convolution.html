@@ -232,6 +232,20 @@
 from separate groups and improve knowledge transfer.</p>
 <p>Originally proposed by Xiangyu Zhang et. al in:
 <a class="reference external" href="https://arxiv.org/abs/1707.01083">ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices</a></p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">Swish</span><span class="p">(),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">ChannelShuffle</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">GlobalMaxPool</span><span class="p">(),</span>
+    <span class="n">tl</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of groups used in the previous convolutional layer.</p>
@@ -258,6 +272,22 @@ registered hooks while the latter silently ignores them.</p>
 <em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ChannelSplit</code><span class="sig-paren">(</span><em class="sig-param">p: float</em>, <em class="sig-param">dim: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ChannelSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ChannelSplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience layer splitting tensor using <code class="xref py py-obj docutils literal notranslate"><span class="pre">p</span></code>.</p>
 <p>Returns two outputs, splitted accordingly to parameters.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+
+<span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">ChannelSplit</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">half</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">half</span> <span class="c1"># for some reason</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -284,7 +314,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="torchlayers.convolution.Conv">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Conv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, groups: int = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Conv" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Conv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">out_channels: int</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">padding='same'</em>, <em class="sig-param">dilation=1</em>, <em class="sig-param">groups: int = 1</em>, <em class="sig-param">bias: bool = True</em>, <em class="sig-param">padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Conv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standard convolution layer.</p>
 <p>Based on input shape it either creates 1D, 2D or 3D convolution for inputs of shape
 3D, 4D, 5D respectively (including batch as first dimension).</p>
@@ -293,6 +323,26 @@ This mode preserves all dimensions excepts channels.</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code> got a default value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code>.</p>
 <p>Otherwise acts exactly like PyTorch’s Convolution, see
 <a class="reference external" href="https://pytorch.org/docs/stable/nn.html#convolution-layers">documentation</a>.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+
+<span class="k">class</span> <span class="nc">Classifier</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pooling</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">GlobalMaxPool</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dense</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">out_shape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv3</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pooling</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>IMPORTANT</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> currently works only for odd values of <code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_size</span></code>,
@@ -326,7 +376,7 @@ or 3-tuple (for <code class="xref py py-obj docutils literal notranslate"><span 
 
 <dl class="class">
 <dt id="torchlayers.convolution.ConvTranspose">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ConvTranspose</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', output_padding: Union[int, Tuple[int, int], Tuple[int, int, int]] = 0, dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, groups: int = 1, bias: bool = True, padding_mode='zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ConvTranspose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ConvTranspose" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">ConvTranspose</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">out_channels: int</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">padding='same'</em>, <em class="sig-param">output_padding=0</em>, <em class="sig-param">dilation=1</em>, <em class="sig-param">groups: int = 1</em>, <em class="sig-param">bias: bool = True</em>, <em class="sig-param">padding_mode='zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#ConvTranspose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.ConvTranspose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Standard transposed convolution layer.</p>
 <p>Based on input shape it either creates 1D, 2D or 3D convolution (for inputs of shape
 3D, 4D, 5D including batch as first dimension).</p>
@@ -371,6 +421,8 @@ dilation (int or tuple, optional): Spacing between kernel elements. Default: 1</
 <em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">Dense</code><span class="sig-paren">(</span><em class="sig-param">module: torch.nn.modules.module.Module</em>, <em class="sig-param">dim: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#Dense"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.Dense" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dense residual connection concatenating input channels and output channels of provided module.</p>
 <p>Originally proposed by Gao Huang et. al in <a class="reference external" href="https://arxiv.org/abs/1608.06993">Densely Connected Convolutional Networks</a></p>
+<p>Can be used just like <a class="reference internal" href="#torchlayers.convolution.Residual" title="torchlayers.convolution.Residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torchlayers.convolution.Residual</span></code></a> but concatenates
+channels (dimension can be specified) instead of adding.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -400,7 +452,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="torchlayers.convolution.DepthwiseConv">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">DepthwiseConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#DepthwiseConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.DepthwiseConv" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">DepthwiseConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">out_channels: int</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">padding='same'</em>, <em class="sig-param">dilation=1</em>, <em class="sig-param">bias: bool = True</em>, <em class="sig-param">padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#DepthwiseConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.DepthwiseConv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Depthwise convolution layer.</p>
 <p>Based on input shape it either creates 1D, 2D or 3D depthwise convolution
 for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</p>
@@ -492,7 +544,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="torchlayers.convolution.InvertedResidualBottleneck">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">InvertedResidualBottleneck</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, hidden_channels: int = None, activation: Callable[[torch.Tensor], torch.Tensor] = None, batchnorm: bool = True, squeeze_excitation: bool = True, squeeze_excitation_hidden: int = None, squeeze_excitation_activation: Callable[[torch.Tensor], torch.Tensor] = None, squeeze_excitation_sigmoid: Callable[[torch.Tensor], torch.Tensor] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#InvertedResidualBottleneck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.InvertedResidualBottleneck" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">InvertedResidualBottleneck</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">hidden_channels: int = None</em>, <em class="sig-param">activation=None</em>, <em class="sig-param">batchnorm: bool = True</em>, <em class="sig-param">squeeze_excitation: bool = True</em>, <em class="sig-param">squeeze_excitation_hidden: int = None</em>, <em class="sig-param">squeeze_excitation_activation=None</em>, <em class="sig-param">squeeze_excitation_sigmoid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#InvertedResidualBottleneck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.InvertedResidualBottleneck" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.</p>
 <p>Originally proposed by Mark Sandler et. al in
 <a class="reference external" href="https://arxiv.org/abs/1801.04381">MobileNetV2: Inverted Residuals and Linear Bottlenecks &lt;0.5MB model size</a></p>
@@ -602,6 +654,30 @@ registered hooks while the latter silently ignores them.</p>
 </span> times.</p>
 <p>Originally proposed by Xingcheng Zhang et. al in
 <a class="reference external" href="https://arxiv.org/abs/1608.06993">PolyNet: A Pursuit of Structural Diversity in Very Deep Networks</a></p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+<span class="c1"># Any input will be passed 3 times</span>
+<span class="c1"># Through the same convolutional layer (weights and biases shared)</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="n">tl</span><span class="o">.</span><span class="n">Poly</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">layer</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Above can be rewritten by the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+<span class="n">first_convolution</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">first_convolution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">shared_convolution</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">first_level</span> <span class="o">=</span> <span class="n">shared_convolution</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="n">second_level</span> <span class="o">=</span> <span class="n">shared_convolution</span><span class="p">(</span><span class="n">first_level</span><span class="p">)</span>
+<span class="n">third_level</span> <span class="o">=</span> <span class="n">shared_convolution</span><span class="p">(</span><span class="n">second_level</span><span class="p">)</span>
+
+<span class="c1"># That&#39;s what tl.Poly would return</span>
+<span class="n">final</span> <span class="o">=</span> <span class="n">output</span> <span class="o">+</span> <span class="n">first_level</span> <span class="o">+</span> <span class="n">second_level</span> <span class="o">+</span> <span class="n">third_level</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -648,6 +724,30 @@ registered hooks while the latter silently ignores them.</p>
 <p>For correct usage it is advised to keep input line (skip connection) without
 any layer or activation and implement transformations only in module arguments
 (as per <a class="reference external" href="https://arxiv.org/pdf/1603.05027.pdf">Identity Mappings in Deep Residual Networks</a>).</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+<span class="c1"># ResNet-like block</span>
+<span class="k">class</span> <span class="nc">_BlockImpl</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Residual</span><span class="p">(</span>
+            <span class="n">tl</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="n">in_channels</span><span class="p">),</span>
+                <span class="n">tl</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">in_channels</span><span class="p">),</span>
+                <span class="n">tl</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="n">in_channels</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">Block</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span><span class="n">_BlockImpl</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -678,7 +778,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="torchlayers.convolution.SeparableConv">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SeparableConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int], Tuple[int, int, int]] = 3, stride: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, padding: Union[str, int, Tuple[int, int], Tuple[int, int, int]] = 'same', dilation: Union[int, Tuple[int, int], Tuple[int, int, int]] = 1, bias: bool = True, padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SeparableConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SeparableConv" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SeparableConv</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">out_channels: int</em>, <em class="sig-param">kernel_size=3</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">padding='same'</em>, <em class="sig-param">dilation=1</em>, <em class="sig-param">bias: bool = True</em>, <em class="sig-param">padding_mode: str = 'zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SeparableConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SeparableConv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Separable convolution layer (a.k.a. depthwise separable convolution).</p>
 <p>Based on input shape it either creates 1D, 2D or 3D separable convolution
 for inputs of shape 3D, 4D, 5D respectively (including batch as first dimension).</p>
@@ -731,7 +831,7 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="torchlayers.convolution.SqueezeExcitation">
-<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SqueezeExcitation</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int, hidden: int = None, activation: Callable[[torch.Tensor], torch.Tensor] = None, sigmoid: Callable[[torch.Tensor], torch.Tensor] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SqueezeExcitation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SqueezeExcitation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">torchlayers.convolution.</code><code class="sig-name descname">SqueezeExcitation</code><span class="sig-paren">(</span><em class="sig-param">in_channels: int</em>, <em class="sig-param">hidden: int = None</em>, <em class="sig-param">activation=None</em>, <em class="sig-param">sigmoid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchlayers/convolution.html#SqueezeExcitation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#torchlayers.convolution.SqueezeExcitation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Learn channel-wise excitation maps for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
 <p>Provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> will be squeezed into <code class="xref py py-obj docutils literal notranslate"><span class="pre">in_channels</span></code> via average pooling,
 passed through two non-linear layers, rescaled to <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>
@@ -740,6 +840,13 @@ passed through two non-linear layers, rescaled to <span class="math"><span class
 and multiplied with original input channel-wise.</p>
 <p>Originally proposed by Xingcheng Zhang et. al in
 <a class="reference external" href="https://arxiv.org/abs/1709.01507">Squeeze-and-Excitation Networks</a></p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchlayers</span> <span class="k">as</span> <span class="nn">tl</span>
+
+<span class="c1"># Assume only 128 channels can be an input in this case</span>
+<span class="n">block</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">Residual</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">tl</span><span class="o">.</span><span class="n">SqueezeExcitation</span><span class="p">(),</span> <span class="n">tl</span><span class="o">.</span><span class="n">Conv</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

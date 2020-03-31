@@ -244,11 +244,15 @@
 <span class="sd">    shape was inferred (weight initialization example below)::</span>
 
 
-<span class="sd">        @torchlayers.infer</span>
-<span class="sd">        class MyModule(torch.nn.Linear):</span>
+<span class="sd">        import torch</span>
+<span class="sd">        import torchlayers as tl</span>
+
+<span class="sd">        class _MyModuleImpl(torch.nn.Linear):</span>
 <span class="sd">            def post_build(self):</span>
 <span class="sd">                # You can do anything here really</span>
 <span class="sd">                torch.nn.init.eye_(self.weights)</span>
+
+<span class="sd">        MyModule = tl.infer(_MyModuleImpl)</span>
 
 <span class="sd">    `post_build` should have no arguments other than `self` so all necessary</span>
 <span class="sd">    data should be saved in `module` beforehand.</span>
@@ -295,6 +299,9 @@
 
 <span class="sd">    Usually used as class decorator, e.g.::</span>
 
+<span class="sd">        import torch</span>
+<span class="sd">        import torchlayers as tl</span>
+
 <span class="sd">        class _StrangeLinearImpl(torch.nn.Linear):</span>
 <span class="sd">            def __init__(self, in_features, out_features, bias: bool = True):</span>
 <span class="sd">                super().__init__(in_features, out_features, bias)</span>
@@ -304,7 +311,7 @@
 <span class="sd">                super().forward(inputs) + self.params</span>
 
 <span class="sd">        # Now you can use shape inference of in_features</span>
-<span class="sd">        StrangeLinear = torchlayers.infer(_StrangeLinearImpl)</span>
+<span class="sd">        StrangeLinear = tl.infer(_StrangeLinearImpl)</span>
 
 <span class="sd">        # in_features can be inferred</span>
 <span class="sd">        layer = StrangeLinear(out_features=64)</span>
@@ -380,7 +387,10 @@
 <span class="sd">    Simple proxy which allows you to use your own custom in</span>
 <span class="sd">    `torch.nn.Sequential` and other requiring `torch.nn.Module` as input::</span>
 
-<span class="sd">        model = torch.nn.Sequential(torchlayers.Lambda(lambda tensor: tensor ** 2))</span>
+<span class="sd">        import torch</span>
+<span class="sd">        import torchlayers as tl</span>
+
+<span class="sd">        model = torch.nn.Sequential(tl.Lambda(lambda tensor: tensor ** 2))</span>
 <span class="sd">        model(torch.randn(64 , 20))</span>
 
 <span class="sd">    Parameters</span>
@@ -409,6 +419,9 @@
 <span class="sd">    Mainly useful in `torch.nn.Sequential` when previous layer returns multiple</span>
 <span class="sd">    tensors, e.g.::</span>
 
+<span class="sd">        import torch</span>
+<span class="sd">        import torchlayers as tl</span>
+
 <span class="sd">        class Foo(torch.nn.Module):</span>
 <span class="sd">            # Return same tensor three times</span>
 <span class="sd">            # You could explicitly return a list or tuple as well</span>
@@ -416,7 +429,7 @@
 <span class="sd">                return tensor, tensor, tensor</span>
 
 
-<span class="sd">        model = torch.nn.Sequential(Foo(), torchlayers.Concatenate())</span>
+<span class="sd">        model = torch.nn.Sequential(Foo(), tl.Concatenate())</span>
 <span class="sd">        model(torch.randn(64 , 20))</span>
 
 <span class="sd">    All tensors must have the same shape (except in the concatenating dimension).</span>
@@ -447,7 +460,10 @@
 <span class="sd">    Reshapes input `torch.Tensor` features while preserving batch dimension.</span>
 <span class="sd">    Standard `torch.reshape` values (e.g. `-1`) are supported, e.g.::</span>
 
-<span class="sd">        layer = torchlayers.Reshape(20, -1)</span>
+<span class="sd">        import torch</span>
+<span class="sd">        import torchlayers as tl</span>
+
+<span class="sd">        layer = tl.Reshape(20, -1)</span>
 <span class="sd">        layer(torch.randn(64, 80)) # shape (64, 20, 4)</span>
 
 <span class="sd">    All tensors must have the same shape (except in the concatenating dimension).</span>

@@ -27,11 +27,15 @@ def build(module, *args, **kwargs):
     shape was inferred (weight initialization example below)::
 
 
-        @torchlayers.infer
-        class MyModule(torch.nn.Linear):
+        import torch
+        import torchlayers as tl
+
+        class _MyModuleImpl(torch.nn.Linear):
             def post_build(self):
                 # You can do anything here really
                 torch.nn.init.eye_(self.weights)
+
+        MyModule = tl.infer(_MyModuleImpl)
 
     `post_build` should have no arguments other than `self` so all necessary
     data should be saved in `module` beforehand.
@@ -78,6 +82,9 @@ def infer(module_class, index: str = 1):
 
     Usually used as class decorator, e.g.::
 
+        import torch
+        import torchlayers as tl
+
         class _StrangeLinearImpl(torch.nn.Linear):
             def __init__(self, in_features, out_features, bias: bool = True):
                 super().__init__(in_features, out_features, bias)
@@ -87,7 +94,7 @@ def infer(module_class, index: str = 1):
                 super().forward(inputs) + self.params
 
         # Now you can use shape inference of in_features
-        StrangeLinear = torchlayers.infer(_StrangeLinearImpl)
+        StrangeLinear = tl.infer(_StrangeLinearImpl)
 
         # in_features can be inferred
         layer = StrangeLinear(out_features=64)
@@ -163,7 +170,10 @@ class Lambda(torch.nn.Module):
     Simple proxy which allows you to use your own custom in
     `torch.nn.Sequential` and other requiring `torch.nn.Module` as input::
 
-        model = torch.nn.Sequential(torchlayers.Lambda(lambda tensor: tensor ** 2))
+        import torch
+        import torchlayers as tl
+
+        model = torch.nn.Sequential(tl.Lambda(lambda tensor: tensor ** 2))
         model(torch.randn(64 , 20))
 
     Parameters
@@ -192,6 +202,9 @@ class Concatenate(torch.nn.Module):
     Mainly useful in `torch.nn.Sequential` when previous layer returns multiple
     tensors, e.g.::
 
+        import torch
+        import torchlayers as tl
+
         class Foo(torch.nn.Module):
             # Return same tensor three times
             # You could explicitly return a list or tuple as well
@@ -199,7 +212,7 @@ class Concatenate(torch.nn.Module):
                 return tensor, tensor, tensor
 
 
-        model = torch.nn.Sequential(Foo(), torchlayers.Concatenate())
+        model = torch.nn.Sequential(Foo(), tl.Concatenate())
         model(torch.randn(64 , 20))
 
     All tensors must have the same shape (except in the concatenating dimension).
@@ -230,7 +243,10 @@ class Reshape(torch.nn.Module):
     Reshapes input `torch.Tensor` features while preserving batch dimension.
     Standard `torch.reshape` values (e.g. `-1`) are supported, e.g.::
 
-        layer = torchlayers.Reshape(20, -1)
+        import torch
+        import torchlayers as tl
+
+        layer = tl.Reshape(20, -1)
         layer(torch.randn(64, 80)) # shape (64, 20, 4)
 
     All tensors must have the same shape (except in the concatenating dimension).

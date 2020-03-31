@@ -91,6 +91,27 @@ class Conv(_Conv):
     Otherwise acts exactly like PyTorch's Convolution, see
     `documentation <https://pytorch.org/docs/stable/nn.html#convolution-layers>`__.
 
+    Example::
+
+        import torchlayers as tl
+
+
+        class Classifier(tl.Module):
+            def __init__(self, out_shape):
+                super().__init__()
+                self.conv1 = tl.Conv(64, 6)
+                self.conv2 = tl.Conv(128)
+                self.conv3 = tl.Conv(256)
+                self.pooling = tl.GlobalMaxPool()
+                self.dense = tl.Linear(out_shape)
+
+            def forward(self, x):
+                x = torch.relu(self.conv1(x))
+                x = torch.relu(self.conv2(x))
+                x = torch.relu(self.conv3(x))
+                return self.dense(self.pooling(x))
+
+
     .. note::
                 **IMPORTANT**: `same` currently works only for odd values of `kernel_size`,
                 `dilation` and `stride`. If any of those is even you should explicitly pad
@@ -131,18 +152,10 @@ class Conv(_Conv):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 3,
-        stride: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
-        padding: typing.Union[
-            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = "same",
-        dilation: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
+        kernel_size=3,
+        stride=1,
+        padding="same",
+        dilation=1,
         groups: int = 1,
         bias: bool = True,
         padding_mode: str = "zeros",
@@ -216,21 +229,11 @@ class ConvTranspose(_Conv):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 3,
-        stride: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
-        padding: typing.Union[
-            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = "same",
-        output_padding: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 0,
-        dilation: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
+        kernel_size=3,
+        stride=1,
+        padding="same",
+        output_padding=0,
+        dilation=1,
         groups: int = 1,
         bias: bool = True,
         padding_mode="zeros",
@@ -304,18 +307,10 @@ class DepthwiseConv(_Conv):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 3,
-        stride: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
-        padding: typing.Union[
-            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = "same",
-        dilation: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
+        kernel_size=3,
+        stride=1,
+        padding="same",
+        dilation=1,
         bias: bool = True,
         padding_mode: str = "zeros",
     ):
@@ -387,18 +382,10 @@ class SeparableConv(torch.nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 3,
-        stride: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
-        padding: typing.Union[
-            str, int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = "same",
-        dilation: typing.Union[
-            int, typing.Tuple[int, int], typing.Tuple[int, int, int]
-        ] = 1,
+        kernel_size=3,
+        stride=1,
+        padding="same",
+        dilation=1,
         bias: bool = True,
         padding_mode: str = "zeros",
     ):
@@ -461,6 +448,21 @@ class ChannelShuffle(_dev_utils.modules.Representation):
     Originally proposed by Xiangyu Zhang et. al in:
     `ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices <https://arxiv.org/abs/1707.01083>`__
 
+    Example::
+
+
+        import torchlayers as tl
+
+        model = tl.Sequential(
+            tl.Conv(64),
+            tl.Swish(),
+            tl.Conv(128, groups=16),
+            tl.ChannelShuffle(groups=16),
+            tl.Conv(256),
+            tl.GlobalMaxPool(),
+            tl.Linear(10),
+        )
+
     Parameters
     ----------
     groups : int
@@ -484,6 +486,23 @@ class ChannelSplit(_dev_utils.modules.Representation):
     """Convenience layer splitting tensor using `p`.
 
     Returns two outputs, splitted accordingly to parameters.
+
+    Example::
+
+        import torchlayers as tl
+
+
+        class Net(tl.Module):
+            def __init__(self):
+                super().__init__()
+                self.layer = tl.Conv(256, groups=16)
+                self.splitter = tl.ChannelSplit(0.5)
+
+            def forward(x):
+                outputs = self.layer(x)
+                half, rest = self.splitter(outputs)
+                return half # for some reason
+
 
     Parameters
     ----------
@@ -517,6 +536,33 @@ class Residual(torch.nn.Module):
     any layer or activation and implement transformations only in module arguments
     (as per `Identity Mappings in Deep Residual Networks <https://arxiv.org/pdf/1603.05027.pdf>`__).
 
+    Example::
+
+
+        import torch
+        import torchlayers as tl
+
+        # ResNet-like block
+        class _BlockImpl(tl.Module):
+            def __init__(self, in_channels: int):
+                self.block = tl.Residual(
+                    tl.Sequential(
+                        tl.Conv(in_channels),
+                        tl.ReLU(),
+                        tl.Conv(4 * in_channels),
+                        tl.ReLU(),
+                        tl.Conv(in_channels),
+                    )
+                )
+
+            def forward(self, x):
+                return self.block(x)
+
+
+        Block = tl.infer(_BlockImpl)
+
+
+
     Parameters
     ----------
     module : torch.nn.Module
@@ -546,6 +592,9 @@ class Dense(torch.nn.Module):
     """Dense residual connection concatenating input channels and output channels of provided module.
 
     Originally proposed by Gao Huang et. al in `Densely Connected Convolutional Networks <https://arxiv.org/abs/1608.06993>`__
+
+    Can be used just like `torchlayers.convolution.Residual` but concatenates
+    channels (dimension can be specified) instead of adding.
 
     Parameters
     ----------
@@ -581,6 +630,31 @@ class Poly(torch.nn.Module):
 
     Originally proposed by Xingcheng Zhang et. al in
     `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks <https://arxiv.org/abs/1608.06993>`__
+
+    Example::
+
+        import torchlayers as tl
+
+        # Any input will be passed 3 times
+        # Through the same convolutional layer (weights and biases shared)
+        layer = tl.Sequential(tl.Conv(64), tl.Poly(tl.Conv(64), order=3))
+        layer(torch.randn(1, 3, 32, 32))
+
+    Above can be rewritten by the following::
+
+        x = torch.randn(1, 3, 32, 32)
+
+        first_convolution = tl.Conv(64)
+        output = first_convolution(x)
+
+        shared_convolution = tl.Conv(64)
+        first_level = shared_convolution(output)
+        second_level = shared_convolution(first_level)
+        third_level = shared_convolution(second_level)
+
+        # That's what tl.Poly would return
+        final = output + first_level + second_level + third_level
+
 
     Parameters
     ----------
@@ -692,6 +766,15 @@ class SqueezeExcitation(_dev_utils.modules.Representation):
     Originally proposed by Xingcheng Zhang et. al in
     `Squeeze-and-Excitation Networks <https://arxiv.org/abs/1709.01507>`__
 
+    Example::
+
+
+        import torchlayers as tl
+
+        # Assume only 128 channels can be an input in this case
+        block = tl.Residual(tl.Conv(128), tl.SqueezeExcitation(), tl.Conv(128))
+
+
     Parameters
     ----------
     in_channels : int
@@ -710,11 +793,7 @@ class SqueezeExcitation(_dev_utils.modules.Representation):
     """
 
     def __init__(
-        self,
-        in_channels: int,
-        hidden: int = None,
-        activation: typing.Callable[[torch.Tensor], torch.Tensor] = None,
-        sigmoid: typing.Callable[[torch.Tensor], torch.Tensor] = None,
+        self, in_channels: int, hidden: int = None, activation=None, sigmoid=None,
     ):
         super().__init__()
         self.in_channels: int = in_channels
@@ -806,7 +885,6 @@ class Fire(_dev_utils.modules.Representation):
         )
 
 
-# To test
 class InvertedResidualBottleneck(_dev_utils.modules.Representation):
     """Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.
 
@@ -856,16 +934,12 @@ class InvertedResidualBottleneck(_dev_utils.modules.Representation):
         self,
         in_channels: int,
         hidden_channels: int = None,
-        activation: typing.Callable[[torch.Tensor], torch.Tensor] = None,
+        activation=None,
         batchnorm: bool = True,
         squeeze_excitation: bool = True,
         squeeze_excitation_hidden: int = None,
-        squeeze_excitation_activation: typing.Callable[
-            [torch.Tensor], torch.Tensor
-        ] = None,
-        squeeze_excitation_sigmoid: typing.Callable[
-            [torch.Tensor], torch.Tensor
-        ] = None,
+        squeeze_excitation_activation=None,
+        squeeze_excitation_sigmoid=None,
     ):
         def _add_batchnorm(block, channels):
             if batchnorm:
