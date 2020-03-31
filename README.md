@@ -39,18 +39,18 @@ Firstly let's define it using `torch.nn` and `torchlayers`:
 
 ```python
 import torch
-import torchlayers
+import torchlayers as tl
 
 # torch.nn and torchlayers can be mixed easily
 model = torch.nn.Sequential(
-    torchlayers.Conv(64),  # specify ONLY out_channels
+    tl.Conv(64),  # specify ONLY out_channels
     torch.nn.ReLU(),  # use torch.nn wherever you wish
-    torchlayers.BatchNorm(),  # BatchNormNd inferred from input
-    torchlayers.Conv(128),  # Default kernel_size equal to 3
-    torchlayers.ReLU(),
-    torchlayers.Conv(256, kernel_size=11),  # "same" padding as default
-    torchlayers.GlobalMaxPool(),  # Known from Keras
-    torchlayers.Linear(10),  # Output for 10 classes
+    tl.BatchNorm(),  # BatchNormNd inferred from input
+    tl.Conv(128),  # Default kernel_size equal to 3
+    tl.ReLU(),
+    tl.Conv(256, kernel_size=11),  # "same" padding as default
+    tl.GlobalMaxPool(),  # Known from Keras
+    tl.Linear(10),  # Output for 10 classes
 )
 
 print(model)
@@ -74,7 +74,7 @@ Sequential(
 * Now you can __build__/instantiate your model with example input (in this case MNIST-like):
 
 ```python
-mnist_model = torchlayers.build(model, torch.randn(1, 3, 28, 28))
+mnist_model = tl.build(model, torch.randn(1, 3, 28, 28))
 ```
 
 * Or if it's text classification you are after, same model could be built with different
@@ -82,7 +82,7 @@ mnist_model = torchlayers.build(model, torch.randn(1, 3, 28, 28))
 
 ```python
 # [batch, embedding, timesteps], first dimension > 1 for BatchNorm1d to work
-text_model = torchlayers.build(model, torch.randn(2, 300, 1))
+text_model = tl.build(model, torch.randn(2, 300, 1))
 ```
 
 * Finally, you can `print` both models after instantiation, provided below side
@@ -123,16 +123,16 @@ class _MyLinearImpl(torch.nn.Module):
     def forward(self, inputs):
         return torch.nn.functional.linear(inputs, self.weight, self.bias)
 
-MyLinear = torchlayers.infer(_MyLinearImpl)
+MyLinear = tl.infer(_MyLinearImpl)
 
 # Build and use just like any other layer in this library
-layer =torchlayers.build(MyLinear(out_features=32), torch.randn(1, 64))
+layer =tl.build(MyLinear(out_features=32), torch.randn(1, 64))
 layer(torch.randn(1, 64))
 ```
 
 By default `inputs.shape[1]` will be used as `in_features` value
 during initial `forward` pass. If you wish to use different `index` (e.g. to infer using
-`inputs.shape[3]`) use `MyLayer = torchlayers.infer(_MyLayerImpl, index=3)` as a decorator.
+`inputs.shape[3]`) use `MyLayer = tl.infer(_MyLayerImpl, index=3)` as a decorator.
 
 ## Autoencoder with inverted residual bottleneck and pixel shuffle
 
@@ -150,63 +150,63 @@ and building blocks provided by `torchlayers`.
 class AutoEncoder(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self.encoder = torchlayers.Sequential(
-            torchlayers.StandardNormalNoise(),  # Apply noise to input images
-            torchlayers.Conv(64, kernel_size=7),
-            torchlayers.activations.Swish(),  # Direct access to module .activations
-            torchlayers.InvertedResidualBottleneck(squeeze_excitation=False),
-            torchlayers.AvgPool(),  # shape 64 x 128 x 128, kernel_size=2 by default
-            torchlayers.HardSwish(),  # Access simply through torchlayers
-            torchlayers.SeparableConv(128),  # Up number of channels to 128
-            torchlayers.InvertedResidualBottleneck(),  # Default with squeeze excitation
+        self.encoder = tl.Sequential(
+            tl.StandardNormalNoise(),  # Apply noise to input images
+            tl.Conv(64, kernel_size=7),
+            tl.activations.Swish(),  # Direct access to module .activations
+            tl.InvertedResidualBottleneck(squeeze_excitation=False),
+            tl.AvgPool(),  # shape 64 x 128 x 128, kernel_size=2 by default
+            tl.HardSwish(),  # Access simply through tl
+            tl.SeparableConv(128),  # Up number of channels to 128
+            tl.InvertedResidualBottleneck(),  # Default with squeeze excitation
             torch.nn.ReLU(),
-            torchlayers.AvgPool(),  # shape 128 x 64 x 64, kernel_size=2 by default
-            torchlayers.DepthwiseConv(256),  # DepthwiseConv easier to use
+            tl.AvgPool(),  # shape 128 x 64 x 64, kernel_size=2 by default
+            tl.DepthwiseConv(256),  # DepthwiseConv easier to use
             # Pass input thrice through the same weights like in PolyNet
-            torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=3),
-            torchlayers.ReLU(),  # all torch.nn can be accessed via torchlayers
-            torchlayers.MaxPool(),  # shape 256 x 32 x 32
-            torchlayers.Fire(out_channels=512),  # shape 512 x 32 x 32
-            torchlayers.SqueezeExcitation(hidden=64),
-            torchlayers.InvertedResidualBottleneck(),
-            torchlayers.MaxPool(),  # shape 512 x 16 x 16
-            torchlayers.InvertedResidualBottleneck(squeeze_excitation=False),
+            tl.Poly(tl.InvertedResidualBottleneck(), order=3),
+            tl.ReLU(),  # all torch.nn can be accessed via tl
+            tl.MaxPool(),  # shape 256 x 32 x 32
+            tl.Fire(out_channels=512),  # shape 512 x 32 x 32
+            tl.SqueezeExcitation(hidden=64),
+            tl.InvertedResidualBottleneck(),
+            tl.MaxPool(),  # shape 512 x 16 x 16
+            tl.InvertedResidualBottleneck(squeeze_excitation=False),
             # Randomly switch off the last two layers with 0.5 probability
-            torchlayers.StochasticDepth(
+            tl.StochasticDepth(
                 torch.nn.Sequential(
-                    torchlayers.InvertedResidualBottleneck(squeeze_excitation=False),
-                    torchlayers.InvertedResidualBottleneck(squeeze_excitation=False),
+                    tl.InvertedResidualBottleneck(squeeze_excitation=False),
+                    tl.InvertedResidualBottleneck(squeeze_excitation=False),
                 ),
                 p=0.5,
             ),
-            torchlayers.AvgPool(),  # shape 512 x 8 x 8
+            tl.AvgPool(),  # shape 512 x 8 x 8
         )
 
         # This one is more "standard"
-        self.decoder = torchlayers.Sequential(
-            torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=2),
+        self.decoder = tl.Sequential(
+            tl.Poly(tl.InvertedResidualBottleneck(), order=2),
             # Has ICNR initialization by default after calling `build`
-            torchlayers.ConvPixelShuffle(out_channels=512, upscale_factor=2),
+            tl.ConvPixelShuffle(out_channels=512, upscale_factor=2),
             # Shape 512 x 16 x 16 after PixelShuffle
-            torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=3),
-            torchlayers.ConvPixelShuffle(out_channels=256, upscale_factor=2),
+            tl.Poly(tl.InvertedResidualBottleneck(), order=3),
+            tl.ConvPixelShuffle(out_channels=256, upscale_factor=2),
             # Shape 256 x 32 x 32
-            torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=3),
-            torchlayers.ConvPixelShuffle(out_channels=128, upscale_factor=2),
+            tl.Poly(tl.InvertedResidualBottleneck(), order=3),
+            tl.ConvPixelShuffle(out_channels=128, upscale_factor=2),
             # Shape 128 x 64 x 64
-            torchlayers.Poly(torchlayers.InvertedResidualBottleneck(), order=4),
-            torchlayers.ConvPixelShuffle(out_channels=64, upscale_factor=2),
+            tl.Poly(tl.InvertedResidualBottleneck(), order=4),
+            tl.ConvPixelShuffle(out_channels=64, upscale_factor=2),
             # Shape 64 x 128 x 128
-            torchlayers.InvertedResidualBottleneck(),
-            torchlayers.Conv(256),
-            torchlayers.Dropout(),  # Defaults to 0.5 and Dropout2d for images
-            torchlayers.Swish(),
-            torchlayers.InstanceNorm(),
-            torchlayers.ConvPixelShuffle(out_channels=32, upscale_factor=2),
+            tl.InvertedResidualBottleneck(),
+            tl.Conv(256),
+            tl.Dropout(),  # Defaults to 0.5 and Dropout2d for images
+            tl.Swish(),
+            tl.InstanceNorm(),
+            tl.ConvPixelShuffle(out_channels=32, upscale_factor=2),
             # Shape 32 x 256 x 256
-            torchlayers.Conv(16),
-            torchlayers.Swish(),
-            torchlayers.Conv(3),
+            tl.Conv(16),
+            tl.Swish(),
+            tl.Conv(3),
             # Shape 3 x 256 x 256
         )
 
@@ -217,7 +217,7 @@ class AutoEncoder(torch.nn.Module):
 Now one can instantiate the module and use it with `torch.nn.MSELoss` as per usual.
 
 ```python
-autoencoder = torchlayers.build(AutoEncoder(), torch.randn(1, 3, 256, 256))
+autoencoder = tl.build(AutoEncoder(), torch.randn(1, 3, 256, 256))
 ```
 
 # Installation
