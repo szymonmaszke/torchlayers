@@ -65,7 +65,7 @@ class Classifier(tl.Module):
         return self.dense(self.pooling(x))
 
 # Pass model and any example inputs afterwards
-clf = torchlayers.build(Classifier(), torch.randn(1, 3, 32, 32))
+clf = tl.build(Classifier(), torch.randn(1, 3, 32, 32))
 ```
 
 Above `torchlayers.Linear(out_features=10)` is used. It is "equivalent" to
