@@ -8,6 +8,7 @@ import torch
 from . import (_dev_utils, _inferable, activations, convolution, normalization,
                pooling, regularization, upsample)
 from ._version import __version__
+from .module import InferDimension
 
 __all__ = ["build", "infer", "Lambda", "Reshape", "Concatenate"]
 
@@ -282,7 +283,7 @@ class Reshape(torch.nn.Module):
 def __dir__():
     return (
         dir(torch.nn)
-        + ["Lambda", "Concatenate", "Reshape"]
+        + ["Lambda", "Concatenate", "Reshape", "build", "infer"]
         + dir(convolution)
         + dir(normalization)
         + dir(upsample)

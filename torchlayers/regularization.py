@@ -1,6 +1,6 @@
 import torch
 
-from ._dev_utils import modules
+from . import module
 
 
 class StochasticDepth(torch.nn.Module):
@@ -42,7 +42,7 @@ class StochasticDepth(torch.nn.Module):
         return self.p * self.module(inputs)
 
 
-class Dropout(modules.InferDimension):
+class Dropout(module.InferDimension):
     """Randomly zero out some of the tensor elements.
 
     Based on input shape it either creates `2D` or `3D` version of dropout for inputs of shape
@@ -59,7 +59,15 @@ class Dropout(modules.InferDimension):
     """
 
     def __init__(self, p=0.5, inplace=False):
-        super().__init__(p=p, inplace=inplace)
+        super().__init__(
+            dispatcher={
+                5: torch.nn.Dropout3d,
+                4: torch.nn.Dropout2d,
+                "*": torch.nn.Dropout,
+            },
+            p=p,
+            inplace=inplace,
+        )
 
     # Dropout can have any input shape according to documentation
     def _module_not_found(self, inputs):

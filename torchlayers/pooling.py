@@ -2,7 +2,7 @@ import typing
 
 import torch
 
-from . import _dev_utils
+from . import module
 
 
 class _GlobalPool(torch.nn.Module):
@@ -61,7 +61,7 @@ class GlobalAvgPool(_GlobalPool):
     """
 
 
-class MaxPool(_dev_utils.modules.InferDimension):
+class MaxPool(module.InferDimension):
     """Perform `max` operation across first `torch.Tensor` dimension.
 
     Depending on shape of passed `torch.Tensor` either `torch.nn.MaxPool1D`,
@@ -104,6 +104,11 @@ class MaxPool(_dev_utils.modules.InferDimension):
         ceil_mode: bool = False,
     ):
         super().__init__(
+            dispatcher={
+                5: torch.nn.MaxPool3d,
+                4: torch.nn.MaxPool2d,
+                3: torch.nn.MaxPool1d,
+            },
             kernel_size=kernel_size,
             stride=stride,
             padding=padding,
@@ -113,7 +118,7 @@ class MaxPool(_dev_utils.modules.InferDimension):
         )
 
 
-class AvgPool(_dev_utils.modules.InferDimension):
+class AvgPool(module.InferDimension):
     """Perform `avg` operation across first `torch.Tensor` dimension.
 
     Depending on shape of passed `torch.Tensor` either `torch.nn.AvgPool1D`,
@@ -152,6 +157,11 @@ class AvgPool(_dev_utils.modules.InferDimension):
         count_include_pad: bool = True,
     ):
         super().__init__(
+            dispatcher={
+                5: torch.nn.AvgPool3d,
+                4: torch.nn.AvgPool2d,
+                3: torch.nn.AvgPool1d,
+            },
             kernel_size=kernel_size,
             stride=stride,
             padding=padding,

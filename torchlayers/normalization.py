@@ -1,9 +1,11 @@
+import collections
+
 import torch
 
-from . import _dev_utils
+from . import module
 
 
-class InstanceNorm(_dev_utils.modules.InferDimension):
+class InstanceNorm(module.InferDimension):
     """Apply Instance Normalization over inferred dimension (3D up to 5D).
 
     Based on input shape it either creates 1D, 2D or 3D instance normalization for inputs of shape
@@ -42,6 +44,11 @@ class InstanceNorm(_dev_utils.modules.InferDimension):
         track_running_stats: bool = False,
     ):
         super().__init__(
+            dispatcher={
+                5: torch.nn.InstanceNorm3d,
+                4: torch.nn.InstanceNorm2d,
+                3: torch.nn.InstanceNorm1d,
+            },
             num_features=num_features,
             eps=eps,
             momentum=momentum,
@@ -50,7 +57,7 @@ class InstanceNorm(_dev_utils.modules.InferDimension):
         )
 
 
-class BatchNorm(_dev_utils.modules.InferDimension):
+class BatchNorm(module.InferDimension):
     """Apply Batch Normalization over inferred dimension (2D up to 5D).
 
     Based on input shape it either creates `1D`, `2D` or `3D` batch normalization for inputs of shape
@@ -90,24 +97,17 @@ class BatchNorm(_dev_utils.modules.InferDimension):
         track_running_stats: bool = True,
     ):
         super().__init__(
+            dispatcher={
+                5: torch.nn.BatchNorm3d,
+                4: torch.nn.BatchNorm2d,
+                3: torch.nn.BatchNorm1d,
+                2: torch.nn.BatchNorm1d,
+            },
             num_features=num_features,
             eps=eps,
             momentum=momentum,
             affine=affine,
             track_running_stats=track_running_stats,
-        )
-
-    def _module_not_found(self, inputs):
-        if len(inputs.shape) == 2:
-            inner_class = getattr(torch.nn, "{}1d".format(self._module_name), None)
-            if inner_class is not None:
-                return inner_class
-
-        raise ValueError(
-            "{} could not be inferred from shape. ".format(self._module_name)
-            + "Only 5, 4, 3 or 2 dimensional input allowed (including batch dimension), got {}.".format(
-                len(inputs.shape)
-            )
         )
 
 
@@ -140,4 +140,6 @@ class GroupNorm(torch.nn.GroupNorm):
         eps: float = 1e-05,
         affine: bool = True,
     ):
-        super().__init__(num_groups, num_channels, eps, affine)
+        super().__init__(
+            num_groups=num_groups, num_channels=num_channels, eps=eps, affine=affine,
+        )

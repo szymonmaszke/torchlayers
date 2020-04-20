@@ -5,68 +5,65 @@ import typing
 
 import torch
 
-from . import _dev_utils, normalization, pooling
+from . import _dev_utils, module, normalization, pooling
 
 # TO-DO: Ensure torch.jit compatibility of layers below
 
 
-class _Conv(_dev_utils.modules.InferDimension):
+class _Conv(module.InferDimension):
     """Base layer for convolution-like modules.
 
-    Passes all arguments to `_dev_utils.modules.InferDimension` and sets up
+    Passes all arguments to `_dev_utils.modules.module.InferDimension` and sets up
     `same` padding.
 
     See concrete classes (e.g. `Conv` or `DepthwiseConv`) for specific use cases.
 
     Parameters
     ----------
-    module_name : str
-        `str` representation of `module` name.
+    dispatcher: typing.Dict[int, typing.Any]
+        Dispatching dictionary for dimensionality reduction
     **kwargs
         Any arguments needed for class creation.
 
     """
 
     def __init__(
-        self, module_name: str, **kwargs,
+        self, dispatcher: typing.Dict[int, typing.Any], **kwargs,
     ):
-        super().__init__(instance_creator=Conv._pad, module_name=module_name, **kwargs)
+        super().__init__(dispatcher=dispatcher, initializer=self._pad, **kwargs)
 
-    @classmethod
-    def _dimension_pad(cls, dimension, kernel_size, stride, dilation):
-        if kernel_size % 2 == 0:
-            raise ValueError(
-                'Only asymmetric "same" padding is currently supported. `kernel_size` size has to be odd, but got `kernel_size={}`'.format(
-                    kernel_size
+    def _pad(self, inner_class, inputs, **kwargs):
+        def _dimension_pad(dimension, kernel_size, stride, dilation):
+            if kernel_size % 2 == 0:
+                raise ValueError(
+                    'Only asymmetric "same" padding is currently supported. `kernel_size` size has to be odd, but got `kernel_size={}`'.format(
+                        kernel_size
+                    )
                 )
-            )
-        if stride % 2 == 0:
-            raise ValueError(
-                'Only asymmetric "same" padding is currently supported. `stride` size has to be odd, but got `stride={}`'.format(
-                    kernel_size
+            if stride % 2 == 0:
+                raise ValueError(
+                    'Only asymmetric "same" padding is currently supported. `stride` size has to be odd, but got `stride={}`'.format(
+                        kernel_size
+                    )
                 )
+
+            return math.ceil(
+                (dimension * stride - dimension + dilation * (kernel_size - 1)) / 2
             )
 
-        return math.ceil(
-            (dimension * stride - dimension + dilation * (kernel_size - 1)) / 2
-        )
+        def _expand_if_needed(dimensions, argument):
+            if isinstance(argument, collections.abc.Iterable):
+                return argument
+            return tuple(itertools.repeat(argument, len(dimensions)))
 
-    @classmethod
-    def _expand_if_needed(cls, dimensions, argument):
-        if isinstance(argument, collections.abc.Iterable):
-            return argument
-        return tuple(itertools.repeat(argument, len(dimensions)))
-
-    @classmethod
-    def _pad(cls, inputs, inner_class, **kwargs):
         if isinstance(kwargs["padding"], str) and kwargs["padding"].lower() == "same":
             dimensions = inputs.shape[2:]
             paddings = tuple(
-                cls._dimension_pad(dimension, kernel_size, stride, dilation)
+                _dimension_pad(dimension, kernel_size, stride, dilation)
                 for dimension, kernel_size, stride, dilation in zip(
                     dimensions,
                     *[
-                        cls._expand_if_needed(dimensions, kwargs[name])
+                        _expand_if_needed(dimensions, kwargs[name])
                         for name in ("kernel_size", "stride", "dilation")
                     ],
                 )
@@ -161,7 +158,7 @@ class Conv(_Conv):
         padding_mode: str = "zeros",
     ):
         super().__init__(
-            module_name="Conv",
+            dispatcher={5: torch.nn.Conv3d, 4: torch.nn.Conv2d, 3: torch.nn.Conv1d},
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
@@ -239,7 +236,11 @@ class ConvTranspose(_Conv):
         padding_mode="zeros",
     ):
         super().__init__(
-            module_name="ConvTranspose",
+            dispatcher={
+                5: torch.nn.ConvTranspose3d,
+                4: torch.nn.ConvTranspose2d,
+                3: torch.nn.ConvTranspose1d,
+            },
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
@@ -320,7 +321,7 @@ class DepthwiseConv(_Conv):
             )
 
         super().__init__(
-            module_name="Conv",
+            dispatcher={5: torch.nn.Conv3d, 4: torch.nn.Conv2d, 3: torch.nn.Conv1d},
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=kernel_size,
