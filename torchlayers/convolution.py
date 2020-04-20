@@ -437,7 +437,7 @@ class SeparableConv(torch.nn.Module):
         return self.pointwise(self.depthwise(inputs))
 
 
-class ChannelShuffle(_dev_utils.modules.Representation):
+class ChannelShuffle(torch.nn.Module):
     """Shuffle output channels.
 
     When using group convolution knowledge transfer between next layers is reduced
@@ -483,7 +483,7 @@ class ChannelShuffle(_dev_utils.modules.Representation):
         )
 
 
-class ChannelSplit(_dev_utils.modules.Representation):
+class ChannelSplit(torch.nn.Module):
     """Convenience layer splitting tensor using `p`.
 
     Returns two outputs, splitted accordingly to parameters.
@@ -757,7 +757,7 @@ class WayPoly(torch.nn.Module):
         return torch.stack([inputs] + outputs, dim=0).sum(dim=0)
 
 
-class SqueezeExcitation(_dev_utils.modules.Representation):
+class SqueezeExcitation(torch.nn.Module):
     """Learn channel-wise excitation maps for `inputs`.
 
     Provided `inputs` will be squeezed into `in_channels` via average pooling,
@@ -820,7 +820,7 @@ class SqueezeExcitation(_dev_utils.modules.Representation):
         )
 
 
-class Fire(_dev_utils.modules.Representation):
+class Fire(torch.nn.Module):
     """Squeeze and Expand number of channels efficiently operation-wise.
 
     First input channels will be squeezed to `hidden` channels and :math:`1 x 1` convolution.
@@ -886,7 +886,7 @@ class Fire(_dev_utils.modules.Representation):
         )
 
 
-class InvertedResidualBottleneck(_dev_utils.modules.Representation):
+class InvertedResidualBottleneck(torch.nn.Module):
     """Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.
 
     Originally proposed by Mark Sandler et. al in

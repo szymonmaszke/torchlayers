@@ -1,1 +1,1 @@
-from . import infer, modules
+from . import infer
