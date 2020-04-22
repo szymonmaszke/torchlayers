@@ -1,12 +1,13 @@
 import inspect
 import io
+import types
 import typing
 import warnings
 
 import torch
 
-from . import (_dev_utils, _inferable, activations, convolution, normalization,
-               pooling, regularization, upsample)
+from . import (_dev_utils, activations, convolution, normalization, pooling,
+               regularization, upsample)
 from ._version import __version__
 from .module import InferDimension
 
@@ -275,45 +276,122 @@ class Reshape(torch.nn.Module):
 
 ###############################################################################
 #
-#                       MODULE ATTRIBUTE GETTERS
+#                       MODULE AND SHAPE INFERENCE
 #
 ###############################################################################
 
 
+modules_map = {
+    # PyTorch specific tensor index
+    "Linear": (torch.nn, -1),
+    "RNN": (torch.nn, 2),
+    "LSTM": (torch.nn, 2),
+    "GRU": (torch.nn, 2),
+    "MultiheadAttention": (torch.nn, 2),
+    "Transformer": (torch.nn, 2),
+    "TransformerEncoderLayer": (torch.nn, 2),
+    "TransformerDecoderLayer": (torch.nn, 2),
+    # PyTorch default (1) tensor index
+    "RNNCell": torch.nn,
+    "LSTMCell": torch.nn,
+    "GRUCell": torch.nn,
+    "Conv1d": torch.nn,
+    "Conv2d": torch.nn,
+    "Conv3d": torch.nn,
+    "ConvTranspose1d": torch.nn,
+    "ConvTranspose2d": torch.nn,
+    "ConvTranspose3d": torch.nn,
+    "BatchNorm1d": torch.nn,
+    "BatchNorm2d": torch.nn,
+    "BatchNorm3d": torch.nn,
+    "SyncBatchNorm": torch.nn,
+    "InstanceNorm1d": torch.nn,
+    "InstanceNorm2d": torch.nn,
+    "InstanceNorm3d": torch.nn,
+    # Torchlayers convolution
+    "SqueezeExcitation": convolution,
+    "Fire": convolution,
+    "Conv": convolution,
+    "ConvTranspose": convolution,
+    "DepthwiseConv": convolution,
+    "SeparableConv": convolution,
+    "InvertedResidualBottleneck": convolution,
+    # Torchlayers normalization
+    "BatchNorm": normalization,
+    "InstanceNorm": normalization,
+    "GroupNorm": normalization,
+    # Torchlayers upsample
+    "ConvPixelShuffle": upsample,
+}
+
+
 def __dir__():
-    return (
-        dir(torch.nn)
-        + ["Lambda", "Concatenate", "Reshape", "build", "infer"]
-        + dir(convolution)
-        + dir(normalization)
-        + dir(upsample)
-        + dir(pooling)
-        + dir(regularization)
-        + dir(activations)
-    )
+    return [key for key in modules_map if not key.startswith("*")] + dir(torch.nn)
 
 
 def __getattr__(name: str):
-    def _getattr(name):
-        module_class = None
+    def infer_module(module, tensor_index):
+        klass = getattr(module, name, None)
+        if klass is not None:
+            return infer(klass, tensor_index)
+        return None
+
+    def process_entry(data) -> typing.Optional:
+        if isinstance(data, typing.Iterable):
+            if len(data) != 2:
+                raise AttributeError(
+                    f"Value of to-be-inferred module: {name} second argument has "
+                    f"to be of length 2 but got {len(data)}. Check torchlayers documentation."
+                )
+            return infer_module(*data)
+
+        if isinstance(data, types.ModuleType):
+            return infer_module(data, 1)
+
+        raise AttributeError(
+            "Torchlayers recognized entry to infer but it's entry is of incorrect type. "
+            "Check documentation about registration of user modules for more info."
+        )
+
+    def registered_module():
+        for key, data in modules_map.items():
+            if key.startswith("*"):
+                klass = process_entry(data)
+                if klass is not None:
+                    return klass
+
+        return None
+
+    def noninferable_torchlayers():
         for module in (
+            activations,
             convolution,
             normalization,
             pooling,
             regularization,
             upsample,
-            activations,
-            torch.nn,
         ):
-            module_class = getattr(module, name, None)
-            if module_class is not None:
-                return module_class
+            klass = getattr(module, name, None)
+            if klass is not None:
+                return klass
 
-        raise AttributeError("module {} has no attribute {}".format(__name__, name))
+        return None
 
-    module_class = _getattr(name)
-    if name in _inferable.torch.all() + _inferable.custom.all():
-        return infer(
-            module_class, _dev_utils.helpers.get_per_module_index(module_class)
-        )
-    return module_class
+    data = modules_map.get(name)
+    if data is None:
+        klass = registered_module()
+    else:
+        klass = process_entry(data)
+
+    # Try to return from torchlayers without inference
+    if klass is None:
+        klass = noninferable_torchlayers()
+
+    # Try to return from torch.nn without inference
+    if klass is None:
+        klass = getattr(torch.nn, name, None)
+
+    # As far as we know there is no such module
+    if klass is None:
+        raise AttributeError(f"module {__name__} has no attribute {name}")
+    return klass

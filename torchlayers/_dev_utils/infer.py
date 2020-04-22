@@ -2,7 +2,6 @@ import inspect
 import pickle
 import typing
 
-from .. import _inferable
 from . import helpers
 
 VARARGS_VARIABLE = "_torchlayers_varargs_variable"
@@ -50,7 +49,7 @@ def parse_arguments(
     """
 
     def _add_rnn_uninferable(uninferable: typing.Dict, module) -> typing.Dict:
-        if module.__name__ in _inferable.torch.recurrent:
+        if module.__name__ in ["RNN", "LSTM", "GRU"]:
             uninferable.update(
                 {
                     "input_size": "?",

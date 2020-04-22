@@ -2,8 +2,6 @@ import collections
 import itertools
 import typing
 
-from .. import _inferable
-
 
 def is_kwarg(argument: str) -> bool:
     """`True` if argument name is `**kwargs`"""
@@ -46,27 +44,6 @@ def remove_type_hint(argument: str) -> str:
         if len(splitted_on_default) > 1:
             no_type_hint += "={}".format(splitted_on_default[1])
     return no_type_hint
-
-
-def get_per_module_index(module: str) -> int:
-    """Get integer pointer to `tensor.shape` for the shape inference.
-
-    Almost all modules need `shape[1]` to be inferred.
-    Currently only exception being `recurrent` modules, in this case `2` is returned.
-
-    Returns
-    -------
-    int
-        Pointer to `tensor.shape` which should be inferred for specific module.
-    """
-    if (
-        module.__name__
-        in _inferable.torch.recurrent
-        + _inferable.torch.transformer
-        + _inferable.torch.attention
-    ):
-        return 2
-    return 1
 
 
 def create_vars(
