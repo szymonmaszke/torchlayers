@@ -6,7 +6,7 @@ from . import module
 class StochasticDepth(torch.nn.Module):
     """Randomly skip module during training with specified `p`, leaving inference untouched.
 
-    Originally proposed by Gao Huang et. al in
+    Originally proposed by Gao Huang et al. in
     `Deep Networks with Stochastic Depth <www.arxiv.org/abs/1512.03385>`__.
 
     Originally devised as regularization, though `other research <https://web.stanford.edu/class/cs331b/2016/projects/kaplan_smith_jiang.pdf>`__  suggests:

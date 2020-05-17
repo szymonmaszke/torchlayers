@@ -66,7 +66,7 @@ class Swish(torch.nn.Module):
 
         Swish(x) = x / (1 + \exp(-beta * x))
 
-    This form was originally proposed by Prajit Ramachandran et. al in
+    This form was originally proposed by Prajit Ramachandran et al. in
     `Searching for Activation Functions <https://arxiv.org/pdf/1710.05941.pdf>`__
 
     Parameters
@@ -112,7 +112,7 @@ class HardSwish(torch.nn.Module):
 
 
     While similar in effect to `Swish` should be more CPU-efficient.
-    Above formula proposed by in Andrew Howard et. al in `Searching for MobileNetV3 <https://arxiv.org/pdf/1905.02244.pdf>`__.
+    Above formula proposed by in Andrew Howard et al. in `Searching for MobileNetV3 <https://arxiv.org/pdf/1905.02244.pdf>`__.
 
     Parameters
     ----------

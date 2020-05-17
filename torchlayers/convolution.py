@@ -446,7 +446,7 @@ class ChannelShuffle(torch.nn.Module):
     This layer reshuffles output channels via simple `reshape` in order to mix the representation
     from separate groups and improve knowledge transfer.
 
-    Originally proposed by Xiangyu Zhang et. al in:
+    Originally proposed by Xiangyu Zhang et al. in:
     `ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices <https://arxiv.org/abs/1707.01083>`__
 
     Example::
@@ -531,7 +531,7 @@ class ChannelSplit(torch.nn.Module):
 class Residual(torch.nn.Module):
     """Residual connection adding input to output of provided module.
 
-    Originally proposed by He et. al in `ResNet <www.arxiv.org/abs/1512.03385>`__
+    Originally proposed by He et al. in `ResNet <www.arxiv.org/abs/1512.03385>`__
 
     For correct usage it is advised to keep input line (skip connection) without
     any layer or activation and implement transformations only in module arguments
@@ -592,7 +592,7 @@ class Residual(torch.nn.Module):
 class Dense(torch.nn.Module):
     """Dense residual connection concatenating input channels and output channels of provided module.
 
-    Originally proposed by Gao Huang et. al in `Densely Connected Convolutional Networks <https://arxiv.org/abs/1608.06993>`__
+    Originally proposed by Gao Huang et al. in `Densely Connected Convolutional Networks <https://arxiv.org/abs/1608.06993>`__
 
     Can be used just like `torchlayers.convolution.Residual` but concatenates
     channels (dimension can be specified) instead of adding.
@@ -629,7 +629,7 @@ class Poly(torch.nn.Module):
 
     where :math:`I` is identity mapping and :math:`F` is output of `module` applied :math:`^N` times.
 
-    Originally proposed by Xingcheng Zhang et. al in
+    Originally proposed by Xingcheng Zhang et al. in
     `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks <https://arxiv.org/abs/1608.06993>`__
 
     Example::
@@ -698,7 +698,7 @@ class MPoly(torch.nn.Module):
     where :math:`I` is identity and consecutive :math:`F_N` are consecutive modules
     applied to output of previous ones.
 
-    Originally proposed by Xingcheng Zhang et. al in
+    Originally proposed by Xingcheng Zhang et al. in
     `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks <https://arxiv.org/abs/1608.06993>`__
 
     Parameters
@@ -735,7 +735,7 @@ class WayPoly(torch.nn.Module):
 
     Could be considered as an extension of standard `ResNet` to many parallel modules.
 
-    Originally proposed by Xingcheng Zhang et. al in
+    Originally proposed by Xingcheng Zhang et al. in
     `PolyNet: A Pursuit of Structural Diversity in Very Deep Networks <https://arxiv.org/abs/1608.06993>`__
 
     Parameters
@@ -764,7 +764,7 @@ class SqueezeExcitation(torch.nn.Module):
     passed through two non-linear layers, rescaled to :math:`[0, 1]` via `sigmoid`-like function
     and multiplied with original input channel-wise.
 
-    Originally proposed by Xingcheng Zhang et. al in
+    Originally proposed by Xingcheng Zhang et al. in
     `Squeeze-and-Excitation Networks <https://arxiv.org/abs/1709.01507>`__
 
     Example::
@@ -827,7 +827,7 @@ class Fire(torch.nn.Module):
     After that those will be expanded to `out_channels` partially done by :math:`3 x 3` convolution
     and partially by :math:`1 x 1` convolution (as specified by `p` parameter).
 
-    Originally proposed by Forrest N. Iandola et. al in
+    Originally proposed by Forrest N. Iandola et al. in
     `SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size <https://arxiv.org/abs/1602.07360>`__
 
     Parameters
@@ -889,10 +889,10 @@ class Fire(torch.nn.Module):
 class InvertedResidualBottleneck(torch.nn.Module):
     """Inverted residual block used in MobileNetV2, MNasNet, Efficient Net and other architectures.
 
-    Originally proposed by Mark Sandler et. al in
+    Originally proposed by Mark Sandler et al. in
     `MobileNetV2: Inverted Residuals and Linear Bottlenecks <0.5MB model size <https://arxiv.org/abs/1801.04381>`__
 
-    Expanded with `SqueezeExcitation` after depthwise convolution by Mingxing Tan et. al in
+    Expanded with `SqueezeExcitation` after depthwise convolution by Mingxing Tan et al. in
     `MnasNet: Platform-Aware Neural Architecture Search for Mobile <https://arxiv.org/abs/1807.11626>`__
 
     Due to it's customizable nature blocks from other research papers could be easily produced, e.g.
