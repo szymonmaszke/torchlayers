@@ -6,35 +6,39 @@ from . import module
 
 
 class _GlobalPool(torch.nn.Module):
+    def forward(self, inputs):
+        return self._pooling(inputs).reshape(inputs.shape[0], -1)
+
+
+class GlobalMaxPool1d(_GlobalPool):
+    """Applies a 1D global max pooling over the last dimension.
+
+    Usually used after last `Conv1d` layer to get maximum feature values
+    for each timestep.
+
+    Internally operates as `torch.nn.AdaptiveMaxPool1d` with redundant `1` dimensions
+    flattened.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
     def __init__(self):
         super().__init__()
-
-        self._operation = self._maximum if "Max" in type(self).__name__ else self._mean
-
-    def _mean(self, tensor):
-        return torch.mean(tensor, axis=-1)
-
-    def _maximum(self, tensor):
-        values, _ = torch.max(tensor, axis=-1)
-        return values
-
-    def __repr__(self):
-        return "{}()".format(type(self).__name__)
-
-    def forward(self, inputs):
-        while len(inputs.shape) > 2:
-            inputs = self._operation(inputs)
-        return inputs
+        self._pooling = torch.nn.AdaptiveMaxPool1d(1)
 
 
-class GlobalMaxPool(_GlobalPool):
-    """Perform `max` operation across first `torch.Tensor` dimension.
+class GlobalMaxPool2d(_GlobalPool):
+    """Applies a 2D global max pooling over the last dimension(s).
 
-    Usually used after last convolution layer to get pixels of maximum value
-    from each channel.
+    Usually used after last `Conv2d` layer to get maximum value feature values
+    for each channel. Can be used on `3D` or `4D` input (though the latter is more common).
 
-    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` pooling will be used
-    for `3D`, `4D` and `5D` shape respectively (batch included).
+    Internally operates as `torch.nn.AdaptiveMaxPool2d` with redundant `1` dimensions
+    flattened.
 
     Returns
     -------
@@ -43,15 +47,19 @@ class GlobalMaxPool(_GlobalPool):
 
     """
 
+    def __init__(self):
+        super().__init__()
+        self._pooling = torch.nn.AdaptiveMaxPool2d(1)
 
-class GlobalAvgPool(_GlobalPool):
-    """Perform `mean` operation across first `torch.Tensor` dimension.
 
-    Usually used after last convolution layer to get mean of pixels
-    from each channel.
+class GlobalMaxPool3d(_GlobalPool):
+    """Applies a 3D global max pooling over the last dimension(s).
 
-    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` pooling will be used
-    for `3D`, `4D` and `5D` shape respectively (batch included).
+    Usually used after last `Conv3d` layer to get maximum value feature values
+    for each channel. Can be used on `4D` or `5D` input (though the latter is more common).
+
+    Internally operates as `torch.nn.AdaptiveMaxPool3d` with redundant `1` dimensions
+    flattened.
 
     Returns
     -------
@@ -59,6 +67,122 @@ class GlobalAvgPool(_GlobalPool):
         `2D` tensor `(batch, features)`
 
     """
+
+    def __init__(self):
+        super().__init__()
+        self._pooling = torch.nn.AdaptiveMaxPool3d(1)
+
+
+class GlobalAvgPool1d(_GlobalPool):
+    """Applies a 1D global average pooling over the last dimension.
+
+    Usually used after last `Conv1d` layer to get mean of features values
+    for each timestep.
+
+    Internally operates as `torch.nn.AdaptiveAvgPool1d` with redundant `1` dimensions
+    flattened.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._pooling = torch.nn.AdaptiveAvgPool1d(1)
+
+
+class GlobalAvgPool2d(_GlobalPool):
+    """Applies a 2D global average pooling over the last dimension(s).
+
+    Usually used after last `Conv2d` layer to get mean value of features values
+    for each channel. Can be used on `3D` or `4D` input (though the latter is more common).
+
+    Internally operates as `torch.nn.AdaptiveAvgPool3d` with redundant `1` dimensions
+    flattened.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._pooling = torch.nn.AdaptiveAvgPool2d(1)
+
+
+class GlobalAvgPool3d(_GlobalPool):
+    """Applies a 3D global average pooling over the last dimension(s).
+
+    Usually used after last `Conv3d` layer to get mean value of features values
+    for each channel. Can be used on `4D` or `5D` input (though the latter is more common).
+
+    Internally operates as `torch.nn.AdaptiveAvgPool3d` with redundant `1` dimensions
+    flattened.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._pooling = torch.nn.AdaptiveAvgPool3d(1)
+
+
+class GlobalMaxPool(module.InferDimension):
+    """Perform `max` pooling operation leaving maximum values from channels.
+
+    Usually used after last convolution layer (`torchlayers.Conv`)
+    to get pixels of maximum value from each channel.
+
+    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D` `GlobalMaxPool`
+    will be used for `3D`, `4D` and `5D` shape respectively (batch included).
+
+    Internally operates as `torchlayers.pooling.GlobalMaxPoolNd`.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
+    def __init__(self):
+        super().__init__(
+            dispatcher={5: GlobalMaxPool3d, 4: GlobalMaxPool2d, 3: GlobalMaxPool1d}
+        )
+
+
+class GlobalAvgPool(module.InferDimension):
+    """Perform `mean` pooling operation leaving average values from channels.
+
+    Usually used after last convolution layer (`torchlayers.Conv`) to get mean
+    of pixels from each channel.
+
+    Depending on shape of passed `torch.Tensor` either `1D`, `2D` or `3D`
+    pooling will be used for `3D`, `4D` and `5D`
+    shape respectively (batch included).
+
+    Internally operates as `torchlayers.pooling.GlobalAvgPoolNd`.
+
+    Returns
+    -------
+    `torch.Tensor`
+        `2D` tensor `(batch, features)`
+
+    """
+
+    def __init__(self):
+        super().__init__(
+            dispatcher={5: GlobalAvgPool3d, 4: GlobalAvgPool2d, 3: GlobalAvgPool1d}
+        )
 
 
 class MaxPool(module.InferDimension):
