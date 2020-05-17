@@ -332,9 +332,6 @@ def create_reduce(module, parsed_init_arguments):
     Callable
         __getattr__ function
     """
-    infered_input, non_inferable_arguments = helpers.process_arguments(
-        parsed_init_arguments
-    )
 
     def __reduce__(self):
         infered_module = getattr(self, module, None)
@@ -345,11 +342,8 @@ def create_reduce(module, parsed_init_arguments):
 
         custom_reduce = getattr(infered_module, "__reduce__", None)
         if custom_reduce is None:
-            return (
-                type(infered_module),
-                (getattr(infered_module, infered_input),)
-                + tuple(getattr(self, arg) for arg in non_inferable_arguments),
-                infered_module.state_dict(),
+            raise ValueError(
+                "Infered module does not have a __reduce__ method. Does it inherit from torch.nn.Module?"
             )
         return custom_reduce()
 
