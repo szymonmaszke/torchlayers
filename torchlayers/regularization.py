@@ -81,3 +81,12 @@ class StandardNormalNoise(torch.nn.Module):
         if self.training:
             return inputs + torch.randn_like(inputs)
         return inputs
+
+
+class UniformNoise(torch.nn.Module):
+    """Add noise from uniform `[0, 1)` distribution during forward pass."""
+
+    def forward(self, inputs):
+        if self.training:
+            return inputs + torch.rand_like(inputs)
+        return inputs
