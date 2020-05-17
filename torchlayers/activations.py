@@ -59,7 +59,8 @@ def swish(tensor: torch.Tensor, beta: float = 1.0) -> torch.Tensor:
 
 
 class Swish(torch.nn.Module):
-    """Applies Swish function element-wise.
+    r"""
+    Applies Swish function element-wise.
 
     .. math::
 
@@ -102,7 +103,8 @@ def hard_swish(tensor: torch.Tensor) -> torch.Tensor:
 
 
 class HardSwish(torch.nn.Module):
-    """Applies HardSwish function element-wise.
+    r"""
+    Applies HardSwish function element-wise.
 
     .. math::
 
