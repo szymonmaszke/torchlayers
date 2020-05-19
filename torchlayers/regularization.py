@@ -16,6 +16,16 @@ class StochasticDepth(torch.nn.Module):
 
     It might be useful to employ this technique to layers closer to the bottleneck.
 
+    Example::
+
+
+        import torchlayers as tl
+
+        # Assume only 128 channels can be an input in this case
+        block = tl.StochasticDepth(tl.Conv(128), p=0.3)
+        # May skip tl.Conv with 0.3 probability
+        block(torch.randn(1, 3, 32, 32))
+
     Parameters
     ----------
     module: torch.nn.Module
@@ -44,6 +54,9 @@ class StochasticDepth(torch.nn.Module):
 
 class Dropout(module.InferDimension):
     """Randomly zero out some of the tensor elements.
+
+    .. note::
+            Changes input only if `module` is in `train` mode.
 
     Based on input shape it either creates `2D` or `3D` version of dropout for inputs of shape
     `4D`, `5D` respectively (including batch as first dimension).
@@ -75,7 +88,29 @@ class Dropout(module.InferDimension):
 
 
 class StandardNormalNoise(torch.nn.Module):
-    """Add noise from standard normal distribution during forward pass."""
+    """Add noise from standard normal distribution during forward pass.
+
+    .. note::
+            Changes input only if `module` is in `train` mode.
+
+    Example::
+
+
+        import torchlayers as tl
+
+        model = tl.Sequential(
+            tl.StandardNormalNoise(), tl.Linear(10), tl.ReLU(), tl.tl.Linear(1)
+        )
+        tl.build(model, torch.randn(3, 30))
+
+        # Noise from Standard Normal distribution will be added
+        model(torch.randn(3, 30))
+
+        model.eval()
+        # Eval mode, no noise added
+        model(torch.randn(3, 30))
+
+    """
 
     def forward(self, inputs):
         if self.training:
@@ -84,7 +119,29 @@ class StandardNormalNoise(torch.nn.Module):
 
 
 class UniformNoise(torch.nn.Module):
-    """Add noise from uniform `[0, 1)` distribution during forward pass."""
+    """Add noise from uniform `[0, 1)` distribution during forward pass.
+
+    .. note::
+            Changes input only if `module` is in `train` mode.
+
+    Example::
+
+
+        import torchlayers as tl
+
+        noisy_linear_regression = tl.Sequential(
+            tl.UniformNoise(), tl.Linear(1)
+        )
+        tl.build(model, torch.randn(1, 10))
+
+        # Noise from Uniform distribution will be added
+        model(torch.randn(64, 10))
+
+        model.eval()
+        # Eval mode, no noise added
+        model(torch.randn(64, 10))
+
+    """
 
     def forward(self, inputs):
         if self.training:
