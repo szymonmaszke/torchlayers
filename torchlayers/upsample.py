@@ -13,12 +13,37 @@ class ConvPixelShuffle(torch.nn.Module):
     of `convolution` it has similar starting point to nearest neighbour upsampling.
 
     `kernel_size` got a default value of `3`, `upscale_factor` got a default
-    value of `2`
+    value of `2`.
+
+    Example::
+
+        import torchlayers as tl
+
+
+        class MiniAutoEncoder(tl.Module):
+            def __init__(self, out_channels):
+                super().__init__()
+                self.conv1 = tl.Conv(64)
+                # Twice smaller image by default
+                self.pooling = tl.MaxPool()
+                # Twice larger (upscale_factor=2) by default
+                self.upsample = tl.ConvPixelShuffle(out_channels)
+
+            def forward(self, x):
+                x = self.conv1(x)
+                pooled = self.pooling(x)
+                return self.upsample(pooled)
+
+
+        out_channels = 3
+        network = MiniAutoEncoder(out_channels)
+        tl.build(network, torch.randn(1, out_channels, 64, 64))
+        assert network(torch.randn(5, out_channels, 64, 64)).shape == [5, out_channels, 64, 64]
 
     .. note::
 
         Currently only `4D` input is allowed (`[batch, channels, height, width]`),
-        due to `torch.nn.PixelShuffle` not supporting `1D` or `3D` versions.
+        due to `torch.nn.PixelShuffle` not supporting `3D` or `5D` inputs.
         See [this PyTorch PR](https://github.com/pytorch/pytorch/pull/6340/files)
         for example of dimension-agnostic implementation.
 
@@ -46,7 +71,7 @@ class ConvPixelShuffle(torch.nn.Module):
         If ``True``, adds a learnable bias to the output. Default: ``True``
     initializer: typing.Callable[[torch.Tensor,], torch.Tensor], optional
         Initializer for ICNR initialization, can be a function from `torch.nn.init`.
-        Gets and returns tensor after initialization.
+        Receive tensor as argument and returns tensor after initialization.
         Default: `torch.nn.init.kaiming_normal_`
 
     """
@@ -58,12 +83,12 @@ class ConvPixelShuffle(torch.nn.Module):
         upscale_factor: int = 2,
         kernel_size: int = 3,
         stride: int = 1,
-        padding: typing.Union[typing.Tuple[int, int], int, str] = "same",
+        padding="same",
         dilation: int = 1,
         groups: int = 1,
         bias: bool = True,
         padding_mode: str = "zeros",
-        initializer: typing.Callable[[torch.Tensor,], torch.Tensor] = None,
+        initializer=None,
     ):
         super().__init__()
         self.convolution = convolution.Conv(
