@@ -31,12 +31,7 @@ def generate_inputs():
         yield module(regularization, name), name, steps
 
 
-@pytest.mark.parametrize("module,name,steps", list(generate_inputs()))
-def test_weight_decay(module, name, steps: bool):
-    tl.build(module, torch.randn(1, 20))
-    for _ in range(steps):
-        output = module(torch.randn(5, 20))
-        output.sum().backward()
+def check_gradient_correctness(module, name):
     for param_name, param in module.named_parameters():
         if name is not None:
             if name in param_name:
@@ -45,3 +40,16 @@ def test_weight_decay(module, name, steps: bool):
                 assert torch.abs(param.grad).sum() < 10000.0
         else:
             assert torch.abs(param.grad).sum() > 10000.0
+
+
+@pytest.mark.parametrize("module,name,steps", list(generate_inputs()))
+def test_weight_decay(module, name, steps: bool):
+    tl.build(module, torch.randn(1, 20))
+    for _ in range(steps):
+        output = module(torch.randn(5, 20))
+        output.sum().backward()
+    check_gradient_correctness(module, name)
+    module.zero_grad()
+    output = module(torch.rand(5, 20))
+    output.sum().backward()
+    check_gradient_correctness(module, name)

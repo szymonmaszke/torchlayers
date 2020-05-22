@@ -169,11 +169,13 @@ class WeightDecay(torch.nn.Module):
     def _weight_decay_hook(self, *_):
         if self.name is None:
             for param in self.module.parameters():
-                if param.grad is None:
+                if param.grad is None or torch.all(param.grad == 0.0):
                     param.grad = self.regularize(param)
         else:
             for name, param in self.module.named_parameters():
-                if self.name in name and param.grad is None:
+                if self.name in name and (
+                    param.grad is None or torch.all(param.grad == 0.0)
+                ):
                     param.grad = self.regularize(param)
 
     def forward(self, *args, **kwargs):
