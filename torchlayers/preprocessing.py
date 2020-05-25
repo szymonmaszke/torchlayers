@@ -218,7 +218,7 @@ class Transform(_GetInputs):
 
         return inputs
 
-    @abc.abstratcmethod
+    @abc.abstractmethod
     def transform(self, x):
         pass
 
