@@ -7,7 +7,7 @@ import warnings
 import torch
 
 from . import (_dev_utils, activations, convolution, normalization, pooling,
-               regularization, upsample)
+               preprocessing, regularization, upsample)
 from ._version import __version__
 from .module import InferDimension
 
@@ -369,6 +369,7 @@ def __getattr__(name: str):
             normalization,
             pooling,
             regularization,
+            preprocessing,
             upsample,
         ):
             klass = getattr(module, name, None)
