@@ -1,7 +1,7 @@
 import torch
 
 import pytest
-import torchlayers
+import torchlayers as tl
 
 
 class ConcatenateProxy(torch.nn.Module):
@@ -17,21 +17,22 @@ class _CustomLinearImpl(torch.nn.Linear):
         self.some_params = torch.nn.Parameter(torch.randn(2, out_features))
 
 
-CustomLinear = torchlayers.infer(_CustomLinearImpl)
+CustomLinear = tl.infer(_CustomLinearImpl)
 
 
 @pytest.fixture
 def model():
-    return torchlayers.Sequential(
-        torchlayers.Conv(64),
-        torchlayers.ReLU(),
-        torchlayers.MaxPool(),
-        torchlayers.Conv(128),
-        torchlayers.ReLU(),
-        torchlayers.MaxPool(),
-        torchlayers.Conv(256),
-        torchlayers.ReLU(),
-        torchlayers.Reshape(-1),
+    return tl.Sequential(
+        tl.Conv(64),
+        tl.ReLU(),
+        tl.MaxPool(),
+        tl.BatchNorm(),
+        tl.Conv(128),
+        tl.ReLU(),
+        tl.MaxPool(),
+        tl.Conv(256),
+        tl.ReLU(),
+        tl.Reshape(-1),
     )
 
 
@@ -40,13 +41,13 @@ def test_reshape(model):
 
 
 def test_lambda():
-    layer = torchlayers.Lambda(lambda inputs: inputs * 3)
+    layer = tl.Lambda(lambda inputs: inputs * 3)
     output = layer(torch.ones(16))
     assert torch.sum(output) == 16 * 3
 
 
 def test_concatenate():
-    model = torch.nn.Sequential(ConcatenateProxy(), torchlayers.Concatenate(dim=-1))
+    model = torch.nn.Sequential(ConcatenateProxy(), tl.Concatenate(dim=-1))
     assert model(torch.randn(64, 20)).shape == torch.randn(64, 60).shape
 
 
@@ -63,5 +64,5 @@ def test_custom_inferable_parameters():
 
 def test_custom_inferable_build():
     layer = CustomLinear(32)
-    layer = torchlayers.build(layer, torch.rand(16, 64))
+    layer = tl.build(layer, torch.rand(16, 64))
     assert layer.some_params.shape == (2, 32)

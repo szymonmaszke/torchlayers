@@ -4,40 +4,39 @@ import tempfile
 import torch
 
 import pytest
-import torchlayers
+import torchlayers as tl
 
 
 @pytest.fixture
 def model():
-    return torchlayers.Sequential(
-        torchlayers.Conv(64),
-        torchlayers.BatchNorm(),
-        torchlayers.ReLU(),
-        torchlayers.Conv(128),
-        torchlayers.BatchNorm(),
-        torchlayers.ReLU(),
-        torchlayers.Conv(256),
-        torchlayers.GlobalMaxPool(),
-        torchlayers.Linear(64),
-        torchlayers.BatchNorm(),
-        torchlayers.Linear(10),
+    return tl.Sequential(
+        tl.Conv(64),
+        tl.BatchNorm(),
+        tl.ReLU(),
+        tl.Conv(128),
+        tl.BatchNorm(),
+        tl.ReLU(),
+        tl.Conv(256),
+        tl.GlobalMaxPool(),
+        tl.Linear(64),
+        tl.BatchNorm(),
+        tl.Linear(10),
     )
 
 
 def test_functionality(model):
     # Initialize
-    model = torchlayers.build(model, torch.randn(16, 3, 28, 28))
+    model = tl.build(model, torch.randn(16, 3, 28, 28))
 
     optimizer = torch.optim.Adam(model.parameters())
     criterion = torch.nn.CrossEntropyLoss()
 
+    for _ in range(16):
+        output = model(torch.randn(16, 3, 28, 28))
+        loss = criterion(output, torch.randint(2, (16,)))
+        loss.backward()
 
-#     for _ in range(16):
-#         output = model(torch.randn(16, 3, 28, 28))
-#         loss = criterion(output, torch.randint(2, (16,)))
-#         loss.backward()
-
-#         optimizer.zero_grad()
+        optimizer.zero_grad()
 
 
 def test_print_pre_init(model):
@@ -59,13 +58,13 @@ def test_print_pre_init(model):
 
 
 def test_attribute_access_existing():
-    layer = torchlayers.Conv(64)
+    layer = tl.Conv(64)
     assert layer.kernel_size == 3
     assert layer.padding == "same"
 
 
 def test_attribute_access_notinstantiated():
-    layer = torchlayers.Conv(64)
+    layer = tl.Conv(64)
     with pytest.raises(AttributeError):
         non_instantiated_channels = layer.in_channels
 

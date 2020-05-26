@@ -1,8 +1,8 @@
 import torch
 
-import torchlayers
+import torchlayers as tl
 
 
 def test_module():
-    layer = torchlayers.Conv2d(64, kernel_size=3)
+    layer = tl.Conv2d(64, kernel_size=3)
     assert layer.__module__ == "torchlayers"

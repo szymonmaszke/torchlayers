@@ -1,9 +1,9 @@
 import torch
 
 import pytest
-import torchlayers
+import torchlayers as tl
 
 
 def test_2dbatchnorm():
-    layer = torchlayers.BatchNorm()
+    layer = tl.BatchNorm()
     layer(torch.randn(20, 100))

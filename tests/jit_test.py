@@ -3,13 +3,13 @@ import tempfile
 
 import torch
 
-import torchlayers
+import torchlayers as tl
 
 
 def test_basic_jit():
     inputs = torch.randn(16, 3, 32, 32)
 
-    layer = torchlayers.build(torchlayers.Conv(64), inputs)
+    layer = tl.build(tl.Conv(64), inputs)
     output = layer(inputs)
     new_model = torch.jit.script(layer)
 
@@ -21,7 +21,7 @@ def test_basic_jit_save():
     inputs = torch.randn(16, 3, 32, 32)
     temp = pathlib.Path(tempfile.gettempdir())
 
-    layer = torchlayers.build(torchlayers.Conv(64), inputs)
+    layer = tl.build(tl.Conv(64), inputs)
     output = layer(inputs)
     new_model = torch.jit.script(layer)
 

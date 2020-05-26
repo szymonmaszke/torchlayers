@@ -3,14 +3,14 @@ import tempfile
 
 import torch
 
-import torchlayers
+import torchlayers as tl
 
 
 def test_save():
     inputs = torch.randn(16, 32)
     temp = pathlib.Path(tempfile.gettempdir())
 
-    layer = torchlayers.build(torchlayers.Linear(64), inputs)
+    layer = tl.build(tl.Linear(64), inputs)
     output = layer(inputs)
     torch.save(layer, temp / "linear_model.pt")
 
@@ -23,7 +23,7 @@ def test_convolution_save():
     inputs = torch.randn(16, 3, 32, 32)
     temp = pathlib.Path(tempfile.gettempdir())
 
-    layer = torchlayers.build(torchlayers.Conv2d(64, kernel_size=3), inputs)
+    layer = tl.build(tl.Conv2d(64, kernel_size=3), inputs)
     output = layer(inputs)
     torch.save(layer, temp / "conv_model.pt")
 
@@ -36,7 +36,7 @@ def test_dimension_save():
     inputs = torch.randn(16, 3, 32, 32)
     temp = pathlib.Path(tempfile.gettempdir())
 
-    layer = torchlayers.build(torchlayers.Conv(64), inputs)
+    layer = tl.build(tl.Conv(64), inputs)
     output = layer(inputs)
     torch.save(layer, temp / "conv_model.pt")
 
