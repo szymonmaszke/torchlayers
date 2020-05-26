@@ -66,3 +66,10 @@ def test_custom_inferable_build():
     layer = CustomLinear(32)
     layer = tl.build(layer, torch.rand(16, 64))
     assert layer.some_params.shape == (2, 32)
+
+
+def test_smoke_summary(model):
+    summary = tl.summary(model, torch.randn(1, 3, 32, 32)).string(
+        inputs=False, buffers=False
+    )
+    assert (len(summary)) == 1459

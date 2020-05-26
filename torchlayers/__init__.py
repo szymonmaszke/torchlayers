@@ -1,3 +1,4 @@
+import collections
 import inspect
 import io
 import types
@@ -11,7 +12,335 @@ from . import (_dev_utils, activations, convolution, normalization, pooling,
 from ._version import __version__
 from .module import InferDimension
 
-__all__ = ["build", "infer", "Lambda", "Reshape", "Concatenate"]
+__all__ = ["summary", "build", "infer", "Lambda", "Reshape", "Concatenate"]
+
+
+def summary(module, *args, **kwargs):
+    """Create summary of PyTorch module.
+
+    Works similarly to `summary` functionality provided by `keras`.
+
+    Example::
+
+        import torchlayers as tl
+
+
+        class Classifier(tl.Module):
+            def __init__(self):
+                super().__init__()
+                self.conv1 = tl.Conv2d(64, kernel_size=6)
+                self.conv2 = tl.Conv2d(128, kernel_size=3)
+                self.conv3 = tl.Conv2d(256, kernel_size=3, padding=1)
+                self.pooling = tl.GlobalMaxPool()
+                self.dense = tl.Linear(10)
+
+            def forward(self, x):
+                x = torch.relu(self.conv1(x))
+                x = torch.relu(self.conv2(x))
+                x = torch.relu(self.conv3(x))
+                return self.dense(self.pooling(x))
+
+        clf = Classifier()
+        tl.build(clf, torch.randn(1, 3, 32, 32))
+        # You have to print the summary explicitly
+        print(tl.summary(clf, torch.randn(1, 3, 32, 32)))
+
+    Above would print (please notice explicit usage of `print` statement)::
+
+
+                Layer (type)       |      Inputs      |     Outputs      | Params (size in MB)  | Buffers (size in MB)
+        ===============================================================================================================
+        ---------------------------------------------------------------------------------------------------------------
+               conv1 (Conv2d)      |  (1, 3, 32, 32)  | (1, 64, 27, 27)  |  6976 (0.027904 MB)  |   0 (0.000000 MB)
+        ---------------------------------------------------------------------------------------------------------------
+               conv2 (Conv2d)      | (1, 64, 27, 27)  | (1, 128, 25, 25) | 73856 (0.295424 MB)  |   0 (0.000000 MB)
+        ---------------------------------------------------------------------------------------------------------------
+               conv3 (Conv2d)      | (1, 128, 25, 25) | (1, 256, 25, 25) | 295168 (1.180672 MB) |   0 (0.000000 MB)
+        ---------------------------------------------------------------------------------------------------------------
+         pooling (GlobalMaxPool2d) | (1, 256, 25, 25) |     (1, 256)     |   0 (0.000000 MB)    |   0 (0.000000 MB)
+        ---------------------------------------------------------------------------------------------------------------
+               dense (Linear)      |     (1, 256)     |     (1, 10)      |  2570 (0.010280 MB)  |   0 (0.000000 MB)
+        ---------------------------------------------------------------------------------------------------------------
+        ===============================================================================================================
+        Total params: 378570 (1.514280 Mb)
+        Total buffers: 0 (0.000000 Mb)
+
+
+    Custom `Summarizer` object is returned from the function. Users can specify which columns to return
+    (if any) using `string` function.
+    Calling `summary` on the above model like this::
+
+        print(tl.summary(clf, torch.randn(1, 3, 32, 32)).string(buffers=False, inputs=False))
+
+    Would give the following output to `stdout`:
+
+
+                Layer (type)       |     Outputs      | Params (size in MB)
+        =====================================================================
+        ---------------------------------------------------------------------
+               conv1 (Conv2d)      | (1, 64, 27, 27)  |  6976 (0.027904 MB)
+        ---------------------------------------------------------------------
+               conv2 (Conv2d)      | (1, 128, 25, 25) | 73856 (0.295424 MB)
+        ---------------------------------------------------------------------
+               conv3 (Conv2d)      | (1, 256, 25, 25) | 295168 (1.180672 MB)
+        ---------------------------------------------------------------------
+         pooling (GlobalMaxPool2d) |     (1, 256)     |   0 (0.000000 MB)
+        ---------------------------------------------------------------------
+               dense (Linear)      |     (1, 10)      |  2570 (0.010280 MB)
+        ---------------------------------------------------------------------
+        =====================================================================
+        Total params: 378570 (1.514280 Mb)
+        Total buffers: 0 (0.000000 Mb)
+
+    `string` method has following flags (if `True` the column is returned, `True` by default)
+    specifiable by user:
+
+        - layers
+        - inputs
+        - outputs
+        - params
+        - buffers
+
+    Returned `Summarizer` object has following fields which can be accessed and
+    read/modified by user:
+
+        - names - `list` containing names of consecutive modules
+        - modules - `list` containing names of **classes** of consecutive modules
+        - inputs - `list` containing inputs (possibly multiple of them) to layers.
+        Each `input` is described by `shape` (if it's a `torch.Tensor` instance)
+        or by class name otherwise
+        - outputs - `list` containing outputs (possibly multiple of them) of layers.
+        Each `output` is described by `shape` (if it's a `torch.Tensor` instance)
+        or by class name otherwise
+        - params - `list` containing number of parameters for each layer
+        - params_sizes - `list` containing sizes of parameters for layers (in megabytes)
+        - buffers - `list` containing number of buffer parameters for each layer
+        - buffers_sizes - `list` containing sizes of buffers for layers (in megabytes)
+
+    Finally, `Summarizer` can also be called with other inputs so it gathers
+    representation based on the last provided input. For example::
+
+        summarizer = tl.summary(module, torch.randn(1, 3, 32, 32))
+        with summarizer:
+            summarizer(torch.randn(5, 3, 64, 64))
+
+        # Inputs and outputs summary for input of shape (5, 3, 64, 64)
+        print(summarizer)
+
+    .. note::
+            This function can be called before or after `torchlayers.build`
+            but the results may vary (names and types of layers before and after
+            inference).
+
+    .. note::
+            This function runs input through the network hence the input shapes
+            are inferred after this call. Network will not be built into
+            PyTorch counterparts though (e.g. `tl.Conv` will not become `torch.nn.Conv2d` or a-like).
+
+
+    Parameters
+    ----------
+    module : torch.nn.Module
+        Instance of module to create summary for
+    *args
+        Arguments required by module's `forward`
+    **kwargs
+        Keyword arguments required by module's `forward`
+    """
+
+    class Summarizer:
+        def __init__(self, module):
+            self.module = module
+
+            self.names = []
+            self.modules = []
+
+            self.inputs = []
+            self.outputs = []
+
+            self.params = []
+            self.params_sizes = []
+
+            self.buffers = []
+            self.buffers_sizes = []
+
+            self._handles = []
+            self._last_module_state = None
+
+        def __enter__(self):
+            self._last_module_state = self.module.training
+            self.module.eval()
+            for name, submodule in list(self.module.named_modules())[1:]:
+                if "." not in name:
+                    self.names.append(name)
+                    self.modules.append(type(submodule).__name__)
+                    self._handles.append(submodule.register_forward_hook(self.hook))
+            return self
+
+        def __exit__(self, *_, **__):
+            for handle in self._handles:
+                handle.remove()
+            self.module.train(self._last_module_state)
+            return False
+
+        @staticmethod
+        def _parse(item):
+            if torch.is_tensor(item):
+                return tuple(item.shape)
+
+            if isinstance(item, collections.abc.Iterable):
+                return Summarizer._unwrap(
+                    tuple(Summarizer._parse(element) for element in item)
+                )
+            else:
+                return type(item).__name__
+
+        @staticmethod
+        def _unwrap(item):
+            if len(item) == 1:
+                return item[0]
+            return item
+
+        def hook(self, module, inputs, outputs):
+            def _elements_count(iterator):
+                return sum(element.numel() for element in iterator)
+
+            def _elements_size_in_mb(iterator):
+                return (
+                    sum(
+                        element.numel() * element.element_size() for element in iterator
+                    )
+                    / 1_000_000
+                )
+
+            # Inputs and outputs
+            self.inputs.append(Summarizer._parse(inputs))
+            self.outputs.append(Summarizer._parse(outputs))
+
+            # Parameters and buffers
+            self.params.append(_elements_count(module.parameters()))
+            self.params_sizes.append(_elements_size_in_mb(module.parameters()))
+            self.buffers.append(_elements_count(module.buffers()))
+            self.buffers_sizes.append(_elements_size_in_mb(module.buffers()))
+
+        def __call__(self, *args, **kwargs):
+            with torch.no_grad():
+                return self.module(*args, **kwargs)
+            return self
+
+        def string(
+            self,
+            layers: bool = True,
+            inputs: bool = True,
+            outputs: bool = True,
+            params: bool = True,
+            buffers: bool = True,
+        ):
+            def create_text():
+                def conditional_return(conditions, values):
+                    for condition, value in zip(conditions, values):
+                        if condition:
+                            yield value
+
+                def footer(
+                    total_params, total_params_sizes, total_buffers, total_buffers_sizes
+                ):
+                    return "Total params: {} ({:.6f} MB)\nTotal buffers: {} ({:.6f} MB)".format(
+                        total_params,
+                        total_params_sizes,
+                        total_buffers,
+                        total_buffers_sizes,
+                    )
+
+                layers_text = ["Layer (type)"]
+                inputs_text = ["Inputs"]
+                outputs_text = ["Outputs"]
+                params_text = ["Params (size in MB)"]
+                buffers_text = ["Buffers (size in MB)"]
+
+                total_params, total_params_sizes, total_buffers, total_buffers_sizes = (
+                    0,
+                    0,
+                    0,
+                    0,
+                )
+                for (
+                    name,
+                    module,
+                    inp,
+                    out,
+                    param,
+                    param_size,
+                    buffer,
+                    buffer_size,
+                ) in zip(
+                    self.names,
+                    self.modules,
+                    self.inputs,
+                    self.outputs,
+                    self.params,
+                    self.params_sizes,
+                    self.buffers,
+                    self.buffers_sizes,
+                ):
+
+                    layers_text.append("{} ({})".format(name, module))
+                    inputs_text.append("{}".format(inp))
+                    outputs_text.append("{}".format(out))
+                    params_text.append("{} ({:.6f} MB)".format(param, param_size))
+                    buffers_text.append("{} ({:.6f} MB)".format(buffer, buffer_size))
+                    total_params += param
+                    total_params_sizes += param_size
+                    total_buffers += buffer
+                    total_buffers_sizes += buffer_size
+
+                return (
+                    footer(
+                        total_params,
+                        total_params_sizes,
+                        total_buffers,
+                        total_buffers_sizes,
+                    ),
+                    conditional_return(
+                        (layers, inputs, outputs, params, buffers),
+                        (
+                            layers_text,
+                            inputs_text,
+                            outputs_text,
+                            params_text,
+                            buffers_text,
+                        ),
+                    ),
+                )
+
+            def center(columns):
+                # + 2 to leave some space for representation on both sides
+                for column in columns:
+                    longest = max(map(len, column)) + 2
+                    yield tuple(map(lambda string: string.center(longest), column))
+
+            def join(columns):
+                return tuple("|".join(row) for row in zip(*columns))
+
+            footer, columns = create_text()
+            rows = join(center(columns))
+            representation = rows[0]
+            representation += "\n" + "=" * len(rows[0]) + "\n"
+            representation += "-" * len(rows[0]) + "\n"
+            for row in rows[1:]:
+                representation += row
+                representation += "\n" + "-" * len(row) + "\n"
+
+            representation += "=" * len(rows[0]) + "\n"
+            representation += footer
+            return representation
+
+        def __str__(self):
+            return self.string()
+
+    with Summarizer(module) as summarizer:
+        summarizer(*args, **kwargs)
+        return summarizer
 
 
 def build(module, *args, **kwargs):
