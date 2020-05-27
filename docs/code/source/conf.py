@@ -15,6 +15,14 @@ import sys
 
 import pytorch_sphinx_theme
 
+
+def get_version():
+    namespace = {}
+
+    exec(open("../../../torchlayers/_version.py").read(), namespace)  # get version
+    return namespace["__version__"]
+
+
 sys.path.insert(0, os.path.abspath("../../.."))
 
 
@@ -23,7 +31,7 @@ sys.path.insert(0, os.path.abspath("../../.."))
 project = "torchlayers"
 copyright = "2019, Szymon Maszke"
 author = "Szymon Maszke"
-version = "0.1.1"
+version = get_version()
 
 
 # -- General configuration ---------------------------------------------------
