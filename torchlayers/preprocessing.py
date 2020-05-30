@@ -9,7 +9,7 @@ class _GetInputs(torch.nn.Module):
     def _get_inputs(self, inputs):
         if self.inplace:
             return inputs
-        return inputs.copy()
+        return inputs.clone()
 
 
 class RandomApply(_GetInputs):
@@ -163,11 +163,12 @@ class Normalize(torch.nn.Module):
 
         self.register_buffer("mean", tensor_mean)
         self.register_buffer("std", tensor_std)
+        self.inplace: bool = inplace
 
     def forward(self, inputs):
         inputs_length = len(inputs.shape) - 2
-        mean = self.mean.view(1, -1, [1] * inputs_length)
-        std = self.std.view(1, -1, [1] * inputs_length)
+        mean = self.mean.view(1, -1, *([1] * inputs_length))
+        std = self.std.view(1, -1, *([1] * inputs_length))
         if self.inplace:
             inputs.sub_(mean).div_(std)
             return inputs
@@ -304,7 +305,9 @@ class RandomErasing(Transform):
     .. note::
             **IMPORTANT**: This function is a `no-op` during inference phase.
     .. note::
-            Each image in batch will have the same
+            Each image in batch will have the same rectangle region cut out
+            due to efficiency reasons. It probably doesn't alter the idea
+            drastically but exact effects weren't tested.
 
 
     Parameters
