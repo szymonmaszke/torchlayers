@@ -161,7 +161,7 @@ class WeightDecay(torch.nn.Module):
         self.weight_decay = weight_decay
         self.name = name
 
-        self.hook = self.module.register_backward_hook(self._weight_decay_hook)
+        self.hook = self.module.register_full_backward_hook(self._weight_decay_hook)
 
     def remove(self):
         self.hook.remove()
